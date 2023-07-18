@@ -1,6 +1,7 @@
 ---
 layout: ../layouts/Root.astro
 title: Adel Nizamutdinov
+description: Personal website
 ---
 
 Outdoor computer programmer 🍜
