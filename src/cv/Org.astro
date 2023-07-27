@@ -1,26 +1,26 @@
 ---
-import type cv from "../../public/cv.json"
+import type { experience } from "../../public/cv.json"
+import images from "./ogimages.json"
 
 interface Props {
-  org: (typeof cv)["education"][number]["org"]
+  org: (typeof experience)[number]["org"]
 }
+const { org } = Astro.props
 ---
 
 <div class="flex flex-row gap-2">
-  <a class="flex-shrink-0" target="_blank" rel="noreferrer" href={e.org.url}>
-    <h4 class="mb-0">
-      <img
-        loading="eager"
-        width={24}
-        height={24}
-        class="m-0 h-6 w-6 object-cover"
-        src={e.org.logoURL ?? images[e.org.url]}
-        alt={e.org.name}
-      />
-    </h4>
+  <a class="mt-6 flex-shrink-0" target="_blank" rel="noreferrer" href={org.url}>
+    <img
+      loading="eager"
+      width={24}
+      height={24}
+      class="m-0 print:-mt-1 h-6 w-6 object-cover"
+      src={org.imgURL ?? images[org.url]}
+      alt={org.name}
+    />
   </a>
 
-  <div>
+  <div class="flex flex-col space-y-0">
     <slot />
   </div>
 </div>

@@ -11,3 +11,16 @@ export const fmtDur = (start: string, end: string | undefined): string =>
     }),
     { format: ["years", "months"] },
   )
+
+export const fmtExpTime = ({
+  start,
+  end,
+  duration = true,
+}: {
+  start: string
+  end: string | undefined
+  duration?: boolean
+}): string => {
+  const dur = duration ? ` (${fmtDur(start, end)})` : ""
+  return `${fmtDate(start)} - ${end ? fmtDate(end) : "Present"}${dur}`
+}

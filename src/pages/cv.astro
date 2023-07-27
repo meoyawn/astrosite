@@ -1,11 +1,16 @@
 ---
 import cv from "../../public/cv.json"
-import emailIcon from "../cv/email.svg"
-import githubIcon from "../cv/github.svg"
+import emailIcon from "../cv/icon/email.svg"
+import githubIcon from "../cv/icon/github.svg"
 import IconLink from "../cv/IconLink.astro"
-import linkIcon from "../cv/link.svg"
-import linkedinIcon from "../cv/linkedin.svg"
+import linkIcon from "../cv/icon/link.svg"
+import linkedinIcon from "../cv/icon/linkedin.svg"
+import Org from "../cv/Org.astro"
 import HtmlRoot from "../layouts/HtmlRoot.astro"
+import { md2html } from "../app/markdown"
+import { fmtDate, fmtExpTime } from "../cv/cv"
+import { clsx } from "clsx"
+import Products from "../cv/Products.astro"
 ---
 
 <HtmlRoot
@@ -13,10 +18,10 @@ import HtmlRoot from "../layouts/HtmlRoot.astro"
   class="prose prose-sky m-6 max-w-none print:prose-sm print:m-0 sm:m-12 md:m-16"
 >
   <section>
-    <h1 class="mb-0">{cv.head.name}</h1>
-    <p class="mt-0">{cv.head.location}</p>
+    <h1>{cv.head.name}</h1>
+    <h3>{cv.head.title}</h3>
 
-    <div class="grid grid-cols-1 sm:grid-cols-2">
+    <p class="grid grid-cols-1 sm:grid-cols-2 print:grid-cols-2">
       <IconLink icon={emailIcon} href={`mailto:${cv.head.email}`} />
       <!--<IconLink href={`tel:${cv.head}`} icon={phoneIcon}>-->
       <IconLink
@@ -28,6 +33,68 @@ import HtmlRoot from "../layouts/HtmlRoot.astro"
         icon={githubIcon}
         href={`https://github.com/${cv.head.github}`}
       />
-    </div>
+    </p>
   </section>
+
+  <section>
+    <h3>Summary</h3>
+    <Fragment set:html={md2html(cv.summaryMD)} />
+  </section>
+
+  <section>
+    <h3>Experience</h3>
+
+    {
+      cv.experience.map(exp => (
+        <Org org={exp.org}>
+          <Fragment>{exp.title ? <h4>{exp.title}</h4> : null}</Fragment>
+
+          <p>
+            <a
+              href={exp.org.url}
+              target="_blank"
+              rel="noreferrer"
+              class={clsx({ "font-semibold": !exp.title })}
+            >
+              {exp.org.name}
+            </a>
+            <br />
+            <span>{fmtExpTime(exp)}</span>
+          </p>
+
+          <Fragment set:html={md2html(exp.summaryMD)} />
+          <Products products={exp.products} />
+        </Org>
+      ))
+    }
+  </section>
+
+  <section>
+    <h3>Education</h3>
+
+    {cv.education.map(ed => (
+      <Org org={ed.org}>
+        <h4>{ed.org.name}</h4>
+        <Fragment set:html={md2html(ed.degreeMD)} />
+        <span>{fmtExpTime({ ...ed, duration: false })}</span>
+        <Products products={ed.products} />
+      </Org>
+    ))}
+  </section>
+
+  <section>
+    <h3>Honors & awards</h3>
+
+    {cv.awards.map(aw => (
+      <Org org={aw.org}>
+        <h4>
+          <a href={aw.url}>{aw.title}</a>
+          <span> - </span>
+          <a href={aw.org.url}>{aw.org.name}</a>
+        </h4>
+        <span>{fmtDate(aw.date)}</span>
+      </Org>
+    ))}
+  </section>
+
 </HtmlRoot>

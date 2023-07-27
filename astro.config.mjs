@@ -1,5 +1,5 @@
 import tailwind from "@astrojs/tailwind"
-import { defineConfig } from "astro/config"
+import { defineConfig, sharpImageService } from "astro/config"
 import rehypeExternalLinks from "rehype-external-links"
 
 // https://astro.build/config
@@ -10,5 +10,19 @@ export default defineConfig({
     rehypePlugins: [
       [rehypeExternalLinks, { target: "_blank", rel: "noreferrer" }],
     ],
+  },
+  experimental: {
+    assets: false,
+  },
+  image: {
+    service: sharpImageService(),
+  },
+  /** https://vitejs.dev/config/ */
+  vite: {
+    server: {
+      watch: {
+        ignored: ["**/.idea/**"],
+      },
+    },
   },
 })

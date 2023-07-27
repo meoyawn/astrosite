@@ -1,5 +1,5 @@
 ---
-import Root from "./HtmlRoot.astro"
+import HtmlRoot from "./HtmlRoot.astro"
 
 interface Props {
   frontmatter: Partial<Record<string, string>>
@@ -10,8 +10,10 @@ const {
 } = Astro.props
 ---
 
-<Root title={title} description={description}>
-  <main class="prose m-6 max-w-prose sm:m-12 md:m-16">
-    <slot />
-  </main>
-</Root>
+<HtmlRoot
+  title={title}
+  description={description}
+  class="prose m-6 max-w-prose sm:m-12 md:m-16"
+>
+  <slot />
+</HtmlRoot>
