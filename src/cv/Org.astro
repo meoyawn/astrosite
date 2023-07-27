@@ -1,0 +1,26 @@
+---
+import type cv from "../../public/cv.json"
+
+interface Props {
+  org: (typeof cv)["education"][number]["org"]
+}
+---
+
+<div class="flex flex-row gap-2">
+  <a class="flex-shrink-0" target="_blank" rel="noreferrer" href={e.org.url}>
+    <h4 class="mb-0">
+      <img
+        loading="eager"
+        width={24}
+        height={24}
+        class="m-0 h-6 w-6 object-cover"
+        src={e.org.logoURL ?? images[e.org.url]}
+        alt={e.org.name}
+      />
+    </h4>
+  </a>
+
+  <div>
+    <slot />
+  </div>
+</div>

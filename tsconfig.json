@@ -1,3 +1,7 @@
 {
-  "extends": "astro/tsconfigs/strictest"
+  "extends": "astro/tsconfigs/strictest",
+  "compilerOptions": {
+    "importsNotUsedAsValues": "preserve",
+    "resolveJsonModule": true
+  }
 }

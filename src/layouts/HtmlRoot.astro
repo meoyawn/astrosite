@@ -1,11 +1,11 @@
 ---
 interface Props {
-  frontmatter: Record<string, unknown>
+  title: string
+  description?: string
+  class?: string
 }
 
-const {
-  frontmatter: { title, description },
-} = Astro.props
+const { title, description } = Astro.props
 ---
 
 <!DOCTYPE html>
@@ -16,12 +16,10 @@ const {
     <meta name="viewport" content="width=device-width" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <title>{title}</title>
-    <meta name="description" content={description} />
+    <meta name="description" content={description ?? "Personal website"} />
   </head>
 
-  <body>
-    <main class="prose m-6 max-w-prose sm:m-12 md:m-16">
-      <slot />
-    </main>
+  <body class={Astro.props.class}>
+    <slot />
   </body>
 </html>

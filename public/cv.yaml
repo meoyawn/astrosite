@@ -1,0 +1,162 @@
+head:
+  name: Adel Nizamutdinov
+  title: Software Engineer
+  location: United States or Remote
+  email: mail@adelnz.com
+  url: https://adelnz.com
+  linkedin: adelnizamuddin
+  github: meoyawn
+
+summaryMD: |
+  - 10 years of building commercial software in Java, Kotlin, Typescript & Python
+  - Bootstrapped a profitable SaaS to $2K MRR
+  - Built 2 teams from scratch
+
+experience:
+  - title: Independent
+    org:
+      name: Agape Labs
+      url: https://adelnz.com
+    location: Solo
+    start: 2019-10-01
+    products:
+      - name: Listenbox
+        url: https://listenbox.app
+      - name: Arrowbox
+        url: https://arrowbox.co
+      - name: ResponsibleAPI
+        url: https://responsibleapi.com
+    summaryMD: |
+      Working on my own products.
+
+      - Bootstrapped a [profitable SaaS](https://listenbox.app) to $2k MRR
+
+  - title: Senior Android Developer
+    org:
+      name: Wheely
+      url: https://wheely.com/en
+      imgURL: https://cd.wheely.com/site/public/images/favicon/favicon-32x32.png
+    start: 2017-06-01
+    end: 2019-06-01
+    location: Remote
+    products:
+      - name: Wheely
+        url: https://play.google.com/store/apps/details?id=com.wheely.wheely
+      - name: Wheely for Chauffeurs
+        url: https://play.google.com/store/apps/details?id=com.wheely.groundio
+    summaryMD: |
+      Developed Passenger & Driver Android Apps. Interviewed Android developers.
+
+      - Redesigned the Passenger app
+      - Introduced UI (integration) tests
+
+  - title: Lead Android Developer
+    org:
+      name: Infotech Group
+      url: https://infotech.group/en
+    start: 2016-05-01
+    end: 2017-06-01
+    location: Kazan, Tatarstan
+    products:
+      - name: District Power Grids
+        url: https://play.google.com/store/apps/details?id=com.infotechcorp.moscowlamps
+      - name: Lighting Service
+        url: https://play.google.com/store/apps/details?id=group.infotech.gorenie
+    summaryMD: |
+      Developed Android apps. Hired and technically led Android developers.
+
+      - Created internal processes and infrastructure for Android development
+      - Hired and led 3 Android developers
+      - Built 2 apps from scratch
+
+  - title: Android Developer
+    org:
+      name: Yandex
+      url: https://yandex.com
+    start: 2015-07-01
+    end: 2016-03-01
+    location: Saint Petersburg, Russia
+    products:
+      - name: Yandex Start
+        url: https://play.google.com/store/apps/details?id=ru.yandex.searchplugin
+    summaryMD: |
+      Developed [Yandex.Search for Android](https://play.google.com/store/apps/details?id=ru.yandex.searchplugin).
+
+      - Adapted UI for tablets
+      - Improved app performance
+      - Introduced application upgrade tests
+
+  - title: Lead Android Developer
+    org:
+      name: Flatstack
+      url: https://www.flatstack.com
+    start: 2012-10-01
+    end: 2015-02-01
+    location: Kazan, Tatarstan
+    products:
+      - name: Meloman
+        url: https://web.archive.org/web/20141003050637/https://play.google.com/store/apps/details?id=com.flatsoft.meloman
+        imgURL: https://web.archive.org/web/20141003050637im_/https://lh6.ggpht.com/LEHezD8Eqfpr46bBfGeDqOAd2j6lNLa-4nUzBc4fMZULoo5xisrWkrF4GVs318YFFFs=w300
+      - name: BreakingNews.ie
+        url: https://play.google.com/store/apps/details?id=ie.breakingnews.mobile
+      - name: Irish Examiner
+        url: https://play.google.com/store/apps/details?id=ie.irishexaminer.mobile
+      - name: Diligent HighBond
+        url: https://play.google.com/store/apps/details?id=com.aclgrc.android
+      - name: Roadtrippers
+        url: https://play.google.com/store/apps/details?id=com.roadtrippers
+    summaryMD: |
+      Developed Android apps. Hired and technically led Android developers. Did customer demos.
+
+      - Built 4 apps from scratch
+      - Created internal processes for Android development
+      - Hired and led 3 Android developers
+
+education:
+  - org:
+      name: Kazan State University
+      url: https://eng.kpfu.ru
+      imgURL: https://upload.wikimedia.org/wikipedia/commons/d/d2/Kazan_federal_university_emblem.png
+    start: 2010-09-01
+    end: 2015-07-01
+    products:
+      - name: KSU Schedule
+        url: https://play.google.com/store/apps/details?id=com.stiggpwnz.schedule
+      - name: VK Vibes
+        url: https://web.archive.org/web/20140829110945/https://play.google.com/store/apps/details?id=com.stiggpwnz.vibes
+        imgURL: https://web.archive.org/web/20221010221523im_/https://lh3.ggpht.com/iykRcs70ukktRV3JaA7akqNhrWB3o3DcFYBz3BsTie55BWYUn7yLf_QjQGEqw54JrRxX=w300
+    degreeMD: |
+      [Specialist](https://academia.stackexchange.com/a/78098) of Applied Mathematics and Computer Science
+
+awards:
+  - title: Winner of Telegram Android Challenge 2016
+    url: https://vk.com/wall1_1108590
+    org:
+      name: Telegram
+      url: https://telegram.org
+    date: 2016-07-01
+
+  - title: 55th in 2011 ACM ICPC Sub-regionals
+    url: https://neerc.ifmo.ru/archive/2011/southern/standings.html
+    org:
+      name: ACM
+      url: https://www.acm.org
+      imgURL: https://upload.wikimedia.org/wikipedia/commons/8/8e/Association_for_Computing_Machinery_%28ACM%29_logo.svg
+    date: 2011-10-01
+
+skills:
+  - Building and maintaining Android apps
+  - Building and maintaining SaaS apps
+  - Hiring and building teams from scratch
+  - Search engine optimization and paid ads
+
+tech-skills:
+  languages: [ TypeScript, Kotlin, Java, Python, SQL ]
+  frontend: [ D3.js, Next.js, React.js, Remix.js, Tailwind CSS, Astro.js ]
+  mobile: [ Android SDK ]
+  design: [ Figma ]
+  database: [ SQLite, PostgreSQL, Pinecone ]
+  backend: [ Vert.x, Node.js, CRDT ]
+  misc: [ Git, Docker, Linux, Excel, FFmpeg ]
+  marketing: [ SEO, Google Ads ]
+  payments: [ Stripe ]

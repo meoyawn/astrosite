@@ -1,10 +1,17 @@
 {
+  "arrowParens": "avoid",
+  "proseWrap": "always",
+  "semi": false,
+  "singleQuote": false,
+  "trailingComma": "all",
+  "pluginSearchDirs": [],
   "plugins": [
     "prettier-plugin-packagejson",
     "@ianvs/prettier-plugin-sort-imports",
-    "prettier-plugin-astro"
+    "prettier-plugin-astro",
+    "@prettier/plugin-xml",
+    "prettier-plugin-tailwindcss"
   ],
-  "arrowParens": "avoid",
   "overrides": [
     {
       "files": "*.astro",
@@ -12,7 +19,5 @@
         "parser": "astro"
       }
     }
-  ],
-  "semi": false,
-  "singleQuote": false
+  ]
 }

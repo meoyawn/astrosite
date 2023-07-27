@@ -1,0 +1,33 @@
+---
+import cv from "../../public/cv.json"
+import emailIcon from "../cv/email.svg"
+import githubIcon from "../cv/github.svg"
+import IconLink from "../cv/IconLink.astro"
+import linkIcon from "../cv/link.svg"
+import linkedinIcon from "../cv/linkedin.svg"
+import HtmlRoot from "../layouts/HtmlRoot.astro"
+---
+
+<HtmlRoot
+  title="Adel Nizamutdinov's CV"
+  class="prose prose-sky m-6 max-w-none print:prose-sm print:m-0 sm:m-12 md:m-16"
+>
+  <section>
+    <h1 class="mb-0">{cv.head.name}</h1>
+    <p class="mt-0">{cv.head.location}</p>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2">
+      <IconLink icon={emailIcon} href={`mailto:${cv.head.email}`} />
+      <!--<IconLink href={`tel:${cv.head}`} icon={phoneIcon}>-->
+      <IconLink
+        icon={linkedinIcon}
+        href={`https://linkedin.com/in/${cv.head.linkedin}`}
+      />
+      <IconLink icon={linkIcon} href={cv.head.url} />
+      <IconLink
+        icon={githubIcon}
+        href={`https://github.com/${cv.head.github}`}
+      />
+    </div>
+  </section>
+</HtmlRoot>
