@@ -11,9 +11,6 @@ export default defineConfig({
       [rehypeExternalLinks, { target: "_blank", rel: "noreferrer" }],
     ],
   },
-  experimental: {
-    assets: false,
-  },
   image: {
     service: sharpImageService(),
   },

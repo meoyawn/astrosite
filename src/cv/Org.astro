@@ -14,8 +14,8 @@ const { org } = Astro.props
       loading="eager"
       width={24}
       height={24}
-      class="m-0 print:-mt-1 h-6 w-6 object-cover"
-      src={org.imgURL ?? images[org.url]}
+      class="m-0 h-6 w-6 object-cover print:-mt-1"
+      src={org.imgURL ?? (images as Record<string, string>)[org.url]}
       alt={org.name}
     />
   </a>

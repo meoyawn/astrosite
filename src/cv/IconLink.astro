@@ -1,15 +1,16 @@
 ---
+import { Image } from "astro:assets"
+
 interface Props {
   href: string
-  icon: string
+  icon: ImageMetadata
   alt: string
 }
 const { href, icon, alt } = Astro.props
 ---
 
 <a class="flex items-center gap-1" target="_blank" rel="noreferrer" href={href}>
-
-  <img class="m-0 print:m-0 h-4 w-4" src={icon} alt={alt} />
+  <Image class="m-0 print:m-0" src={icon} alt={alt} height={16} width={16} />
 
   <span>
     {href.replace("mailto:", "").replace("https://", "").replace("tel:", "")}

@@ -6,7 +6,7 @@
   "scripts": {
     "astro": "astro",
     "bld": "astro build",
-    "deploy": "bun test && rm -rf dist/ && astro build && wrangler pages deploy dist/ --commit-dirty=true",
+    "deploy": "bun test && astro check && rm -rf dist/ && astro build && wrangler pages deploy dist/ --commit-dirty=true",
     "dev": "astro dev",
     "preview": "astro preview",
     "start": "astro dev"
@@ -15,24 +15,29 @@
     "clsx": "^2.0.0",
     "date-fns": "^2.30.0",
     "rehype-external-links": "^2.1.0",
+    "rehype-stringify": "^10.0.0",
+    "remark-parse": "^10.0.2",
+    "remark-rehype": "^10.1.0",
     "unified": "^11.0.2"
   },
   "devDependencies": {
-    "@astrojs/tailwind": "^4.0.0",
+    "@astrojs/check": "^0.2.0",
+    "@astrojs/tailwind": "^5.0.0",
     "@ianvs/prettier-plugin-sort-imports": "^4.1.0",
     "@prettier/plugin-xml": "^3.2.0",
     "@tailwindcss/typography": "^0.5.9",
     "@types/js-yaml": "^4.0.5",
-    "astro": "^2.10.15",
+    "astro": "^3.0.4",
     "autoprefixer": "^10.4.15",
     "js-yaml": "^4.1.0",
     "postcss": "^8.4.29",
     "prettier": "^3.0.3",
     "prettier-plugin-astro": "^0.12.0",
     "prettier-plugin-packagejson": "^2.4.5",
-    "prettier-plugin-tailwindcss": "^0.5.3",
+    "prettier-plugin-tailwindcss": "^0.5.4",
     "sharp": "^0.32.5",
     "tailwindcss": "^3.3.3",
+    "typescript": "^5.2.2",
     "vitest": "^0.34.3",
     "wrangler": "^3.6.0"
   }

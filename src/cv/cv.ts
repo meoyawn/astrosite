@@ -18,7 +18,7 @@ export const fmtExpTime = ({
   duration = true,
 }: {
   start: string
-  end: string | undefined
+  end?: string
   duration?: boolean
 }): string => {
   const dur = duration ? ` (${fmtDur(start, end)})` : ""
