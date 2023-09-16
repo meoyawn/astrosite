@@ -27,7 +27,7 @@
     "@prettier/plugin-xml": "^3.2.1",
     "@tailwindcss/typography": "^0.5.10",
     "@types/js-yaml": "^4.0.5",
-    "astro": "^3.0.13",
+    "astro": "^3.1.0",
     "autoprefixer": "^10.4.15",
     "concurrently": "^8.2.1",
     "js-yaml": "^4.1.0",

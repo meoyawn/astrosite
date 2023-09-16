@@ -6,7 +6,7 @@ description: Personal website
 
 Outdoor computer programmer 🍜
 
-Created [Listenbox](https://listenbox.app),
+Built [Listenbox](https://listenbox.app),
 [ResponsibleAPI](https://responsibleapi.com).
 
 In my spare time creating fun toys like [PeatGPT](https://peatgpt.pages.dev),
