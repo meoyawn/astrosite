@@ -9,13 +9,18 @@ const { org } = Astro.props
 ---
 
 <div class="flex flex-row gap-2">
-  <a class="mt-6 flex-shrink-0" target="_blank" rel="noreferrer" href={org.url}>
+  <a
+    class="not-prose mt-6 flex-shrink-0"
+    target="_blank"
+    rel="noreferrer"
+    href={org.url}
+  >
     <img
       loading="eager"
       width={24}
       height={24}
-      class="m-0 h-6 w-6 object-cover print:-mt-1"
-      src={org.imgURL ?? (images as Record<string, string>)[org.url]}
+      class="h-6 w-6 object-cover"
+      src={org.imgURL ?? images[org.url]}
       alt={org.name}
     />
   </a>

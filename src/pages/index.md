@@ -4,7 +4,7 @@ title: Adel Nizamutdinov
 description: Personal website
 ---
 
-Outdoor computer programmer 🍜
+Currently [experimenting with lead magnets](https://magnetbox.co).
 
 Built [Listenbox](https://listenbox.app),
 [ResponsibleAPI](https://responsibleapi.com).

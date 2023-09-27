@@ -10,7 +10,7 @@ const { href, icon, alt } = Astro.props
 ---
 
 <a class="flex items-center gap-1" target="_blank" rel="noreferrer" href={href}>
-  <Image class="m-0 print:m-0" src={icon} alt={alt} height={16} width={16} />
+  <Image class="not-prose" src={icon} alt={alt} height={16} width={16} />
 
   <span>
     {href.replace("mailto:", "").replace("https://", "").replace("tel:", "")}
