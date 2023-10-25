@@ -4,7 +4,7 @@ title: Adel Nizamutdinov
 description: Personal website
 ---
 
-Currently [experimenting with lead magnets](https://magnetbox.co).
+Currently [experimenting with lead generation](https://magnetbox.co).
 
 Built [Listenbox](https://listenbox.app),
 [ResponsibleAPI](https://responsibleapi.com).
