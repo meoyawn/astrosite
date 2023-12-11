@@ -23,3 +23,6 @@ pnpm-debug.log*
 .idea/
 .vscode/
 public/cv.json
+.wrangler/
+
+.astro/

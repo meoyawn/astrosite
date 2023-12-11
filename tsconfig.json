@@ -1,8 +1,14 @@
 {
   "extends": "astro/tsconfigs/strictest",
   "compilerOptions": {
-    "resolveJsonModule": true,
+    "allowSyntheticDefaultImports": true,
     "noEmit": true,
-    "allowSyntheticDefaultImports": true
+    "plugins": [
+      {
+        "name": "@astrojs/ts-plugin"
+      }
+    ],
+    "resolveJsonModule": true,
+    "verbatimModuleSyntax": true
   }
 }
