@@ -1,11 +1,10 @@
 ---
 draft: true
+title: (Painless) Python package management
 ---
-
-# Painless Python package management
 
 ## Poetry
 
-## Pipx
+## pipx
 
 ## Shiv
