@@ -4,14 +4,13 @@ title: Adel Nizamutdinov
 description: Personal website
 ---
 
-Currently [experimenting with lead generation](https://magnetbox.co).
-
-Built [Listenbox](https://listenbox.app),
+Built [Listenbox](https://listenbox.app), [Arrowbox](https://arrowbox.co),
 [ResponsibleAPI](https://responsibleapi.com).
 
-In my spare time creating fun toys like [PeatGPT](https://peatgpt.pages.dev),
-[Moscow Cancer](https://moscow-cancer.vercel.app),
-[Storagecast](https://storagecast.vercel.app), [Arrowbox](https://arrowbox.co).
-More open source stuff on [GitHub](https://github.com/meoyawn).
+In my spare time creating fun toys like [PeatGPT](https://peatgpt.pages.dev)
+_(let me know if you want to build a custom chatbot, I have ideas about
+monetizing them)_, [Moscow Cancer](https://moscow-cancer.vercel.app),
+[Storagecast](https://storagecast.vercel.app). More open source stuff on
+[GitHub](https://github.com/meoyawn).
 
 Contact by [email](mailto:mail@adelnz.com)
