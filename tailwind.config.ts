@@ -1,3 +1,4 @@
+import typo from "@tailwindcss/typography"
 import { type Config } from "tailwindcss"
 
 // noinspection JSUnusedGlobalSymbols
@@ -6,5 +7,5 @@ export default {
   theme: {
     extend: {},
   },
-  plugins: [require("@tailwindcss/typography")],
+  plugins: [typo],
 } satisfies Config

@@ -12,6 +12,5 @@
     "strictNullChecks": true,
     "verbatimModuleSyntax": true,
     "allowJs": true
-  },
-  "include": ["src/"]
+  }
 }
