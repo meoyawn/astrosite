@@ -1,7 +1,10 @@
 ---
 draft: true
-title: Supplements that work (for me)
+title: Supplements are interventions
+description: A per
 ---
+
+And some personal experience
 
 ## Coffee
 
@@ -25,12 +28,16 @@ title: Supplements that work (for me)
 
 0.5-5mg (1-10 drops of 1% solution) in the morning.
 
-### Effects:
+### Good effects:
 
 - Reduces anxiety
 - Clears warts
 - Clears intestinal overgrowth (white tongue) see
   https://twitter.com/search?q=methylene%20blue%20die%20off
+
+### Bad effects:
+
+- Low libido
 
 ## Coconut oil
 

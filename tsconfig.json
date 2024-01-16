@@ -9,6 +9,9 @@
       }
     ],
     "resolveJsonModule": true,
-    "verbatimModuleSyntax": true
-  }
+    "strictNullChecks": true,
+    "verbatimModuleSyntax": true,
+    "allowJs": true
+  },
+  "include": ["src/"]
 }

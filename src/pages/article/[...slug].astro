@@ -1,0 +1,25 @@
+---
+import { getCollection } from "astro:content"
+import MdRoot from "../../layouts/MdRoot.astro"
+
+// noinspection JSUnusedGlobalSymbols
+export async function getStaticPaths() {
+  const blogEntries = await getCollection("articles")
+  const xxx = blogEntries.filter(x => !x.data.draft)
+  return xxx.map(entry => ({
+    params: { slug: entry.slug },
+    props: { entry },
+  }))
+}
+
+const { entry } = Astro.props
+const { Content } = await entry.render()
+---
+
+<MdRoot
+  frontmatter={{ title: entry.data.title, description: entry.data.description }}
+>
+  <a href="/">← Home</a>
+  <h1>{entry.data.title}</h1>
+  <Content />
+</MdRoot>

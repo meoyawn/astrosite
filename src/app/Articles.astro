@@ -1,0 +1,21 @@
+---
+import { getCollection } from "astro:content"
+
+const arr0 = await getCollection("articles")
+const arr = arr0.filter(x => !x.data.draft)
+---
+
+{
+  arr.length ? (
+    <>
+      <h2>Writing</h2>
+      <ul>
+        {arr.map(p => (
+          <li>
+            <a href={`/article/${p.slug}`}>{p.data.title}</a>
+          </li>
+        ))}
+      </ul>
+    </>
+  ) : null
+}
