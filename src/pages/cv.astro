@@ -1,7 +1,6 @@
 ---
 import { clsx } from "clsx"
 import cv from "../../public/cv.json"
-import { md2html } from "../app/markdown"
 import { fmtDate, fmtExpTime } from "../app/cv/cv"
 import emailIcon from "../app/cv/icon/email.svg"
 import githubIcon from "../app/cv/icon/github.svg"
@@ -10,18 +9,19 @@ import linkedinIcon from "../app/cv/icon/linkedin.svg"
 import IconLink from "../app/cv/IconLink.astro"
 import Org from "../app/cv/Org.astro"
 import Products from "../app/cv/Products.astro"
+import { md2html } from "../app/markdown"
 import HtmlRoot from "../layouts/HtmlRoot.astro"
 ---
 
 <HtmlRoot
   title="Adel Nizamutdinov's CV"
-  class="prose prose-sky m-6 max-w-none print:prose-sm print:m-0 sm:m-12 md:m-16"
+  class="prose prose-sky m-6 max-w-none print:prose-sm sm:m-12 md:m-16 print:m-0"
 >
   <section>
     <h1>{cv.head.name}</h1>
     <h3>{cv.head.title}</h3>
 
-    <p class="grid grid-cols-1 print:grid-cols-2 sm:grid-cols-2">
+    <p class="grid grid-cols-1 sm:grid-cols-2 print:grid-cols-2">
       <IconLink icon={emailIcon} href={`mailto:${cv.head.email}`} alt="email" />
       <!--<IconLink href={`tel:${cv.head}`} icon={phoneIcon}>-->
       <IconLink
