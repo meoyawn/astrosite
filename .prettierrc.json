@@ -7,7 +7,7 @@
   "pluginSearchDirs": [],
   "plugins": [
     "prettier-plugin-packagejson",
-    "@ianvs/prettier-plugin-sort-imports",
+    "prettier-plugin-organize-imports",
     "prettier-plugin-astro",
     "@prettier/plugin-xml",
     "prettier-plugin-tailwindcss"
