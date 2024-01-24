@@ -22,13 +22,13 @@
   },
   "devDependencies": {
     "@astrojs/check": "^0.4.1",
-    "@astrojs/mdx": "^2.0.6",
+    "@astrojs/mdx": "^2.1.0",
     "@astrojs/tailwind": "^5.1.0",
     "@astrojs/ts-plugin": "^1.4.0",
     "@prettier/plugin-xml": "^3.2.2",
     "@tailwindcss/typography": "^0.5.10",
     "@types/js-yaml": "^4.0.9",
-    "astro": "^4.2.3",
+    "astro": "^4.2.4",
     "autoprefixer": "^10.4.17",
     "concurrently": "^8.2.2",
     "js-yaml": "^4.1.0",
@@ -42,6 +42,6 @@
     "tailwindcss": "^3.4.1",
     "typescript": "^5.3.3",
     "vitest": "^1.2.1",
-    "wrangler": "^3.23.0"
+    "wrangler": "^3.24.0"
   }
 }
