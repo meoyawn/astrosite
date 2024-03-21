@@ -129,6 +129,13 @@ education:
       [Specialist](https://academia.stackexchange.com/a/78098) of Applied Mathematics and Computer Science
 
 awards:
+  - title: 4th in Telegram Android Contest 2019
+    url: https://t.me/contest/23
+    org:
+      name: Telegram
+      url: https://telegram.org
+    date: 2019-04-02
+
   - title: Winner of Telegram Android Challenge 2016
     url: https://vk.com/wall1_1108590
     org:
