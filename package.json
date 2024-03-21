@@ -32,7 +32,6 @@
     "astro": "^4.5.8",
     "autoprefixer": "^10.4.19",
     "concurrently": "^8.2.2",
-    "js-yaml": "^3.14.1",
     "postcss": "^8.4.38",
     "prettier": "^3.2.5",
     "prettier-plugin-astro": "^0.13.0",
