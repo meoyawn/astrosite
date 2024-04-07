@@ -1,3 +1,5 @@
+# yaml-language-server: $schema=https://json.schemastore.org/yamllint.json
+
 head:
   name: Adel Nizamutdinov
   title: Senior Software Engineer
@@ -8,7 +10,7 @@ head:
   github: meoyawn
 
 summaryMD: |
-  - 10 years of building software products in Java, Kotlin, Typescript & Python
+  - 12 years of building software products in Java, Kotlin, Typescript & Python
   - Bootstrapped a profitable SaaS to $2K+ MRR
   - Built 2 developer teams from scratch
 
@@ -16,7 +18,40 @@ experience:
   - org:
       name: Self-employed
       url: https://adelnz.com
-      imgURL: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' xml:space='preserve' viewBox='0 0 512 512'%3E%3Cpath d='M412 192c-4 2-7 7-5 11a160 160 0 0 1-151 213 160 160 0 1 1 104-282 8 8 0 0 0 10-12 176 176 0 1 0 52 75c-1-4-6-6-10-5z'/%3E%3Cpath d='M392 172a8 8 0 1 0 14-8l-12-17a8 8 0 1 0-12 10l10 15z'/%3E%3Cpath d='M480 208h-13c-6-24-15-46-28-67l9-9c13-13 13-33 0-46l-22-22a32 32 0 0 0-46 0l-9 9c-21-13-43-22-67-28V32c0-18-14-32-32-32h-32c-18 0-32 14-32 32v13c-24 6-46 15-67 28l-9-9a32 32 0 0 0-46 0L64 86a32 32 0 0 0 0 46l9 9c-13 21-22 43-28 67H32c-18 0-32 14-32 32v32c0 18 14 32 32 32h13c6 24 15 46 28 67l-9 9a32 32 0 0 0 0 46l22 22c13 13 33 13 46 0l9-9c21 13 43 22 67 28v13c0 18 14 32 32 32h32c18 0 32-14 32-32v-13c24-6 46-15 67-28l9 9c13 13 33 13 46 0l22-22c13-13 13-33 0-46l-9-9c13-21 22-43 28-67h13c18 0 32-14 32-32v-32c0-18-14-32-32-32zm16 64c0 9-7 16-16 16h-20c-4 0-7 3-8 6-5 27-15 51-30 74-2 3-2 7 1 10l14 14c6 6 6 16 0 22l-23 23c-6 6-16 6-22 0l-14-14c-3-3-7-3-10-1-23 15-47 25-74 30-3 1-6 4-6 8v20c0 9-7 16-16 16h-32c-9 0-16-7-16-16v-20c0-4-3-7-6-8-27-5-51-15-74-30a8 8 0 0 0-10 1l-14 14c-6 6-16 6-22 0l-23-23c-6-6-6-16 0-22l14-14c3-3 3-7 1-10-15-23-25-47-30-74-1-3-4-6-8-6H32c-9 0-16-7-16-16v-32c0-9 7-16 16-16h20c4 0 7-3 8-6 5-27 15-51 30-74 2-3 2-7-1-10l-14-14c-6-6-6-16 0-22l23-23c6-6 16-6 22 0l14 14c3 3 7 3 10 1 23-15 47-25 74-30 3-1 6-4 6-8V32c0-9 7-16 16-16h32c9 0 16 7 16 16v20c0 4 3 7 6 8 27 5 51 15 74 30 3 2 7 2 10-1l14-14c6-6 16-6 22 0l23 23c6 6 6 16 0 22l-14 14c-3 3-3 7-1 10 15 23 25 47 30 74 1 3 4 6 8 6h20c9 0 16 7 16 16v32z'/%3E%3Cpath d='m211 295-30 8c-19 5-29 24-29 39v9c0 9 8 17 18 17h172c10 0 18-8 18-17v-9c0-15-10-34-29-39l-30-8-5-3v-16c11-12 16-28 16-45v-12c10-33 3-62 0-70h-1v-2h-1v-1h-1v-1h-2v-1h-4c-8 1-17-1-27-3-18-5-37-9-55 3-17 2-29 16-29 35 0 14 7 39 8 44v7c0 17 6 33 16 45v17l-5 3zm5-68c0-8 4-20 6-27 36 1 64 10 74 13v18c0 14-5 27-13 36-8 8-17 13-27 13-21 0-40-24-40-50v-3zm16 62a48 48 0 0 0 48 0v3c0 4 2 8 4 10l-28 17-28-17c2-3 4-6 4-10v-3zm-62 63-2-1v-9c0-9 6-21 17-24l27-7 36 22v19h-78zm174-10v9l-2 1h-78v-19l36-22 27 7c11 3 17 15 17 24zM224 160h3v-1h1l1-1c12-9 27-6 43-2 9 2 18 4 27 4 2 8 4 22 2 38-13-5-44-14-84-14h-3l-1 1h-1v1h-1v1h-1v1l-1 1-1-10c0-9 4-19 16-19z'/%3E%3C/svg%3E"
+      imgURL:
+        "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'
+        xml:space='preserve' viewBox='0 0 512 512'%3E%3Cpath d='M412 192c-4 2-7
+        7-5 11a160 160 0 0 1-151 213 160 160 0 1 1 104-282 8 8 0 0 0 10-12 176
+        176 0 1 0 52 75c-1-4-6-6-10-5z'/%3E%3Cpath d='M392 172a8 8 0 1 0
+        14-8l-12-17a8 8 0 1 0-12 10l10 15z'/%3E%3Cpath d='M480
+        208h-13c-6-24-15-46-28-67l9-9c13-13 13-33 0-46l-22-22a32 32 0 0 0-46
+        0l-9 9c-21-13-43-22-67-28V32c0-18-14-32-32-32h-32c-18 0-32 14-32
+        32v13c-24 6-46 15-67 28l-9-9a32 32 0 0 0-46 0L64 86a32 32 0 0 0 0 46l9
+        9c-13 21-22 43-28 67H32c-18 0-32 14-32 32v32c0 18 14 32 32 32h13c6 24 15
+        46 28 67l-9 9a32 32 0 0 0 0 46l22 22c13 13 33 13 46 0l9-9c21 13 43 22 67
+        28v13c0 18 14 32 32 32h32c18 0 32-14 32-32v-13c24-6 46-15 67-28l9 9c13
+        13 33 13 46 0l22-22c13-13 13-33 0-46l-9-9c13-21 22-43 28-67h13c18 0
+        32-14 32-32v-32c0-18-14-32-32-32zm16 64c0 9-7 16-16 16h-20c-4 0-7 3-8
+        6-5 27-15 51-30 74-2 3-2 7 1 10l14 14c6 6 6 16 0 22l-23 23c-6 6-16 6-22
+        0l-14-14c-3-3-7-3-10-1-23 15-47 25-74 30-3 1-6 4-6 8v20c0 9-7 16-16
+        16h-32c-9 0-16-7-16-16v-20c0-4-3-7-6-8-27-5-51-15-74-30a8 8 0 0 0-10
+        1l-14 14c-6 6-16 6-22 0l-23-23c-6-6-6-16 0-22l14-14c3-3 3-7
+        1-10-15-23-25-47-30-74-1-3-4-6-8-6H32c-9 0-16-7-16-16v-32c0-9 7-16
+        16-16h20c4 0 7-3 8-6 5-27 15-51 30-74 2-3 2-7-1-10l-14-14c-6-6-6-16
+        0-22l23-23c6-6 16-6 22 0l14 14c3 3 7 3 10 1 23-15 47-25 74-30 3-1 6-4
+        6-8V32c0-9 7-16 16-16h32c9 0 16 7 16 16v20c0 4 3 7 6 8 27 5 51 15 74 30
+        3 2 7 2 10-1l14-14c6-6 16-6 22 0l23 23c6 6 6 16 0 22l-14 14c-3 3-3 7-1
+        10 15 23 25 47 30 74 1 3 4 6 8 6h20c9 0 16 7 16 16v32z'/%3E%3Cpath
+        d='m211 295-30 8c-19 5-29 24-29 39v9c0 9 8 17 18 17h172c10 0 18-8
+        18-17v-9c0-15-10-34-29-39l-30-8-5-3v-16c11-12 16-28 16-45v-12c10-33 3-62
+        0-70h-1v-2h-1v-1h-1v-1h-2v-1h-4c-8 1-17-1-27-3-18-5-37-9-55 3-17 2-29
+        16-29 35 0 14 7 39 8 44v7c0 17 6 33 16 45v17l-5 3zm5-68c0-8 4-20 6-27 36
+        1 64 10 74 13v18c0 14-5 27-13 36-8 8-17 13-27 13-21 0-40-24-40-50v-3zm16
+        62a48 48 0 0 0 48 0v3c0 4 2 8 4 10l-28 17-28-17c2-3 4-6 4-10v-3zm-62
+        63-2-1v-9c0-9 6-21 17-24l27-7 36 22v19h-78zm174-10v9l-2 1h-78v-19l36-22
+        27 7c11 3 17 15 17 24zM224 160h3v-1h1l1-1c12-9 27-6 43-2 9 2 18 4 27 4 2
+        8 4 22 2 38-13-5-44-14-84-14h-3l-1 1h-1v1h-1v1h-1v1l-1 1-1-10c0-9 4-19
+        16-19z'/%3E%3C/svg%3E"
     location: Solo
     start: 2019-10-01
     products:
@@ -158,12 +193,13 @@ skills:
   - Search engine optimization and paid ads
 
 tech-skills:
-  languages: [ TypeScript, Kotlin, Java, Python, SQL ]
-  frontend: [ D3.js, Next.js, React.js, Remix.js, Tailwind CSS, Astro.js, Solid.js ]
-  mobile: [ Android SDK, Flutter ]
-  design: [ Figma ]
-  database: [ SQLite, PostgreSQL, Pinecone ]
-  backend: [ Vert.x, Node.js, CRDT ]
-  misc: [ Git, Docker, Linux, Excel, FFmpeg ]
-  payments: [ Stripe ]
-  marketing: [ SEO, Google Ads ]
+  languages: [TypeScript, Kotlin, Java, Python, SQL]
+  frontend:
+    [D3.js, Next.js, React.js, Remix.js, Tailwind CSS, Astro.js, Solid.js]
+  mobile: [Android SDK, Flutter]
+  design: [Figma]
+  database: [SQLite, PostgreSQL, Pinecone]
+  backend: [Vert.x, Node.js, CRDT]
+  misc: [Git, Docker, Linux, Excel, FFmpeg]
+  payments: [Stripe]
+  marketing: [SEO, Google Ads]
