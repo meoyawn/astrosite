@@ -61,7 +61,7 @@ import HtmlRoot from "../layouts/HtmlRoot.astro"
               {exp.org.name}
             </a>
             <br />
-            <span>{fmtExpTime(exp)}</span>
+            <span class="text-date">{fmtExpTime(exp)}</span>
           </p>
 
           <Fragment set:html={md2html(exp.summaryMD)} />
@@ -79,7 +79,9 @@ import HtmlRoot from "../layouts/HtmlRoot.astro"
         <Org org={ed.org}>
           <h4>{ed.org.name}</h4>
           <Fragment set:html={md2html(ed.degreeMD)} />
-          <span>{fmtExpTime({ ...ed, duration: false })}</span>
+          <span class="text-date">
+            {fmtExpTime({ ...ed, duration: false })}
+          </span>
           <Products products={ed.products} />
         </Org>
       ))
@@ -97,7 +99,7 @@ import HtmlRoot from "../layouts/HtmlRoot.astro"
             <span> - </span>
             <a href={aw.org.url}>{aw.org.name}</a>
           </h4>
-          <span>{fmtDate(aw.date)}</span>
+          <span class="text-date">{fmtDate(aw.date)}</span>
         </Org>
       ))
     }
