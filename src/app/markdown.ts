@@ -5,7 +5,7 @@ import remarkRehype from "remark-rehype"
 import { unified } from "unified"
 
 const processor = unified()
-  .use(remarkParse)
+  .use(remarkParse as never)
   .use(remarkRehype)
   .use(rehypeExternalLinks, { target: "_blank", rel: "noreferrer" })
   .use(rehypeStringify)
