@@ -12,9 +12,6 @@ export default defineConfig({
       [rehypeExternalLinks, { target: "_blank", rel: "noreferrer" }],
     ],
   },
-  image: {
-    // service: sharpImageService(),
-  },
   /** https://vitejs.dev/config/ */
   vite: {
     server: {

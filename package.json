@@ -25,19 +25,19 @@
     "@prettier/plugin-xml": "^3.4.1",
     "@tailwindcss/typography": "^0.5.15",
     "@types/js-yaml": "^4.0.9",
-    "astro": "^4.16.13",
+    "astro": "^4.16.14",
     "autoprefixer": "^10.4.20",
     "concurrently": "^9.1.0",
     "postcss": "^8.4.49",
     "prettier": "^3.3.3",
     "prettier-plugin-astro": "^0.14.1",
     "prettier-plugin-organize-imports": "^4.1.0",
-    "prettier-plugin-packagejson": "^2.5.3",
-    "prettier-plugin-tailwindcss": "^0.6.8",
+    "prettier-plugin-packagejson": "^2.5.5",
+    "prettier-plugin-tailwindcss": "^0.6.9",
     "sharp": "^0.33.5",
     "tailwindcss": "^3.4.15",
     "typescript": "^5.6.3",
     "vitest": "^2.1.5",
-    "wrangler": "^3.87.0"
+    "wrangler": "^3.89.0"
   }
 }
