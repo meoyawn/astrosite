@@ -3,8 +3,7 @@ import tailwind from "@astrojs/tailwind"
 import { defineConfig } from "astro/config"
 import rehypeExternalLinks from "rehype-external-links"
 
-// https://astro.build/config
-// noinspection JSUnusedGlobalSymbols
+/** https://astro.build/config */
 export default defineConfig({
   integrations: [tailwind(), mdx()],
   markdown: {
@@ -16,7 +15,7 @@ export default defineConfig({
   vite: {
     server: {
       watch: {
-        ignored: ["**/.idea/**"],
+        ignored: [".idea/**"],
       },
     },
   },
