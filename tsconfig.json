@@ -1,6 +1,7 @@
 {
   "extends": "astro/tsconfigs/strictest",
   "compilerOptions": {
+    "allowJs": true,
     "allowSyntheticDefaultImports": true,
     "noEmit": true,
     "plugins": [
@@ -10,7 +11,6 @@
     ],
     "resolveJsonModule": true,
     "strictNullChecks": true,
-    "verbatimModuleSyntax": true,
-    "allowJs": true
+    "verbatimModuleSyntax": true
   }
 }

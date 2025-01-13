@@ -2,7 +2,7 @@
 import { getCollection } from "astro:content"
 
 const arr0 = await getCollection("articles")
-const arr = arr0.filter(x => !x.data.draft)
+const arr = arr0.filter(x => x.data.published_at)
 ---
 
 {
