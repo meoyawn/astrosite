@@ -6,11 +6,12 @@
     "noEmit": true,
     "plugins": [
       {
-        "name": "@astrojs/ts-plugin"
-      }
+        "name": "@astrojs/ts-plugin",
+      },
     ],
     "resolveJsonModule": true,
     "strictNullChecks": true,
-    "verbatimModuleSyntax": true
-  }
+    "verbatimModuleSyntax": true,
+  },
+  "include": [".astro/types.d.ts", "*.ts", "src", "e2e"],
 }

@@ -1,0 +1,14 @@
+version: "3"
+
+tasks:
+  cursor:
+    cmds:
+      - agent --yolo
+
+  deploy:
+    cmds:
+      - rm -rf dist/
+      - bun check
+      - bun astro build
+      - bun test:e2e
+      - bun wrangler pages deploy dist/
