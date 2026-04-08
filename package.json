@@ -8,7 +8,7 @@
     "check": "bun run --parallel typecheck lint test",
     "check:full": "bun run --parallel --no-exit-on-error typecheck lint test",
     "dev": "astro dev",
-    "dpl": "bun test && astro check && rm -rf dist/ && astro build && wrangler pages deploy dist/ --commit-dirty=true",
+    "dpl": "bun check && rm -rf dist/ && astro build && wrangler pages deploy dist/",
     "lint": "oxlint",
     "test": "bun test",
     "test:coverage": "bun test --coverage",
@@ -27,31 +27,20 @@
   "devDependencies": {
     "@astrojs/check": "^0.9.8",
     "@astrojs/mdx": "^5.0.3",
-    "@astrojs/tailwind": "^6.0.2",
     "@astrojs/ts-plugin": "^1.10.7",
-    "@prettier/plugin-xml": "^3.4.2",
     "@tailwindcss/postcss": "^4.2.2",
     "@tailwindcss/typography": "^0.5.19",
     "@types/js-yaml": "^4.0.9",
     "astro": "^6.1.4",
     "autoprefixer": "^10.4.27",
-    "concurrently": "^9.2.1",
     "oxfmt": "^0.44.0",
     "oxlint": "^1.59.0",
     "oxlint-tsgolint": "^0.20.0",
     "postcss": "^8.5.9",
-    "prettier": "^3.8.1",
-    "prettier-plugin-astro": "^0.14.1",
-    "prettier-plugin-organize-imports": "^4.3.0",
-    "prettier-plugin-packagejson": "^3.0.2",
-    "prettier-plugin-tailwindcss": "^0.7.2",
     "sharp": "^0.34.5",
     "tailwindcss": "^4.2.2",
     "typescript": "^6.0.2",
     "vitest": "^4.1.3",
     "wrangler": "^4.81.0"
-  },
-  "overrides": {
-    "unified": "11.0.5"
   }
 }
