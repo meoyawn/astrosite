@@ -9,8 +9,8 @@ interface Props {
 
 const { products } = Astro.props
 
-const toMD = (products: Products): string =>
-  `Worked on ${products.map(x => `[${x.name}](${x.url})`).join(", ")}`
+const toMD = (items: Products): string =>
+  `Worked on ${items.map(x => `[${x.name}](${x.url})`).join(", ")}`
 ---
 
 <Fragment set:html={md2html(toMD(products))} />

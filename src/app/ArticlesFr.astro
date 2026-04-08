@@ -9,10 +9,10 @@ const arr = arr0.filter(x => x.data.published_at)
   arr.length ? (
     <>
       <h2>Writing</h2>
-      <ul>
+        <ul>
         {arr.map(p => (
           <li>
-            <a href={`/article/${p.slug}`}>{p.data.title}</a>
+            <a href={`/article/${p.id}`}>{p.data.title}</a>
           </li>
         ))}
       </ul>

@@ -1,20 +1,23 @@
 ---
-import { getCollection } from "astro:content"
+import { getCollection, render } from "astro:content"
 import MdRoot from "../../layouts/MdRoot.astro"
 
 // noinspection JSUnusedGlobalSymbols
 export async function getStaticPaths() {
   const blogEntries = await getCollection("articles")
-  const xxx = blogEntries.filter(x => x.data.published_at)
-  xxx.sort((a, b) => (a.data.published_at!! < b.data.published_at!! ? 1 : -1))
-  return xxx.map(entry => ({
-    params: { slug: entry.slug },
+  const publishedEntries = blogEntries.filter(entry => entry.data.published_at)
+  publishedEntries.sort(
+    (a, b) =>
+      (b.data.published_at?.getTime() ?? 0) - (a.data.published_at?.getTime() ?? 0),
+  )
+  return publishedEntries.map(entry => ({
+    params: { slug: entry.id },
     props: { entry },
   }))
 }
 
 const { entry } = Astro.props
-const { Content } = await entry.render()
+const { Content } = await render(entry)
 ---
 
 <MdRoot
