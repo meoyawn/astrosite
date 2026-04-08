@@ -12,7 +12,7 @@
 ## Rules
 
 - never add `oxlint-disable-next-line` unless explicitly asked
-- never edit [package.json](package.json) unless explicitly asked
+- never edit [package.json](package.json). Stop and ask the human
 - never edit [bunfig.toml](bunfig.toml) unless explicitly asked
 - never disable, skip or ignore tests
 - never edit [tsconfig.json](tsconfig.json) unless explicitly asked
