@@ -1,23 +1,11 @@
 import rehypeExternalLinks from "rehype-external-links"
 import rehypeStringify from "rehype-stringify"
-import type { Root } from "mdast"
-import type { Options } from "remark-parse"
 import remarkParse from "remark-parse"
 import remarkRehype from "remark-rehype"
-import { type Plugin, unified } from "unified"
-
-const remarkParseCompat: Plugin<
-  [(Readonly<Options> | null | undefined)?],
-  string,
-  Root
-> = function (...parameters) {
-  // Bun resolved duplicate `unified` packages, so the plugin's `this` type is nominally off.
-  // @ts-expect-error `remark-parse` remains runtime-compatible with the processor we pass here.
-  return remarkParse.call(this, ...parameters)
-}
+import { unified } from "unified"
 
 const processor = unified()
-  .use(remarkParseCompat)
+  .use(remarkParse)
   .use(remarkRehype)
   .use(rehypeExternalLinks, { target: "_blank", rel: "noreferrer" })
   .use(rehypeStringify)
