@@ -10,6 +10,9 @@
     "dev": "astro dev",
     "dpl": "bun test && astro check && rm -rf dist/ && astro build && wrangler pages deploy dist/ --commit-dirty=true",
     "lint": "oxlint",
+    "test": "bun test",
+    "test:coverage": "bun test --coverage",
+    "test:slow": "vitest run src/",
     "typecheck": "astro check"
   },
   "dependencies": {
