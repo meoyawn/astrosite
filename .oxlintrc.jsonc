@@ -1,0 +1,73 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "plugins": ["typescript", "jsdoc"],
+  "categories": {
+    "correctness": "error",
+    "nursery": "off",
+    "pedantic": "off",
+    "perf": "warn",
+    "restriction": "off",
+    "style": "off",
+    "suspicious": "warn",
+  },
+  "options": {
+    "reportUnusedDisableDirectives": "error",
+    "typeAware": true,
+  },
+  "settings": {
+    "jsdoc": {
+      "tagNamePreference": {
+        /** core DSL stuff */
+        "dsl": "dsl",
+        /** core compiler stuff */
+        "compiler": "compiler",
+      },
+    },
+  },
+  "overrides": [
+    {
+      "files": ["src/**/*.ts"],
+      "rules": {
+        "@typescript-eslint/consistent-type-imports": [
+          "error",
+          {
+            "fixStyle": "separate-type-imports",
+            "prefer": "type-imports",
+          },
+        ],
+        "@typescript-eslint/no-deprecated": "error",
+        "@typescript-eslint/no-restricted-types": [
+          "error",
+          {
+            "types": {
+              "any": "Use a specific type instead.",
+            },
+          },
+        ],
+        "@typescript-eslint/no-unsafe-type-assertion": "error",
+        "@typescript-eslint/no-unused-vars": [
+          "error",
+          {
+            "argsIgnorePattern": "^_",
+            "caughtErrorsIgnorePattern": "^_",
+            "destructuredArrayIgnorePattern": "^_",
+            "ignoreRestSiblings": true,
+            "varsIgnorePattern": "^_",
+          },
+        ],
+        "eqeqeq": ["error", "always"],
+        "no-console": "error",
+      },
+    },
+    {
+      "files": ["src/**/*.test.ts"],
+      "rules": {
+        /**
+         * `no-unsafe-type-assertion` has no Oxlint options (cannot allow only `as unknown as`).
+         * Tests compare JSON module values to OpenAPI shapes with explicit assertions.
+         */
+        "@typescript-eslint/no-unsafe-type-assertion": "off",
+      },
+    },
+  ],
+}

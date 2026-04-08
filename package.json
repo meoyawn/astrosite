@@ -5,8 +5,12 @@
   "type": "module",
   "scripts": {
     "bld": "astro build",
+    "check": "bun run --parallel typecheck lint test",
+    "check:full": "bun run --parallel --no-exit-on-error typecheck lint test",
     "dev": "astro dev",
-    "dpl": "bun test && astro check && rm -rf dist/ && astro build && wrangler pages deploy dist/ --commit-dirty=true"
+    "dpl": "bun test && astro check && rm -rf dist/ && astro build && wrangler pages deploy dist/ --commit-dirty=true",
+    "lint": "oxlint",
+    "typecheck": "astro check"
   },
   "dependencies": {
     "clsx": "^2.1.1",
@@ -28,6 +32,9 @@
     "astro": "^6.1.4",
     "autoprefixer": "^10.4.27",
     "concurrently": "^9.2.1",
+    "oxfmt": "^0.44.0",
+    "oxlint": "^1.59.0",
+    "oxlint-tsgolint": "^0.20.0",
     "postcss": "^8.5.9",
     "prettier": "^3.8.1",
     "prettier-plugin-astro": "^0.14.1",
