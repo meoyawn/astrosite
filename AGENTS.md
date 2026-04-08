@@ -3,6 +3,12 @@
 - language: 100% TypeScript
 - framework: [Astro](https://astro.build)
 
+## Dev server
+
+- find localhost port in [astro.config.ts](astro.config.ts)
+- never launch the dev server, it's already running
+- when trying to debug problems, start with simple `curl`
+
 ## Rules
 
 - never add `oxlint-disable-next-line` unless explicitly asked

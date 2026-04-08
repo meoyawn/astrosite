@@ -13,8 +13,9 @@ export default defineConfig({
   /** https://vitejs.dev/config/ */
   vite: {
     server: {
+      port: 4321,
       watch: {
-        ignored: [".idea/**"],
+        ignored: [".idea/**", ".wrangler/**", ".agents/**"],
       },
     },
   },
