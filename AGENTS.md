@@ -29,3 +29,4 @@
 - `rg`, `ast-grep`, `jq` are available for calling
 - never call `wc`, call `scc` instead (both on files and folders)
 - never pass multiple paths to `scc`. A single dir or a single file only.
+- `gh` is available
