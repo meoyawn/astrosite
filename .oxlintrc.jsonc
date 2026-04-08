@@ -21,7 +21,7 @@
   },
   "overrides": [
     {
-      "files": ["src/**/*.ts"],
+      "files": ["src/**/*.ts", "e2e/**/*.ts"],
       "rules": {
         "@typescript-eslint/consistent-type-imports": [
           "error",
@@ -55,7 +55,7 @@
       },
     },
     {
-      "files": ["src/**/*.test.ts"],
+      "files": ["src/**/*.test.ts", "e2e/**/*.test.ts"],
       "rules": {
         /**
          * `no-unsafe-type-assertion` has no Oxlint options (cannot allow only `as unknown as`).

@@ -13,4 +13,5 @@
     "strictNullChecks": true,
     "verbatimModuleSyntax": true,
   },
+  "include": [".astro/types.d.ts", "*.ts", "src", "e2e"],
 }
