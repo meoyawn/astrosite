@@ -77,6 +77,40 @@ describe("screenshot script", () => {
     })
   })
 
+  test(
+    "writes an image for adelnz.com/cv using the default output width",
+    { timeout: 30_000 },
+    async () => {
+      await withTempDir(async tempDir => {
+        const outputPath = join(tempDir, "cv.png")
+
+        const process = Bun.spawn(
+          [
+            "bun",
+            "scripts/screenshot.ts",
+            "https://adelnz.com/cv/",
+            outputPath,
+          ],
+          { stderr: "pipe", stdout: "pipe" },
+        )
+        const [exitCode, stderr] = await Promise.all([
+          process.exited,
+          new Response(process.stderr).text(),
+        ])
+
+        if (exitCode !== 0) {
+          throw new Error(
+            stderr || `screenshot.ts exited with code ${exitCode}`,
+          )
+        }
+
+        const metadata = await sharp(outputPath).metadata()
+
+        expect(metadata.width).toEqual(DEFAULT_WIDTH)
+      })
+    },
+  )
+
   test("exits with an error when the URL is invalid", async () => {
     await withTempDir(async tempDir => {
       const outputPath = join(tempDir, "fixture.png")
