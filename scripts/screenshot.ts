@@ -1,3 +1,5 @@
+#!/usr/bin/env bun
+
 import  Bun,{ $ } from "bun"
 import { dirname, extname, resolve } from "node:path"
 
