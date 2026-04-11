@@ -84,4 +84,21 @@ describe("screenshot script", () => {
 
     expect(metadata.width).toEqual(DEFAULT_WIDTH)
   })
+
+  test("exits with an error when the URL is invalid", async () => {
+    tempDir = await mkdtemp(join(tmpdir(), "screenshot-test-"))
+    const outputPath = join(tempDir, "fixture.png")
+
+    const process = Bun.spawn(
+      ["bun", "scripts/screenshot.ts", "not-a-url", outputPath],
+      { stderr: "pipe", stdout: "pipe" },
+    )
+    const [exitCode, stderr] = await Promise.all([
+      process.exited,
+      new Response(process.stderr).text(),
+    ])
+
+    expect(exitCode).toEqual(1)
+    expect(stderr.trim()).toEqual("not-a-url is not a valid URL")
+  })
 })

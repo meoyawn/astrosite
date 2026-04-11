@@ -72,7 +72,7 @@ type ScreenshotResult = {
 }
 
 export const takeScreenshot = async (
-  url: string,
+  url: URL,
   outputArg: string,
 ): Promise<ScreenshotResult> => {
   const outputPath = resolve(outputArg)
@@ -85,7 +85,7 @@ export const takeScreenshot = async (
     width: getViewportWidth(),
   })
 
-  await view.navigate(url)
+  await view.navigate(url.href)
   await waitForPage(view)
   await view.resize(
     getViewportWidth(),
@@ -104,10 +104,20 @@ export const takeScreenshot = async (
 }
 
 export const main = async (argv = Bun.argv.slice(2)) => {
-  const [url, outputArg] = argv
+  const [urlArg, outputArg] = argv
 
-  if (!url || !outputArg) {
+  if (!urlArg || !outputArg) {
     console.error("Usage: bun scripts/screenshot.ts <url> <output-path>")
+    process.exitCode = 1
+    return
+  }
+
+  let url: URL
+
+  try {
+    url = new URL(urlArg)
+  } catch {
+    console.error(`${urlArg} is not a valid URL`)
     process.exitCode = 1
     return
   }
