@@ -32,7 +32,7 @@
     {
       "files": ["*.jsonc"],
       "options": {
-        "trailingComma": "none",
+        // "trailingComma": "none",
       },
     },
     {
