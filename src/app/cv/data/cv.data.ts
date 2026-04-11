@@ -7,7 +7,6 @@ import type {
   Head,
   Org,
   Product,
-  TechSkills,
 } from "./cv.types"
 import cvSource from "./cv.yaml?raw"
 
@@ -15,9 +14,6 @@ const isRecord = (value: unknown): value is Record<string, unknown> =>
   typeof value === "object" && value !== null && !Array.isArray(value)
 
 const isString = (value: unknown): value is string => typeof value === "string"
-
-const isStringArray = (value: unknown): value is string[] =>
-  Array.isArray(value) && value.every(isString)
 
 const normalizeDate = (value: unknown): unknown =>
   value instanceof Date ? value.toISOString() : value
@@ -113,18 +109,6 @@ const isAward = (value: unknown): value is Award =>
   isOrg(value.org) &&
   isString(value.date)
 
-const isTechSkills = (value: unknown): value is TechSkills =>
-  isRecord(value) &&
-  isStringArray(value.languages) &&
-  isStringArray(value.frontend) &&
-  isStringArray(value.mobile) &&
-  isStringArray(value.design) &&
-  isStringArray(value.database) &&
-  isStringArray(value.backend) &&
-  isStringArray(value.misc) &&
-  isStringArray(value.payments) &&
-  isStringArray(value.marketing)
-
 const isCV = (value: unknown): value is CV =>
   isRecord(value) &&
   isHead(value.head) &&
@@ -136,8 +120,7 @@ const isCV = (value: unknown): value is CV =>
   Array.isArray(value.awards) &&
   value.awards.every(isAward) &&
   Array.isArray(value.skills) &&
-  value.skills.every(isString) &&
-  isTechSkills(value["tech-skills"])
+  value.skills.every(isString)
 
 const parseCV = (value: unknown): CV => {
   if (!isCV(value)) {

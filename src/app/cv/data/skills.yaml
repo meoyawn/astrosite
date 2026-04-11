@@ -1,0 +1,12 @@
+tech-skills:
+  languages: [TypeScript, Kotlin, Java, Python, SQL]
+  backend: [Vert.x, Node.js, CRDT]
+  database: [SQLite, PostgreSQL]
+  mobile: [Android SDK, Flutter]
+  frontend:
+    [D3.js, Next.js, React.js, Remix.js, Tailwind CSS, Astro.js, Solid.js]
+  ops: [Docker, Ansible, Linux]
+  misc: [Git, Excel, FFmpeg]
+  payments: [Stripe]
+  marketing: [SEO]
+  design: [Figma]
