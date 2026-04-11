@@ -30,6 +30,10 @@ const withFixtureServer = async (
   if (port < 10_000) {
     throw new Error("port is too low")
   }
+  if (port > 65_000) {
+    throw new Error("port is too high")
+  }
+
   const server = Bun.serve({
     fetch(request) {
       return new URL(request.url).pathname === "/test.html"
