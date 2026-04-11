@@ -7,9 +7,6 @@ import { describe, expect, test } from "vitest"
 import { DEFAULT_WIDTH } from "./screenshot"
 import fixtureHtml from "./test.html" with { type: "text" }
 
-const getAvailablePort = () =>
-  Math.floor(Math.random() * (65_000 - 10_000 + 1)) + 10_000
-
 const withTempDir = async <Result>(
   func: (tempDir: string) => Promise<Result>,
 ): Promise<Result> => {
@@ -26,14 +23,6 @@ const withFixtureServer = async (
   fixture: string,
   func: (url: URL) => Promise<void>,
 ) => {
-  const port = getAvailablePort()
-  if (port < 10_000) {
-    throw new Error("port is too low")
-  }
-  if (port > 65_000) {
-    throw new Error("port is too high")
-  }
-
   const server = Bun.serve({
     fetch(request) {
       return new URL(request.url).pathname === "/test.html"
@@ -43,11 +32,11 @@ const withFixtureServer = async (
         : new Response("Not found", { status: 404 })
     },
     hostname: "::1",
-    port,
+    port: 0,
   })
 
   try {
-    await func(new URL(`http://[::1]:${port}/test.html`))
+    await func(new URL(`http://[::1]:${server.port}/test.html`))
   } finally {
     await server.stop(true)
   }
