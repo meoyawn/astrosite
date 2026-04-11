@@ -10,6 +10,7 @@
 - never address the server through `localhost`, use ipv6 `[::1]` only
 - never use dev server URL without shell quoting it (because ipv6 symbols)
 - when trying to debug problems, start with simple `curl`
+- take page screenshots using `scripts/screenshot.ts <url> <output-path>`
 
 ## Rules
 
