@@ -6,6 +6,8 @@ export const DEFAULT_WIDTH = 1280
 const DEFAULT_HEIGHT = 900
 const PAGE_SETTLE_TIMEOUT_MS = 5_000
 const PAGE_SETTLE_FRAMES = 3
+const SCREENSHOT_BACKEND = "webkit"
+const WEBKIT_VIEWPORT_WIDTH_SCALE = 2
 
 const screenshotFormats = {
   ".jpeg": "jpeg",
@@ -42,6 +44,36 @@ const getPageHeight = async (view: Bun.WebView) => {
   )
 
   return Number.isFinite(height) ? Math.ceil(height) : DEFAULT_HEIGHT
+}
+
+/**
+ * Detects Bun WebKit's intermittent evaluate callback failure so screenshot
+ * capture can fall back to timed waits instead of exiting.
+ */
+const isRecoverableWebKitEvaluateError = (error: unknown) =>
+  SCREENSHOT_BACKEND === "webkit" &&
+  error instanceof Error &&
+  error.message.includes(
+    "Completion handler for function call is no longer reachable",
+  )
+
+/**
+ * Runs the preferred WebKit flow and only falls back when Bun drops an evaluate
+ * completion handler. All other errors are rethrown unchanged.
+ */
+const withWebKitFallback = async <T>(
+  action: () => Promise<T>,
+  fallback: () => Promise<T>,
+): Promise<T> => {
+  try {
+    return await action()
+  } catch (error) {
+    if (!isRecoverableWebKitEvaluateError(error)) {
+      throw error
+    }
+
+    return await fallback()
+  }
 }
 
 const waitForAnimationFrames = async (view: Bun.WebView, frameCount = 2) => {
@@ -146,7 +178,10 @@ const waitForPage = async (view: Bun.WebView) => {
   await waitForAnimationFrames(view)
 }
 
-const getViewportWidth = () => DEFAULT_WIDTH
+const getViewportWidth = () =>
+  SCREENSHOT_BACKEND === "webkit"
+    ? Math.ceil(DEFAULT_WIDTH / WEBKIT_VIEWPORT_WIDTH_SCALE)
+    : DEFAULT_WIDTH
 
 type ScreenshotResult = {
   outputPath: string
@@ -164,19 +199,33 @@ export const takeScreenshot = async (
   await $`mkdir -p ${dirname(outputPath)}`
 
   await using view = new Bun.WebView({
-    backend: "chrome",
+    backend: SCREENSHOT_BACKEND,
     height: DEFAULT_HEIGHT,
     width: getViewportWidth(),
   })
 
   await view.navigate(url.href)
-  await waitForPage(view)
+  await withWebKitFallback(
+    () => waitForPage(view),
+    () => Bun.sleep(300),
+  )
   await view.resize(
     getViewportWidth(),
-    Math.max(DEFAULT_HEIGHT, (await getPageHeight(view)) + 40),
+    Math.max(
+      DEFAULT_HEIGHT,
+      (await withWebKitFallback(
+        () => getPageHeight(view),
+        async () => DEFAULT_HEIGHT,
+      )) + 40,
+    ),
   )
-  await waitForStablePage(view)
-  await waitForAnimationFrames(view)
+  await withWebKitFallback(
+    async () => {
+      await waitForStablePage(view)
+      await waitForAnimationFrames(view)
+    },
+    () => Bun.sleep(200),
+  )
 
   const screenshot = await view.screenshot({ format })
   await Bun.write(outputPath, screenshot)
