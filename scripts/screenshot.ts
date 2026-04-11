@@ -63,7 +63,7 @@ type ScreenshotResult = {
   url: string
 }
 
-export const takeScreenshot = async (
+const takeScreenshot = async (
   url: URL,
   outputArg: string,
 ): Promise<ScreenshotResult> => {
@@ -96,7 +96,7 @@ export const takeScreenshot = async (
   }
 }
 
-export const main = async (argv = Bun.argv.slice(2)) => {
+const main = async (argv = Bun.argv.slice(2)) => {
   const [urlArg, outputArg] = argv
 
   if (!urlArg || !outputArg) {
