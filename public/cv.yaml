@@ -3,23 +3,23 @@
 head:
   name: Adel Nizamutdinov
   title: Senior Software Engineer
-  location: Singapore, United States, Remote
+  location: Kazan, Tatarstan
   email: mail@adelnz.com
   url: https://adelnz.com
   linkedin: adelnizamuddin
   github: meoyawn
 
 summaryMD: |
-  - 12 years of building software products in Java, Kotlin, Typescript & Python
-  - Bootstrapped a profitable SaaS to $2.8K+ MRR
+  - 13 years of building software products in Java, Kotlin, Typescript & Python
+  - Bootstrapped a profitable SaaS to $3K+ MRR
   - Built 2 developer teams from scratch
 
 experience:
-  - org:
-      name: Self-employed
+  - title: Founder
+    org:
+      name: Listenbox
       url: https://adelnz.com
-      imgURL:
-        "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'
+      imgURL: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'
         xml:space='preserve' viewBox='0 0 512 512'%3E%3Cpath d='M412 192c-4 2-7
         7-5 11a160 160 0 0 1-151 213 160 160 0 1 1 104-282 8 8 0 0 0 10-12 176
         176 0 1 0 52 75c-1-4-6-6-10-5z'/%3E%3Cpath d='M392 172a8 8 0 1 0
@@ -54,6 +54,7 @@ experience:
         16-19z'/%3E%3C/svg%3E"
     location: Solo
     start: 2019-10-01
+    end: 2025-02-08
     products:
       - name: Listenbox
         url: https://listenbox.app
@@ -63,8 +64,7 @@ experience:
         url: https://responsibleapi.com
     summaryMD: |
       Working on my own products.
-
-      - Bootstrapped a [profitable SaaS](https://listenbox.app) to $2.8K+ MRR
+      - Bootstrapped a [profitable SaaS](https://listenbox.app) to $3K MRR
 
   - title: Senior Android Developer
     org:

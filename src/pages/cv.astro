@@ -15,7 +15,12 @@ import HtmlRoot from "../layouts/HtmlRoot.astro"
 
 <HtmlRoot
   title="Adel Nizamutdinov's CV"
-  class="prose prose-sky m-6 max-w-none print:prose-sm sm:m-12 md:m-16 print:m-0"
+  class="
+    prose prose-sky print:prose-xs
+    prose-p:my-2 prose-p:print:my-2
+    prose-ul:print:my-0 prose-ul:my-1
+    m-6 max-w-none sm:m-12 md:m-16 print:m-0
+  "
 >
   <section>
     <h1>{cv.head.name}</h1>
