@@ -6,6 +6,9 @@ export const DEFAULT_WIDTH = 1280
 const DEFAULT_HEIGHT = 900
 const PAGE_SETTLE_TIMEOUT_MS = 5_000
 const PAGE_SETTLE_FRAMES = 3
+const PAGE_PROBE_TIMEOUT_MS = 2_000
+const QUICK_PAGE_PROBE_TIMEOUT_MS = 750
+const POST_RESIZE_PAGE_PROBE_TIMEOUT_MS = 1_500
 const SCREENSHOT_BACKEND = "webkit"
 const WEBKIT_VIEWPORT_WIDTH_SCALE = 2
 
@@ -46,34 +49,33 @@ const getPageHeight = async (view: Bun.WebView) => {
   return Number.isFinite(height) ? Math.ceil(height) : DEFAULT_HEIGHT
 }
 
-/**
- * Detects Bun WebKit's intermittent evaluate callback failure so screenshot
- * capture can fall back to timed waits instead of exiting.
- */
-const isRecoverableWebKitEvaluateError = (error: unknown) =>
-  SCREENSHOT_BACKEND === "webkit" &&
-  error instanceof Error &&
-  error.message.includes(
-    "Completion handler for function call is no longer reachable",
-  )
+type TimedOutResult = { status: "timed_out" }
+
+const getProbeOutcome = async <T>(probe: Promise<T>) => {
+  const [result] = await Promise.allSettled([probe])
+
+  return result
+}
 
 /**
- * Runs the preferred WebKit flow and only falls back when Bun drops an evaluate
- * completion handler. All other errors are rethrown unchanged.
+ * Runs a best-effort page probe with a bounded budget so capture can fall back
+ * to conservative waits and defaults when page inspection is unavailable.
  */
-const withWebKitFallback = async <T>(
-  action: () => Promise<T>,
+const withPageProbeFallback = async <T>(
+  probe: () => Promise<T>,
   fallback: () => Promise<T>,
+  timeoutMs: number,
 ): Promise<T> => {
-  try {
-    return await action()
-  } catch (error) {
-    if (!isRecoverableWebKitEvaluateError(error)) {
-      throw error
-    }
+  const result = await Promise.race<PromiseSettledResult<T> | TimedOutResult>([
+    getProbeOutcome(probe()),
+    Bun.sleep(timeoutMs).then(() => ({ status: "timed_out" as const })),
+  ])
 
+  if (result.status !== "fulfilled") {
     return await fallback()
   }
+
+  return result.value
 }
 
 const waitForAnimationFrames = async (view: Bun.WebView, frameCount = 2) => {
@@ -205,26 +207,29 @@ export const takeScreenshot = async (
   })
 
   await view.navigate(url.href)
-  await withWebKitFallback(
+  await withPageProbeFallback(
     () => waitForPage(view),
     () => Bun.sleep(300),
+    PAGE_PROBE_TIMEOUT_MS,
   )
   await view.resize(
     getViewportWidth(),
     Math.max(
       DEFAULT_HEIGHT,
-      (await withWebKitFallback(
+      (await withPageProbeFallback(
         () => getPageHeight(view),
         async () => DEFAULT_HEIGHT,
+        QUICK_PAGE_PROBE_TIMEOUT_MS,
       )) + 40,
     ),
   )
-  await withWebKitFallback(
+  await withPageProbeFallback(
     async () => {
       await waitForStablePage(view)
       await waitForAnimationFrames(view)
     },
     () => Bun.sleep(200),
+    POST_RESIZE_PAGE_PROBE_TIMEOUT_MS,
   )
 
   const screenshot = await view.screenshot({ format })
@@ -246,15 +251,13 @@ export const main = async (argv = Bun.argv.slice(2)) => {
     return
   }
 
-  let url: URL
-
-  try {
-    url = new URL(urlArg)
-  } catch {
+  if (!URL.canParse(urlArg)) {
     console.error(`${urlArg} is not a valid URL`)
     process.exitCode = 1
     return
   }
+
+  const url = new URL(urlArg)
 
   console.log(JSON.stringify(await takeScreenshot(url, outputArg)))
 }

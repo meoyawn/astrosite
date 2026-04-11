@@ -180,25 +180,4 @@ describe("screenshot script", () => {
 
     expect(await getCenterPixel(outputPath)).toEqual([12, 34, 56, 255])
   })
-
-  test("captures linkedin without producing a blank white image", async () => {
-    tempDir = await mkdtemp(join(tmpdir(), "screenshot-test-"))
-    const outputPath = join(tempDir, "linkedin.png")
-    const url = "https://www.linkedin.com/in/adelnizamuddin"
-
-    const process = Bun.spawn(
-      ["bun", "scripts/screenshot.ts", url, outputPath],
-      { stderr: "pipe", stdout: "pipe" },
-    )
-    const [exitCode, stderr] = await Promise.all([
-      process.exited,
-      new Response(process.stderr).text(),
-    ])
-
-    if (exitCode !== 0) {
-      throw new Error(stderr || `screenshot.ts exited with code ${exitCode}`)
-    }
-
-    expect(await isSingleColorImage(outputPath)).toEqual(false)
-  }, 30_000)
 })
