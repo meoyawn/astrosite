@@ -60,6 +60,9 @@
       },
     },
     {
+      /**
+       * Test files.
+       */
       "files": ["src/**/*.test.ts", "e2e/**/*.test.ts"],
       "rules": {
         /**
@@ -67,6 +70,12 @@
          * Tests compare JSON module values to OpenAPI shapes with explicit assertions.
          */
         "@typescript-eslint/no-unsafe-type-assertion": "off",
+      },
+    },
+    {
+      "files": ["scripts/**/*.ts"],
+      "rules": {
+        "no-console": "off",
       },
     },
   ],

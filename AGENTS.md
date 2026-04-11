@@ -5,8 +5,10 @@
 
 ## Dev server
 
-- find localhost port in [astro.config.ts](astro.config.ts)
+- dev server port is in [astro.config.ts](astro.config.ts)
 - never launch the dev server, it's already running
+- never address the server through `localhost`, use ipv6 `[::1]` only
+- never use dev server URL without shell quoting it (because ipv6 symbols)
 - when trying to debug problems, start with simple `curl`
 
 ## Rules

@@ -1,7 +1,7 @@
 import  Bun,{ $ } from "bun"
 import { dirname, extname, resolve } from "node:path"
 
-const DEFAULT_WIDTH = 720
+const DEFAULT_WIDTH = 1280
 const DEFAULT_HEIGHT = 900
 const WEBVIEW_WIDTH_SCALE = 2
 
