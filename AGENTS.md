@@ -30,3 +30,5 @@
 - never call `wc`, call `scc` instead (both on files and folders)
 - never pass multiple paths to `scc`. A single dir or a single file only.
 - `gh` is available
+- never give up/move on to alternatives when a `<cli>` is unavailable without
+  trying `pkgx <cli>`

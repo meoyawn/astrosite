@@ -21,7 +21,12 @@
   },
   "overrides": [
     {
-      "files": ["src/**/*.ts", "src/**/*.astro", "e2e/**/*.ts"],
+      "files": [
+        "src/**/*.ts",
+        "src/**/*.astro",
+        "e2e/**/*.ts",
+        "scripts/**/*.ts",
+      ],
       "rules": {
         "@typescript-eslint/consistent-type-imports": [
           "error",

@@ -11,7 +11,8 @@
     ],
     "resolveJsonModule": true,
     "strictNullChecks": true,
+    "types": ["bun"],
     "verbatimModuleSyntax": true,
   },
-  "include": [".astro/types.d.ts", "*.ts", "src", "e2e"],
+  "include": [".astro/types.d.ts", "*.ts", "src", "e2e", "scripts"],
 }
