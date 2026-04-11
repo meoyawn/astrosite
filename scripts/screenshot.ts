@@ -1,9 +1,9 @@
 #!/usr/bin/env bun
 
-import  Bun,{ $ } from "bun"
+import Bun, { $ } from "bun"
 import { dirname, extname, resolve } from "node:path"
 
-const DEFAULT_WIDTH = 1280
+export const DEFAULT_WIDTH = 1280
 const DEFAULT_HEIGHT = 900
 const WEBVIEW_WIDTH_SCALE = 2
 
@@ -15,10 +15,14 @@ const screenshotFormats = {
 } as const
 
 const getFormat = (outputPath: string) => {
-  const format = screenshotFormats[extname(outputPath).toLowerCase() as keyof typeof screenshotFormats]
+  const extension = extname(outputPath).toLowerCase()
 
-  if (format) {
-    return format
+  switch (extension) {
+    case ".jpeg":
+    case ".jpg":
+    case ".png":
+    case ".webp":
+      return screenshotFormats[extension]
   }
 
   throw new Error(
@@ -58,38 +62,53 @@ const waitForPage = async (view: Bun.WebView) => {
 
 const getViewportWidth = () => Math.ceil(DEFAULT_WIDTH / WEBVIEW_WIDTH_SCALE)
 
-const [url, outputArg] = Bun.argv.slice(2)
-
-if (!url || !outputArg) {
-  console.error("Usage: bun scripts/screenshot.ts <url> <output-path>")
-  process.exit(1)
+type ScreenshotResult = {
+  outputPath: string
+  title: string
+  url: string
 }
 
-const outputPath = resolve(outputArg)
-const format = getFormat(outputPath)
+export const takeScreenshot = async (url: string, outputArg: string): Promise<ScreenshotResult> => {
+  const outputPath = resolve(outputArg)
+  const format = getFormat(outputPath)
 
-await $`mkdir -p ${dirname(outputPath)}`
+  await $`mkdir -p ${dirname(outputPath)}`
 
-await using view = new Bun.WebView({
-  height: DEFAULT_HEIGHT,
-  width: getViewportWidth(),
-})
+  await using view = new Bun.WebView({
+    height: DEFAULT_HEIGHT,
+    width: getViewportWidth(),
+  })
 
-await view.navigate(url)
-await waitForPage(view)
-await view.resize(
-  getViewportWidth(),
-  Math.max(DEFAULT_HEIGHT, (await getPageHeight(view)) + 40),
-)
-await Bun.sleep(200)
+  await view.navigate(url)
+  await waitForPage(view)
+  await view.resize(
+    getViewportWidth(),
+    Math.max(DEFAULT_HEIGHT, (await getPageHeight(view)) + 40),
+  )
+  await Bun.sleep(200)
 
-const screenshot = await view.screenshot({ format })
-await Bun.write(outputPath, screenshot)
+  const screenshot = await view.screenshot({ format })
+  await Bun.write(outputPath, screenshot)
 
-console.log(
-  JSON.stringify({
+  return {
     outputPath,
     title: view.title,
     url: view.url,
-  }),
-)
+  }
+}
+
+export const main = async (argv = Bun.argv.slice(2)) => {
+  const [url, outputArg] = argv
+
+  if (!url || !outputArg) {
+    console.error("Usage: bun scripts/screenshot.ts <url> <output-path>")
+    process.exitCode = 1
+    return
+  }
+
+  console.log(JSON.stringify(await takeScreenshot(url, outputArg)))
+}
+
+if (import.meta.main) {
+  await main()
+}

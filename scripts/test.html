@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Screenshot Fixture</title>
+    <style>
+      :root {
+        color-scheme: light;
+      }
+
+      html {
+        background: #f6f3ea;
+      }
+
+      body {
+        margin: 0;
+        color: #102542;
+        font-family: Georgia, serif;
+      }
+
+      main {
+        min-height: 1200px;
+        padding: 48px;
+        background:
+          radial-gradient(
+            circle at top right,
+            rgb(255 255 255 / 0.9),
+            transparent 35%
+          ),
+          linear-gradient(180deg, #f6f3ea 0%, #cddafd 100%);
+      }
+
+      h1 {
+        margin: 0 0 16px;
+        font-size: 64px;
+        line-height: 1;
+      }
+
+      p {
+        max-width: 36rem;
+        font-size: 24px;
+        line-height: 1.5;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>Screenshot Fixture</h1>
+      <p>
+        This page is intentionally taller than the default viewport so the
+        script has to size the capture based on document height before taking
+        the image.
+      </p>
+    </main>
+  </body>
+</html>

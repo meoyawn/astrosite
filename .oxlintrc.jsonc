@@ -63,7 +63,7 @@
       /**
        * Test files.
        */
-      "files": ["src/**/*.test.ts", "e2e/**/*.test.ts"],
+      "files": ["**/*.test.ts"],
       "rules": {
         /**
          * `no-unsafe-type-assertion` has no Oxlint options (cannot allow only `as unknown as`).
