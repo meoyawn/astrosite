@@ -1,16 +1,16 @@
 ---
-import type { experience } from "../../../public/cv.json"
+import type { Org } from "./data/cv.types"
 import images from "./ogimages.json"
 
 interface Props {
-  org: (typeof experience)[number]["org"]
+  org: Org
 }
 const { org } = Astro.props
 ---
 
 <div class="flex break-inside-avoid-page flex-row gap-2">
   <a
-    class="not-prose mt-6 flex-shrink-0"
+    class="not-prose mt-6 shrink-0"
     target="_blank"
     rel="noreferrer"
     href={org.url}
