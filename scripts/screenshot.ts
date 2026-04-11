@@ -1,7 +1,6 @@
 #!/usr/bin/env bun
-
-import Bun, { $ } from "bun"
 import { dirname, extname, resolve } from "node:path"
+import Bun, { $ } from "bun"
 
 export const DEFAULT_WIDTH = 1280
 const DEFAULT_HEIGHT = 900
@@ -14,15 +13,15 @@ const screenshotFormats = {
   ".webp": "webp",
 } as const
 
+const isScreenshotExtension = (
+  s: string,
+): s is keyof typeof screenshotFormats => s in screenshotFormats
+
 const getFormat = (outputPath: string) => {
   const extension = extname(outputPath).toLowerCase()
 
-  switch (extension) {
-    case ".jpeg":
-    case ".jpg":
-    case ".png":
-    case ".webp":
-      return screenshotFormats[extension]
+  if (isScreenshotExtension(extension)) {
+    return screenshotFormats[extension]
   }
 
   throw new Error(
@@ -31,19 +30,23 @@ const getFormat = (outputPath: string) => {
 }
 
 const getPageHeight = async (view: Bun.WebView) => {
-  const height = Number(await view.evaluate(`
+  const height = Number(
+    await view.evaluate(`
     Math.max(
       document.documentElement.scrollHeight,
       document.body ? document.body.scrollHeight : 0,
       window.innerHeight
     )
-  `))
+  `),
+  )
 
   return Number.isFinite(height) ? Math.ceil(height) : DEFAULT_HEIGHT
 }
 
 const waitForPage = async (view: Bun.WebView) => {
-  await view.evaluate("document.fonts ? document.fonts.ready.then(() => true) : true")
+  await view.evaluate(
+    "document.fonts ? document.fonts.ready.then(() => true) : true",
+  )
   await view.evaluate(`
     Promise.all(
       [...document.images]
@@ -68,7 +71,10 @@ type ScreenshotResult = {
   url: string
 }
 
-export const takeScreenshot = async (url: string, outputArg: string): Promise<ScreenshotResult> => {
+export const takeScreenshot = async (
+  url: string,
+  outputArg: string,
+): Promise<ScreenshotResult> => {
   const outputPath = resolve(outputArg)
   const format = getFormat(outputPath)
 
