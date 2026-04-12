@@ -5,8 +5,15 @@ This repo has two different TypeScript environments, but four config files:
 - Astro application code in `src/`
 - Tooling code such as `astro.config.ts`, `scripts/**/*.ts`, and `e2e/**/*.ts`
 
-If we only cared about `tsc`, two configs would be enough: one for Astro app
-code and one for tooling code.
+If we only cared about the two real TypeScript projects, two configs would be
+enough: one for Astro app code and one for tooling code.
+
+At the command level, `bun run typecheck` runs two checks in parallel:
+
+- `bun run typecheck:astro`, which runs `astro check --tsconfig tsconfig.json`
+- `bun run typecheck:tooling`, which runs `tsc -p tsconfig.tooling.json`
+
+`astro.config.ts` is covered by the tooling check, not the Astro check.
 
 We have four files because `oxlint` type-aware linting wants directory-local
 `tsconfig.json` projects for files in `scripts/` and `e2e/`, even though both
@@ -21,6 +28,7 @@ This is the app config for Astro source code.
 - It includes `.astro/types.d.ts` and `src/`.
 - It enables the `@astrojs/ts-plugin`.
 - It is the config used by `bun run typecheck:astro`.
+- It does not include `astro.config.ts`, `scripts/**/*.ts`, or `e2e/**/*.ts`.
 
 In practice, this file exists so Astro components and Astro-generated types are
 checked with Astro-specific editor and compiler support, without pulling
@@ -35,10 +43,15 @@ TypeScript project in the repo.
 - It keeps the strict compiler options we want for tooling code.
 - It does not add the Astro TypeScript plugin or `.astro/types.d.ts`.
 - It is the config used by `bun run typecheck:tooling`.
+- It is the project that typechecks `astro.config.ts`.
 
 This keeps tooling typechecking independent from the Astro app project. That
 matters because these files run in a different context and do not need Astro
 language-service behavior.
+
+Because `astro.config.ts` already lives at the repo root, it can be included
+directly in this shared tooling project. It does not need its own wrapper
+`tsconfig.json`.
 
 ## `scripts/tsconfig.json`
 
@@ -67,6 +80,19 @@ tooling options.
 
 Like `scripts/tsconfig.json`, this is an `oxlint` integration wrapper, not a
 separate compiler setup.
+
+## Where `astro.config.ts` Fits
+
+`astro.config.ts` is tooling code, so it is part of `tsconfig.tooling.json`, not
+`tsconfig.json`.
+
+- `bun run typecheck` covers it through `bun run typecheck:tooling`
+- `bun run typecheck:tooling` runs `tsc -p tsconfig.tooling.json`
+- `bun tsc -p tsconfig.tooling.json --listFilesOnly` includes `astro.config.ts`
+
+Unlike `scripts/` and `e2e/`, it does not need a wrapper config. The wrapper
+files exist only so `oxlint` can treat those directories as local projects
+without duplicating the shared tooling compiler settings.
 
 ## Why Not Just Have 2 Files?
 
