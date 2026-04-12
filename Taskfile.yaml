@@ -5,10 +5,106 @@ tasks:
     cmds:
       - agent --yolo
 
-  deploy:
+  lint-src:
+    run: once
+    cmds:
+      - bun oxlint src/
+    sources:
+      - src/**/*
+
+  lint-tooling:
+    run: once
+    cmds:
+      - bun oxlint . --ignore-pattern 'src/**'
+    sources:
+      - "**/*.ts"
+      - exclude: "src/**/*"
+
+  lint:
+    deps:
+      - lint-src
+      - lint-tooling
+
+  typecheck-src:
+    run: once
+    cmds:
+      - bun astro check --tsconfig src/tsconfig.json
+    sources:
+      - src/**/*
+
+  typecheck-tooling:
+    run: once
+    cmds:
+      - bun tsc -p tsconfig.json
+    sources:
+      - "**/*.ts"
+      - exclude: "src/**/*"
+
+  typecheck:
+    deps:
+      - typecheck-src
+      - typecheck-tooling
+
+  test-src:
+    run: once
+    cmds:
+      - bun test src/
+    sources:
+      - src/**/*
+
+  test-tooling:
+    run: once
+    cmds:
+      - bun test
+    sources:
+      - "**/*.ts"
+      - exclude: "src/**/*"
+
+  test:
+    deps:
+      - test-src
+      - test-tooling
+
+  check-src:
+    run: once
+    deps:
+      - lint-src
+      - typecheck-src
+      - test-src
+    sources:
+      - src/**/*
+
+  check:
+    run: once
+    deps:
+      - lint
+      - typecheck
+      - test
+
+  build:
+    run: once
     cmds:
       - rm -rf dist/
-      - bun check
       - bun astro build
-      - bun test:e2e
+    sources:
+      - src/**/*
+      - public/**/*
+    generates:
+      - dist/**/*
+
+  test-e2e:
+    run: once
+    deps:
+      - build
+    cmds:
+      - bun test e2e/
+    sources:
+      - e2e/**/*
+
+  deploy:
+    deps:
+      - test-e2e
+    cmds:
       - bun wrangler pages deploy dist/
+    sources:
+      - dist/**/*
