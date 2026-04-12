@@ -7,8 +7,10 @@
     "resolveJsonModule": true,
     "strictNullChecks": true,
     "types": ["bun"],
-    "verbatimModuleSyntax": true
+    "verbatimModuleSyntax": true,
+    "skipLibCheck": true,
+    "skipDefaultLibCheck": true
   },
   "include": ["**/*.ts"],
-  "exclude": ["src/**/*"]
+  "exclude": ["src/**/*", "node_modules/**/*"]
 }
