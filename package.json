@@ -4,20 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "bld": "astro build",
-    "check": "bun run --parallel typecheck lint test",
-    "check:full": "bun run --parallel --no-exit-on-error typecheck lint test",
-    "dev": "astro dev",
-    "lint": "bun run --parallel lint:src lint:tooling",
-    "lint:src": "oxlint src/",
-    "lint:tooling": "oxlint astro.config.ts e2e/ scripts/",
-    "test": "bun test src/ scripts/",
-    "test:coverage": "bun test src/ scripts/ --coverage",
-    "test:e2e": "bun test e2e/",
-    "test:slow": "vitest run src/ scripts/",
-    "typecheck": "bun run --parallel typecheck:astro typecheck:tooling",
-    "typecheck:astro": "astro check --tsconfig src/tsconfig.json",
-    "typecheck:tooling": "tsc -p tsconfig.json"
+    "dev": "astro dev"
   },
   "dependencies": {
     "clsx": "^2.1.1",

@@ -27,6 +27,7 @@ public/cv.json
 
 .astro/
 .task/
+coverage/
 
 *.jpg
 *.png

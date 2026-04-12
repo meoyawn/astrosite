@@ -65,6 +65,18 @@ tasks:
       - test-src
       - test-tooling
 
+  test-coverage:
+    run: once
+    cmds:
+      - bun test --coverage
+    sources:
+      - "**/*.ts"
+      - exclude: "e2e/**/*"
+
+  dev:
+    cmds:
+      - bun astro dev
+
   check-src:
     run: once
     deps:
