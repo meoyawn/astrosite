@@ -22,6 +22,7 @@ tasks:
       - exclude: "node_modules/**/*"
 
   lint:
+    run: once
     deps:
       - lint-src
       - lint-tooling
@@ -43,6 +44,7 @@ tasks:
       - exclude: "node_modules/**/*"
 
   typecheck:
+    run: once
     deps:
       - typecheck-src
       - typecheck-tooling
@@ -62,6 +64,7 @@ tasks:
       - "scripts/**/*"
 
   test:
+    run: once
     deps:
       - test-src
       - test-tooling
@@ -97,6 +100,8 @@ tasks:
 
   build:
     run: once
+    deps:
+      - check
     cmds:
       - rm -rf dist/
       - bun astro build
