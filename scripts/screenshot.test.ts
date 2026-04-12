@@ -1,15 +1,12 @@
-import { mkdtemp, rm, writeFile } from "node:fs/promises"
+import { mkdtemp, rm } from "node:fs/promises"
 import { tmpdir } from "node:os"
 import { join } from "node:path"
-import { pathToFileURL } from "node:url"
 import sharp from "sharp"
 import { describe, expect, test } from "vitest"
 
 import { DEFAULT_WIDTH } from "./screenshot"
-import fixtureHtml from "./test.html" with { type: "text" }
 
-const getFixtureHtml = (fixture: string | { index: string }) =>
-  typeof fixture === "string" ? fixture : fixture.index
+const fixtureUrl = new URL("./test.html", import.meta.url)
 
 const withTempDir = async <Result>(
   func: (tempDir: string) => Promise<Result>,
@@ -21,18 +18,6 @@ const withTempDir = async <Result>(
   } finally {
     await rm(tempDir, { force: true, recursive: true })
   }
-}
-
-const withFixturePage = async (
-  fixture: string,
-  tempDir: string,
-  func: (url: URL) => Promise<void>,
-) => {
-  const fixturePath = join(tempDir, "test.html")
-
-  await writeFile(fixturePath, fixture)
-
-  await func(pathToFileURL(fixturePath))
 }
 
 const runScreenshot = async (args: string[]) => {
@@ -65,19 +50,13 @@ describe("screenshot script", () => {
     { timeout: 45_000 },
     async () => {
       await withTempDir(async tempDir => {
-        await withFixturePage(
-          getFixtureHtml(fixtureHtml),
-          tempDir,
-          async url => {
-            const outputPath = join(tempDir, "fixture.png")
+        const outputPath = join(tempDir, "fixture.png")
 
-            await expectScreenshotToSucceed([url.href, outputPath])
+        await expectScreenshotToSucceed([fixtureUrl.href, outputPath])
 
-            const metadata = await sharp(outputPath).metadata()
+        const metadata = await sharp(outputPath).metadata()
 
-            expect(metadata.width).toEqual(DEFAULT_WIDTH)
-          },
-        )
+        expect(metadata.width).toEqual(DEFAULT_WIDTH)
       })
     },
   )
@@ -103,19 +82,18 @@ describe("screenshot script", () => {
     { timeout: 45_000 },
     async () => {
       await withTempDir(async tempDir => {
-        await withFixturePage(
-          getFixtureHtml(fixtureHtml),
-          tempDir,
-          async url => {
-            const outputPath = join(tempDir, "fixture-100.png")
+        const outputPath = join(tempDir, "fixture-100.png")
 
-            await expectScreenshotToSucceed(["-w", "100", url.href, outputPath])
+        await expectScreenshotToSucceed([
+          "-w",
+          "100",
+          fixtureUrl.href,
+          outputPath,
+        ])
 
-            const metadata = await sharp(outputPath).metadata()
+        const metadata = await sharp(outputPath).metadata()
 
-            expect(metadata.width).toEqual(100)
-          },
-        )
+        expect(metadata.width).toEqual(100)
       })
     },
   )
