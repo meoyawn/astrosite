@@ -24,6 +24,9 @@
       "files": [
         "src/**/*.ts",
         "src/**/*.astro",
+        "e2e/**/*.ts",
+        "scripts/**/*.ts",
+        "astro.config.ts",
       ],
       "rules": {
         "@typescript-eslint/consistent-type-imports": [
@@ -54,40 +57,24 @@
           },
         ],
         "eqeqeq": ["error", "always"],
+      },
+    },
+    {
+      "files": [
+        "src/**/*.ts",
+        "src/**/*.astro",
+      ],
+      "rules": {
         "no-console": "error",
       },
     },
     {
-      "files": ["e2e/**/*.ts", "scripts/**/*.ts"],
+      "files": [
+        "e2e/**/*.ts",
+        "scripts/**/*.ts",
+        "astro.config.ts",
+      ],
       "rules": {
-        "@typescript-eslint/consistent-type-imports": [
-          "error",
-          {
-            "fixStyle": "separate-type-imports",
-            "prefer": "type-imports",
-          },
-        ],
-        "@typescript-eslint/no-deprecated": "error",
-        "@typescript-eslint/no-restricted-types": [
-          "error",
-          {
-            "types": {
-              "any": "Use a specific type instead.",
-            },
-          },
-        ],
-        "@typescript-eslint/no-unsafe-type-assertion": "error",
-        "@typescript-eslint/no-unused-vars": [
-          "error",
-          {
-            "argsIgnorePattern": "^_",
-            "caughtErrorsIgnorePattern": "^_",
-            "destructuredArrayIgnorePattern": "^_",
-            "ignoreRestSiblings": true,
-            "varsIgnorePattern": "^_",
-          },
-        ],
-        "eqeqeq": ["error", "always"],
         "no-console": "error",
       },
     },

@@ -1,0 +1,13 @@
+{
+  "extends": "astro/tsconfigs/strictest",
+  "compilerOptions": {
+    "allowJs": true,
+    "allowSyntheticDefaultImports": true,
+    "noEmit": true,
+    "resolveJsonModule": true,
+    "strictNullChecks": true,
+    "types": ["bun"],
+    "verbatimModuleSyntax": true
+  },
+  "include": ["astro.config.ts", "e2e/**/*.ts", "scripts/**/*.ts"]
+}
