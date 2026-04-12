@@ -6,7 +6,7 @@ import { describe, expect, test } from "vitest"
 
 import { DEFAULT_WIDTH } from "./screenshot"
 
-const fixtureUrl = new URL("./test.html", import.meta.url)
+const testHtmlURL = new URL("./test.html", import.meta.url)
 
 const withTempDir = async <Result>(
   func: (tempDir: string) => Promise<Result>,
@@ -52,7 +52,7 @@ describe("screenshot script", () => {
       await withTempDir(async tempDir => {
         const outputPath = join(tempDir, "fixture.png")
 
-        await expectScreenshotToSucceed([fixtureUrl.href, outputPath])
+        await expectScreenshotToSucceed([testHtmlURL.href, outputPath])
 
         const metadata = await sharp(outputPath).metadata()
 
@@ -61,7 +61,7 @@ describe("screenshot script", () => {
     },
   )
 
-  test.skip(
+  test(
     "writes an image for adelnz.com/cv using the default output width because the network path is flaky in this environment",
     { timeout: 30_000 },
     async () => {
@@ -87,7 +87,7 @@ describe("screenshot script", () => {
         await expectScreenshotToSucceed([
           "-w",
           "100",
-          fixtureUrl.href,
+          testHtmlURL.href,
           outputPath,
         ])
 
