@@ -1,5 +1,6 @@
 #!/usr/bin/env bun
 import { dirname, extname, resolve } from "node:path"
+import { parseArgs } from "node:util"
 import Bun, { $ } from "bun"
 
 export const DEFAULT_WIDTH = 1280
@@ -26,7 +27,7 @@ const getFormat = (outputPath: string) => {
     return screenshotFormats[extension]
   }
 
-  throw new Error(
+  return exitWithError(
     `Unsupported screenshot format for "${outputPath}". Use .png, .jpg, .jpeg, or .webp.`,
   )
 }
@@ -49,10 +50,10 @@ const getPageHeight = async (view: Bun.WebView) => {
   }
 }
 
-const VIEWPORT_WIDTH =
+const getViewportWidth = (width: number) =>
   SCREENSHOT_BACKEND === "webkit"
-    ? Math.ceil(DEFAULT_WIDTH / WEBKIT_VIEWPORT_WIDTH_SCALE)
-    : DEFAULT_WIDTH
+    ? Math.ceil(width / WEBKIT_VIEWPORT_WIDTH_SCALE)
+    : width
 
 type ScreenshotResult = {
   outputPath: string
@@ -60,24 +61,91 @@ type ScreenshotResult = {
   url: string
 }
 
+const exitWithError = (message: string): never => {
+  console.error(message)
+  process.exit(1)
+}
+
+const exitWithUnknownError = (error: unknown): never =>
+  exitWithError(error instanceof Error ? error.message : String(error))
+
+const parseWidth = (widthArg: string | undefined) => {
+  if (widthArg === undefined) {
+    return DEFAULT_WIDTH
+  }
+
+  const width = Number(widthArg)
+
+  if (!Number.isInteger(width) || width <= 0) {
+    exitWithError(
+      `Invalid width "${widthArg}". Width must be a positive integer.`,
+    )
+  }
+
+  return width
+}
+
+type CliArgs = {
+  outputArg: string
+  url: URL
+  width: number
+}
+
+const parseCliArgs = (argv: readonly string[]): CliArgs => {
+  try {
+    const { positionals, values } = parseArgs({
+      allowPositionals: true,
+      args: argv,
+      options: {
+        width: {
+          short: "w",
+          type: "string",
+        },
+      },
+      strict: true,
+    })
+    const [urlArg, outputArg] = positionals
+
+    if (!urlArg || !outputArg || positionals.length > 2) {
+      return exitWithError(
+        "Usage: bun scripts/screenshot.ts [-w <width>] <url> <output-path>",
+      )
+    }
+
+    if (!URL.canParse(urlArg)) {
+      return exitWithError(`${urlArg} is not a valid URL`)
+    }
+
+    return {
+      outputArg,
+      url: new URL(urlArg),
+      width: parseWidth(values.width),
+    }
+  } catch (error) {
+    return exitWithUnknownError(error)
+  }
+}
+
 const takeScreenshot = async (
   url: URL,
   outputArg: string,
+  width: number,
 ): Promise<ScreenshotResult> => {
   const outputPath = resolve(outputArg)
   const format = getFormat(outputPath)
+  const viewportWidth = getViewportWidth(width)
 
   await $`mkdir -p ${dirname(outputPath)}`
 
   await using view = new Bun.WebView({
     backend: SCREENSHOT_BACKEND,
     height: DEFAULT_HEIGHT,
-    width: VIEWPORT_WIDTH,
+    width: viewportWidth,
   })
 
   await view.navigate(url.href)
   await view.resize(
-    VIEWPORT_WIDTH,
+    viewportWidth,
     Math.max(DEFAULT_HEIGHT, await getPageHeight(view)),
   )
 
@@ -92,23 +160,13 @@ const takeScreenshot = async (
 }
 
 const main = async (argv: readonly string[]) => {
-  const [urlArg, outputArg] = argv
+  try {
+    const { outputArg, url, width } = parseCliArgs(argv)
 
-  if (!urlArg || !outputArg) {
-    console.error("Usage: bun scripts/screenshot.ts <url> <output-path>")
-    process.exitCode = 1
-    return
+    console.log(JSON.stringify(await takeScreenshot(url, outputArg, width)))
+  } catch (error) {
+    exitWithUnknownError(error)
   }
-
-  if (!URL.canParse(urlArg)) {
-    console.error(`${urlArg} is not a valid URL`)
-    process.exitCode = 1
-    return
-  }
-
-  const url = new URL(urlArg)
-
-  console.log(JSON.stringify(await takeScreenshot(url, outputArg)))
 }
 
 if (import.meta.main) {
