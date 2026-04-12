@@ -49,7 +49,7 @@ describe("screenshot script", () => {
         const outputPath = join(tempDir, "fixture.png")
 
         const process = Bun.spawn(
-          ["bun", "scripts/screenshot.ts", url.href, outputPath],
+          ["scripts/screenshot.ts", url.href, outputPath],
           { stderr: "pipe", stdout: "pipe" },
         )
         const [exitCode, stderr] = await Promise.all([
@@ -78,12 +78,7 @@ describe("screenshot script", () => {
         const outputPath = join(tempDir, "cv.png")
 
         const process = Bun.spawn(
-          [
-            "bun",
-            "scripts/screenshot.ts",
-            "https://adelnz.com/cv/",
-            outputPath,
-          ],
+          ["scripts/screenshot.ts", "https://adelnz.com/cv/", outputPath],
           { stderr: "pipe", stdout: "pipe" },
         )
         const [exitCode, stderr] = await Promise.all([
@@ -109,7 +104,7 @@ describe("screenshot script", () => {
       const outputPath = join(tempDir, "fixture.png")
 
       const process = Bun.spawn(
-        ["bun", "scripts/screenshot.ts", "not-a-url", outputPath],
+        ["scripts/screenshot.ts", "not-a-url", outputPath],
         { stderr: "pipe", stdout: "pipe" },
       )
       const [exitCode, stderr] = await Promise.all([
