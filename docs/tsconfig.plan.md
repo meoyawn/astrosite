@@ -113,7 +113,31 @@ bun astro check --tsconfig src/tsconfig.json
 
 ### `oxlint`
 
-Use debug logging to inspect project assignment:
+Use debug logging to inspect tooling project assignment first:
+
+```sh
+OXC_LOG=debug bun oxlint --type-aware astro.config.ts e2e/ scripts/
+```
+
+Success criteria:
+
+- exactly one program is reported
+- the program is root `tsconfig.json`
+- `Unmatched files: 0`
+
+Then inspect app project assignment in isolation:
+
+```sh
+OXC_LOG=debug bun oxlint --type-aware src/
+```
+
+Success criteria:
+
+- exactly one program is reported
+- the program is `src/tsconfig.json`
+- `Unmatched files: 0`
+
+Finally run an end-to-end smoke check across both environments:
 
 ```sh
 OXC_LOG=debug bun oxlint --type-aware astro.config.ts e2e/ scripts/ src/
@@ -129,6 +153,10 @@ Success criteria:
 
 A dry run in `/tmp` with this exact layout succeeded:
 
+- `OXC_LOG=debug bun oxlint --type-aware astro.config.ts e2e/ scripts/`
+  reported only root `tsconfig.json` and `Unmatched files: 0`
+- `OXC_LOG=debug bun oxlint --type-aware src/`
+  reported only `src/tsconfig.json` and `Unmatched files: 0`
 - `OXC_LOG=debug bun oxlint --type-aware astro.config.ts e2e/ scripts/ src/`
   reported `Total programs: 2` and `Unmatched files: 0`
 - `bun astro check --tsconfig src/tsconfig.json` completed successfully
