@@ -52,6 +52,7 @@ flowchart TD
   typecheck --> check
   test --> check
 
+  check --> build
   build --> test_e2e
   test_e2e --> deploy
 ```
@@ -63,6 +64,7 @@ flowchart TD
 - `test` depends on `test-src` and `test-tooling`.
 - `check-src` runs the `src/`-only lint, typecheck, and test tasks.
 - `check` runs the full lint, typecheck, and test aggregates.
+- `build` requires `check` before running the Astro build.
 - `deploy` requires `test-e2e`, which requires `build`.
 
 ## Standalone Tasks
