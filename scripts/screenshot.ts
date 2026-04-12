@@ -91,7 +91,7 @@ const takeScreenshot = async (
   }
 }
 
-const main = async (argv = Bun.argv.slice(2)) => {
+const main = async (argv: readonly string[]) => {
   const [urlArg, outputArg] = argv
 
   if (!urlArg || !outputArg) {
@@ -112,5 +112,5 @@ const main = async (argv = Bun.argv.slice(2)) => {
 }
 
 if (import.meta.main) {
-  await main()
+  await main(Bun.argv.slice(2))
 }
