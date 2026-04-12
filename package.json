@@ -13,7 +13,9 @@
     "test:coverage": "bun test src/ scripts/ --coverage",
     "test:e2e": "bun test e2e/",
     "test:slow": "vitest run src/ scripts/",
-    "typecheck": "astro check"
+    "typecheck": "bun run --parallel typecheck:astro typecheck:scripts",
+    "typecheck:astro": "astro check",
+    "typecheck:scripts": "tsc scripts/"
   },
   "dependencies": {
     "clsx": "^2.1.1",

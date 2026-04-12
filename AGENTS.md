@@ -19,8 +19,13 @@
 - never edit [bunfig.toml](bunfig.toml) unless explicitly asked
 - never disable, skip or ignore tests
 - never edit [tsconfig.json](tsconfig.json) unless explicitly asked
-- never edit `src/**/*` or `scripts/**/*` without running `bun check` after all
-  edits are applied
+
+## Feedback/Verification
+
+After all edits are applied in `src/**/*` or `scripts/**/*`:
+
+- do `bun check` if runtime stuff was changed
+- never run full `bun check` if only types/signatures were changed, do only `bun typecheck`
 
 ## CLI tools
 
