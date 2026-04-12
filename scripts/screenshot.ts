@@ -5,9 +5,6 @@ import Bun, { $ } from "bun"
 export const DEFAULT_WIDTH = 1280
 const DEFAULT_HEIGHT = 900
 
-const INITIAL_RENDER_DELAY_MS = 1
-const POST_RESIZE_DELAY_MS = 1
-
 const SCREENSHOT_BACKEND = "webkit"
 const WEBKIT_VIEWPORT_WIDTH_SCALE = 2
 
@@ -79,12 +76,10 @@ const takeScreenshot = async (
   })
 
   await view.navigate(url.href)
-  await Bun.sleep(INITIAL_RENDER_DELAY_MS)
   await view.resize(
     VIEWPORT_WIDTH,
     Math.max(DEFAULT_HEIGHT, await getPageHeight(view)),
   )
-  await Bun.sleep(POST_RESIZE_DELAY_MS)
 
   const screenshot = await view.screenshot({ format })
   await Bun.write(outputPath, screenshot)
