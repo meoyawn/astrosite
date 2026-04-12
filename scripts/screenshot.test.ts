@@ -36,13 +36,10 @@ const withFixturePage = async (
 }
 
 const runScreenshot = async (args: string[]) => {
-  const process = Bun.spawn(
-    [process.execPath, "scripts/screenshot.ts", ...args],
-    {
-      stderr: "pipe",
-      stdout: "pipe",
-    },
-  )
+  const process = Bun.spawn(["scripts/screenshot.ts", ...args], {
+    stderr: "pipe",
+    stdout: "pipe",
+  })
   const [exitCode, stderr] = await Promise.all([
     process.exited,
     new Response(process.stderr).text(),
@@ -85,10 +82,6 @@ describe("screenshot script", () => {
     },
   )
 
-  /**
-   * This stays in the suite as a real-world smoke case, but it currently flakes
-   * because `https://adelnz.com/cv/` can hang in the test environment.
-   */
   test.skip(
     "writes an image for adelnz.com/cv using the default output width because the network path is flaky in this environment",
     { timeout: 30_000 },
