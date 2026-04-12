@@ -10,5 +10,5 @@
     "verbatimModuleSyntax": true
   },
   "include": ["**/*.ts"],
-  "exclude": ["src/"]
+  "exclude": ["src/**/*"]
 }
