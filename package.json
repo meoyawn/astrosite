@@ -14,8 +14,8 @@
     "test:e2e": "bun test e2e/",
     "test:slow": "vitest run src/ scripts/",
     "typecheck": "bun run --parallel typecheck:astro typecheck:scripts",
-    "typecheck:astro": "astro check",
-    "typecheck:scripts": "tsc scripts/"
+    "typecheck:astro": "astro check --tsconfig tsconfig.json",
+    "typecheck:scripts": "tsc -p tsconfig.scripts.json"
   },
   "dependencies": {
     "clsx": "^2.1.1",
