@@ -20,14 +20,11 @@
     },
   },
   "overrides": [
+    /**
+     * Everything
+     */
     {
-      "files": [
-        "src/**/*.ts",
-        "src/**/*.astro",
-        "e2e/**/*.ts",
-        "scripts/**/*.ts",
-        "astro.config.ts",
-      ],
+      "files": ["**/*.ts", "**/*.astro"],
       "rules": {
         "@typescript-eslint/consistent-type-imports": [
           "error",
@@ -57,31 +54,13 @@
           },
         ],
         "eqeqeq": ["error", "always"],
-      },
-    },
-    {
-      "files": [
-        "src/**/*.ts",
-        "src/**/*.astro",
-      ],
-      "rules": {
-        "no-console": "error",
-      },
-    },
-    {
-      "files": [
-        "e2e/**/*.ts",
-        "scripts/**/*.ts",
-        "astro.config.ts",
-      ],
-      "rules": {
         "no-console": "error",
       },
     },
     {
       /**
        * Test files.
-      */
+       */
       "files": ["**/*.test.ts"],
       "rules": {
         /**

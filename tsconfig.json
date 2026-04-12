@@ -4,15 +4,11 @@
     "allowJs": true,
     "allowSyntheticDefaultImports": true,
     "noEmit": true,
-    "plugins": [
-      {
-        "name": "@astrojs/ts-plugin"
-      }
-    ],
     "resolveJsonModule": true,
     "strictNullChecks": true,
     "types": ["bun"],
     "verbatimModuleSyntax": true
   },
-  "include": [".astro/types.d.ts", "src/"]
+  "include": ["**/*.ts"],
+  "exclude": ["src/"]
 }
