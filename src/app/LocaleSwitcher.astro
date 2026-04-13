@@ -11,14 +11,14 @@ interface Props {
 const { currentLocale, label, path } = Astro.props
 
 const localeLabel: Record<Locale, string> = {
-  en: "English",
-  ru: "Русский",
-  tt: "Татарча",
+  en: "EN",
+  ru: "RU",
+  tt: "TT",
 }
 ---
 
 <nav aria-label={label} class="m-0">
-  <ul class="m-0 flex list-none gap-2 p-0 text-sm font-medium">
+  <ul class="m-0 flex list-none gap-1 p-0 text-sm font-medium">
     {
       locales.map(locale => {
         const href = normalizeLocaleHref(
