@@ -1,5 +1,6 @@
 import { load } from "js-yaml"
 import type { Locale } from "../../i18n"
+import cvEnSource from "./cv.en.yaml?raw"
 import cvRuSource from "./cv.ru.yaml?raw"
 import cvTtSource from "./cv.tt.yaml?raw"
 import type {
@@ -11,7 +12,6 @@ import type {
   Org,
   Product,
 } from "./cv.types"
-import cvSource from "./cv.yaml?raw"
 
 const isRecord = (value: unknown): value is Record<string, unknown> =>
   typeof value === "object" && value !== null && !Array.isArray(value)
@@ -137,7 +137,7 @@ const loadCV = (source: string, sourceName: string): CV =>
   parseCV(normalizeCV(load(source)), sourceName)
 
 export const cvByLocale: Record<Locale, CV> = {
-  en: loadCV(cvSource, "cv.yaml"),
+  en: loadCV(cvEnSource, "cv.en.yaml"),
   ru: loadCV(cvRuSource, "cv.ru.yaml"),
   tt: loadCV(cvTtSource, "cv.tt.yaml"),
 }

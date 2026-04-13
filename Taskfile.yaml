@@ -118,6 +118,7 @@ tasks:
     cmds:
       - bun test e2e/
     sources:
+      - dist/**/*
       - e2e/**/*
 
   deploy:
