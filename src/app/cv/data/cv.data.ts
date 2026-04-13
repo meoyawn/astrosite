@@ -1,4 +1,6 @@
 import { load } from "js-yaml"
+import type { Locale } from "../../i18n"
+import cvRuSource from "./cv.ru.yaml?raw"
 import type {
   Award,
   CV,
@@ -8,8 +10,6 @@ import type {
   Org,
   Product,
 } from "./cv.types"
-import type { Locale } from "../../i18n"
-import cvRuSource from "./cv.ru.yaml?raw"
 import cvSource from "./cv.yaml?raw"
 
 const isRecord = (value: unknown): value is Record<string, unknown> =>
