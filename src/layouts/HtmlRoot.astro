@@ -5,13 +5,14 @@ interface Props {
   title: string
   description?: string | undefined
   class?: string | undefined
+  lang?: string | undefined
 }
 
-const { title, description } = Astro.props
+const { title, description, lang = "en" } = Astro.props
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang={lang}>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />

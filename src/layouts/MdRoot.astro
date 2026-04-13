@@ -2,17 +2,18 @@
 import HtmlRoot from "./HtmlRoot.astro"
 
 interface Props {
-  frontmatter: Partial<Record<string, string>>
+  frontmatter: Partial<Record<"description" | "lang" | "title", string>>
 }
 
 const {
-  frontmatter: { title, description },
+  frontmatter: { title, description, lang },
 } = Astro.props
 ---
 
 <HtmlRoot
   title={title!}
   description={description}
+  lang={lang}
   class="prose mx-auto my-6 max-w-prose px-4 sm:my-12 md:my-16"
 >
   <slot />

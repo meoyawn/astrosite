@@ -4,13 +4,14 @@ import { md2html } from "../markdown"
 type Products = ReadonlyArray<{ name: string; url: string }>
 
 interface Props {
+  intro: string
   products: Products
 }
 
-const { products } = Astro.props
+const { intro, products } = Astro.props
 
-const toMD = (items: Products): string =>
-  `Worked on ${items.map(x => `[${x.name}](${x.url})`).join(", ")}`
+const toMD = (items: Products, label: string): string =>
+  `${label} ${items.map(x => `[${x.name}](${x.url})`).join(", ")}`
 ---
 
-<Fragment set:html={md2html(toMD(products))} />
+<Fragment set:html={md2html(toMD(products, intro))} />

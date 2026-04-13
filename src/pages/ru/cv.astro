@@ -1,0 +1,10 @@
+---
+import CVPage from "../../app/cv/CVPage.astro"
+import type { Locale } from "../../app/i18n"
+import { cvPageCopy } from "../../app/cv/cvPageCopy"
+import { getCV } from "../../app/cv/data/cv.data"
+
+const locale: Locale = "ru"
+---
+
+<CVPage locale={locale} cv={getCV(locale)} copy={cvPageCopy[locale]} />

@@ -8,6 +8,8 @@ import type {
   Org,
   Product,
 } from "./cv.types"
+import type { Locale } from "../../i18n"
+import cvRuSource from "./cv.ru.yaml?raw"
 import cvSource from "./cv.yaml?raw"
 
 const isRecord = (value: unknown): value is Record<string, unknown> =>
@@ -122,14 +124,20 @@ const isCV = (value: unknown): value is CV =>
   Array.isArray(value.skills) &&
   value.skills.every(isString)
 
-const parseCV = (value: unknown): CV => {
+const parseCV = (value: unknown, sourceName: string): CV => {
   if (!isCV(value)) {
-    throw new TypeError("cv.yaml does not match the expected shape")
+    throw new TypeError(`${sourceName} does not match the expected shape`)
   }
 
   return value
 }
 
-const cv = parseCV(normalizeCV(load(cvSource)))
+const loadCV = (source: string, sourceName: string): CV =>
+  parseCV(normalizeCV(load(source)), sourceName)
 
-export default cv
+export const cvByLocale: Record<Locale, CV> = {
+  en: loadCV(cvSource, "cv.yaml"),
+  ru: loadCV(cvRuSource, "cv.ru.yaml"),
+}
+
+export const getCV = (locale: Locale): CV => cvByLocale[locale]

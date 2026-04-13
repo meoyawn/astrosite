@@ -22,10 +22,7 @@
 
 ## Feedback/Verification
 
-After all edits are applied in `src/**/*` or `scripts/**/*`:
-
-- do `bun check` if runtime stuff was changed
-- never run full `bun check` if only types/signatures were changed, do only `bun typecheck`
+- never edit `src/**/*` without verifying with `task check-src` afterwards
 
 ## CLI tools
 

@@ -1,0 +1,49 @@
+---
+import { getRelativeLocaleUrl } from "astro:i18n"
+import { locales, type Locale } from "./i18n"
+
+interface Props {
+  currentLocale: Locale
+  label: string
+  path?: string | undefined
+}
+
+const { currentLocale, label, path } = Astro.props
+
+const localeLabel: Record<Locale, string> = {
+  en: "English",
+  ru: "Русский",
+}
+
+const normalizeHref = (href: string): string =>
+  href !== "/" && href.endsWith("/") ? href.slice(0, -1) : href
+---
+
+<nav aria-label={label} class="mb-6">
+  <ul class="m-0 flex list-none gap-2 p-0 text-sm font-medium">
+    {
+      locales.map(locale => {
+        const href = normalizeHref(
+          path ? getRelativeLocaleUrl(locale, path) : getRelativeLocaleUrl(locale),
+        )
+
+        return (
+          <li>
+            <a
+              href={href}
+              aria-current={locale === currentLocale ? "page" : undefined}
+              class:list={[
+                "rounded border px-3 py-1 no-underline transition-colors",
+                locale === currentLocale
+                  ? "border-slate-900 bg-slate-900 text-white"
+                  : "border-slate-300 text-slate-700 hover:border-slate-900 hover:text-slate-900",
+              ]}
+            >
+              {localeLabel[locale]}
+            </a>
+          </li>
+        )
+      })
+    }
+  </ul>
+</nav>

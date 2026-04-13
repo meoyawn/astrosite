@@ -1,0 +1,130 @@
+---
+import { clsx } from "clsx"
+import LocaleSwitcher from "../LocaleSwitcher.astro"
+import { md2html } from "../markdown"
+import type { Locale } from "../i18n"
+import HtmlRoot from "../../layouts/HtmlRoot.astro"
+import { fmtDate, fmtExpTime } from "./cv"
+import type { CV } from "./data/cv.types"
+import type { CVPageCopy } from "./cvPageCopy"
+import emailIcon from "./icon/email.svg"
+import githubIcon from "./icon/github.svg"
+import linkIcon from "./icon/link.svg"
+import linkedinIcon from "./icon/linkedin.svg"
+import IconLink from "./IconLink.astro"
+import Org from "./Org.astro"
+import Products from "./Products.astro"
+
+interface Props {
+  copy: CVPageCopy
+  cv: CV
+  locale: Locale
+}
+
+const { copy, cv, locale } = Astro.props
+---
+
+<HtmlRoot
+  title={copy.cvTitle}
+  lang={locale}
+  class="
+    prose prose-sky print:prose-xs
+    prose-p:my-2 prose-p:print:my-2
+    prose-ul:print:my-0 prose-ul:my-1
+    m-6 max-w-none sm:m-12 md:m-16 print:m-0
+  "
+>
+  <LocaleSwitcher currentLocale={locale} path="cv" label={copy.switcherLabel} />
+
+  <section>
+    <h1>{cv.head.name}</h1>
+    <h3>{cv.head.title}</h3>
+
+    <p class="grid grid-cols-1 sm:grid-cols-2 print:grid-cols-2">
+      <IconLink
+        icon={emailIcon}
+        href={`mailto:${cv.head.email}`}
+        alt={copy.iconAlt.email}
+      />
+      <!--<IconLink href={`tel:${cv.head}`} icon={phoneIcon}>-->
+      <IconLink
+        icon={linkedinIcon}
+        href={`https://linkedin.com/in/${cv.head.linkedin}`}
+        alt={copy.iconAlt.linkedin}
+      />
+      <IconLink icon={linkIcon} href={cv.head.url} alt={copy.iconAlt.website} />
+      <IconLink
+        icon={githubIcon}
+        href={`https://github.com/${cv.head.github}`}
+        alt={copy.iconAlt.github}
+      />
+    </p>
+  </section>
+
+  <section>
+    <h3>{copy.summary}</h3>
+    <Fragment set:html={md2html(cv.summaryMD)} />
+  </section>
+
+  <section>
+    <h3>{copy.experience}</h3>
+
+    {
+      cv.experience.map(exp => (
+        <Org org={exp.org}>
+          <Fragment>{exp.title ? <h4>{exp.title}</h4> : null}</Fragment>
+
+          <p>
+            <a
+              href={exp.org.url}
+              target="_blank"
+              rel="noreferrer"
+              class={clsx({ "font-semibold": !exp.title })}
+            >
+              {exp.org.name}
+            </a>
+            <br />
+            <span class="text-date">{fmtExpTime({ ...exp, locale })}</span>
+          </p>
+
+          <Fragment set:html={md2html(exp.summaryMD)} />
+          <Products products={exp.products} intro={copy.workedOn} />
+        </Org>
+      ))
+    }
+  </section>
+
+  <section>
+    <h3>{copy.education}</h3>
+
+    {
+      cv.education.map(ed => (
+        <Org org={ed.org}>
+          <h4>{ed.org.name}</h4>
+          <Fragment set:html={md2html(ed.degreeMD)} />
+          <span class="text-date">
+            {fmtExpTime({ ...ed, duration: false, locale })}
+          </span>
+          <Products products={ed.products} intro={copy.workedOn} />
+        </Org>
+      ))
+    }
+  </section>
+
+  <section>
+    <h3>{copy.awards}</h3>
+
+    {
+      cv.awards.map(aw => (
+        <Org org={aw.org}>
+          <h4>
+            <a href={aw.url}>{aw.title}</a>
+            <span> - </span>
+            <a href={aw.org.url}>{aw.org.name}</a>
+          </h4>
+          <span class="text-date">{fmtDate(aw.date, locale)}</span>
+        </Org>
+      ))
+    }
+  </section>
+</HtmlRoot>

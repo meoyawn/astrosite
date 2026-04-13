@@ -1,6 +1,11 @@
 ---
 import { getCollection } from "astro:content"
 
+interface Props {
+  title?: string | undefined
+}
+
+const { title = "Writing" } = Astro.props
 const arr0 = await getCollection("articles")
 const arr = arr0.filter(x => x.data.published_at)
 ---
@@ -8,8 +13,8 @@ const arr = arr0.filter(x => x.data.published_at)
 {
   arr.length ? (
     <>
-      <h2>Writing</h2>
-        <ul>
+      <h2>{title}</h2>
+      <ul>
         {arr.map(p => (
           <li>
             <a href={`/article/${p.id}`}>{p.data.title}</a>
