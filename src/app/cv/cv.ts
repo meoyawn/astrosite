@@ -6,16 +6,19 @@ import type { Locale as SiteLocale } from "../i18n"
 const dateFnsLocaleByLocale = {
   en: enUS,
   ru,
+  tt: ru,
 } as const satisfies Record<SiteLocale, DateFnsLocale>
 
 const dateFormatByLocale: Record<SiteLocale, string> = {
   en: "MMMM y",
   ru: "LLLL y",
+  tt: "LLLL y",
 }
 
 const presentByLocale: Record<SiteLocale, string> = {
   en: "Present",
   ru: "н.в.",
+  tt: "хәзергә",
 }
 
 export const fmtDate = (start: string, locale: SiteLocale): string =>

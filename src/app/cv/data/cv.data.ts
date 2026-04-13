@@ -1,6 +1,7 @@
 import { load } from "js-yaml"
 import type { Locale } from "../../i18n"
 import cvRuSource from "./cv.ru.yaml?raw"
+import cvTtSource from "./cv.tt.yaml?raw"
 import type {
   Award,
   CV,
@@ -138,6 +139,7 @@ const loadCV = (source: string, sourceName: string): CV =>
 export const cvByLocale: Record<Locale, CV> = {
   en: loadCV(cvSource, "cv.yaml"),
   ru: loadCV(cvRuSource, "cv.ru.yaml"),
+  tt: loadCV(cvTtSource, "cv.tt.yaml"),
 }
 
 export const getCV = (locale: Locale): CV => cvByLocale[locale]

@@ -50,4 +50,20 @@ export const cvPageCopy: Record<Locale, CVPageCopy> = {
     switcherLabel: "Сменить язык",
     workedOn: "Работал над:",
   },
+  tt: {
+    awards: "Бүләкләр һәм казанышлар",
+    backToHomeLabel: "Баш бит",
+    cvTitle: "Адель Низамутдиновның CV",
+    education: "Белем",
+    experience: "Эш тәрибәсе",
+    iconAlt: {
+      email: "электрон почта",
+      github: "github",
+      linkedin: "linkedin",
+      website: "сайт",
+    },
+    summary: "Кыскача",
+    switcherLabel: "Телне алыштыру",
+    workedOn: "Эшләгән проектлар:",
+  },
 }

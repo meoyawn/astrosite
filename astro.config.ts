@@ -6,6 +6,10 @@ import { defaultLocale, locales } from "./src/app/i18n"
 /** https://astro.build/config */
 export default defineConfig({
   integrations: [mdx()],
+  server: {
+    host: true,
+    port: 4321,
+  },
   i18n: {
     locales: [...locales],
     defaultLocale,
@@ -21,7 +25,6 @@ export default defineConfig({
   /** https://vitejs.dev/config/ */
   vite: {
     server: {
-      port: 4321,
       watch: {
         ignored: [".idea/**", ".wrangler/**", ".agents/**"],
       },

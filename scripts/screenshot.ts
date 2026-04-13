@@ -6,7 +6,9 @@ import Bun, { $ } from "bun"
 export const DEFAULT_WIDTH = 1280
 const DEFAULT_HEIGHT = 900
 
-const SCREENSHOT_BACKEND = "webkit"
+type WebViewConstructorOptions = ConstructorParameters<typeof Bun.WebView>[0]
+type ScreenshotBackend = NonNullable<WebViewConstructorOptions["backend"]>
+const SCREENSHOT_BACKEND: ScreenshotBackend = "webkit"
 const WEBKIT_VIEWPORT_WIDTH_SCALE = 2
 
 const screenshotFormats = {
