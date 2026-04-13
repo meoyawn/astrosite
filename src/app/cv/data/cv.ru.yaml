@@ -74,7 +74,7 @@ experience:
     products:
       - name: Wheely
         url: https://play.google.com/store/apps/details?id=com.wheely.wheely
-      - name: Wheely for Chauffeurs
+      - name: Wheely для водителей
         url: https://play.google.com/store/apps/details?id=com.wheely.groundio
     summaryMD: |
       Разрабатывал Android-приложения для пассажиров и водителей. Проводил собеседования Android-разработчиков.
@@ -89,9 +89,9 @@ experience:
     end: 2017-06-01
     location: Казань, Татарстан
     products:
-      - name: District Power Grids
+      - name: Районные Электросети
         url: https://play.google.com/store/apps/details?id=com.infotechcorp.moscowlamps
-      - name: Lighting Service
+      - name: Служба Горения
         url: https://play.google.com/store/apps/details?id=group.infotech.gorenie
     summaryMD: |
       Разрабатывал Android-приложения. Нанимал и технически руководил Android-разработчиками.
@@ -101,16 +101,16 @@ experience:
 
   - title: Android-разработчик
     org:
-      name: Yandex
+      name: Яндекс
       url: https://yandex.com
     start: 2015-07-01
     end: 2016-03-01
     location: Санкт-Петербург, Россия
     products:
-      - name: Yandex Start
+      - name: Яндекс Поиск
         url: https://play.google.com/store/apps/details?id=ru.yandex.searchplugin
     summaryMD: |
-      Разрабатывал [Yandex.Search для Android](https://play.google.com/store/apps/details?id=ru.yandex.searchplugin).
+      Разрабатывал [Яндекс Поиск для Android](https://play.google.com/store/apps/details?id=ru.yandex.searchplugin).
       - Адаптировал UI для планшетов
       - Улучшил производительность приложения
       - Внедрил тесты обновления приложения
@@ -142,7 +142,7 @@ experience:
 
 education:
   - org:
-      name: Казанский государственный университет
+      name: Казанский федеральный университет
       url: https://eng.kpfu.ru
       imgURL: https://upload.wikimedia.org/wikipedia/commons/d/d2/Kazan_federal_university_emblem.png
     start: 2010-09-01
