@@ -6,9 +6,13 @@ lang: en
 ---
 
 import ArticlesFr from "../app/ArticlesFr.astro"
+import LocaleCvLink from "../app/LocaleCvLink.astro"
 import LocaleSwitcher from "../app/LocaleSwitcher.astro"
 
-<LocaleSwitcher currentLocale="en" label="Switch language" />
+<div class="mb-6 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">
+  <LocaleCvLink currentLocale="en" label="CV" />
+  <LocaleSwitcher currentLocale="en" label="Switch language" />
+</div>
 
 ### Producing software
 

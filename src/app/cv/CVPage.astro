@@ -1,5 +1,7 @@
 ---
+import { getRelativeLocaleUrl } from "astro:i18n"
 import { clsx } from "clsx"
+import { normalizeLocaleHref } from "../i18n"
 import LocaleSwitcher from "../LocaleSwitcher.astro"
 import { md2html } from "../markdown"
 import type { Locale } from "../i18n"
@@ -22,6 +24,8 @@ interface Props {
 }
 
 const { copy, cv, locale } = Astro.props
+
+const homeHref = normalizeLocaleHref(getRelativeLocaleUrl(locale))
 ---
 
 <HtmlRoot
@@ -34,7 +38,15 @@ const { copy, cv, locale } = Astro.props
     m-6 max-w-none sm:m-12 md:m-16 print:m-0
   "
 >
-  <LocaleSwitcher currentLocale={locale} path="cv" label={copy.switcherLabel} />
+  <div class="mb-6 flex flex-col gap-4 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">
+    <a
+      href={homeHref}
+      class="text-sm font-medium text-slate-700 no-underline hover:text-slate-900"
+    >
+      {copy.backToHomeLabel}
+    </a>
+    <LocaleSwitcher currentLocale={locale} path="cv" label={copy.switcherLabel} />
+  </div>
 
   <section>
     <h1>{cv.head.name}</h1>

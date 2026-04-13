@@ -2,6 +2,7 @@ import type { Locale } from "../i18n"
 
 export interface CVPageCopy {
   awards: string
+  backToHomeLabel: string
   cvTitle: string
   education: string
   experience: string
@@ -19,6 +20,7 @@ export interface CVPageCopy {
 export const cvPageCopy: Record<Locale, CVPageCopy> = {
   en: {
     awards: "Honors & awards",
+    backToHomeLabel: "Home",
     cvTitle: "Adel Nizamutdinov's CV",
     education: "Education",
     experience: "Experience",
@@ -34,6 +36,7 @@ export const cvPageCopy: Record<Locale, CVPageCopy> = {
   },
   ru: {
     awards: "Награды и достижения",
+    backToHomeLabel: "Главная",
     cvTitle: "Резюме Аделя Низамутдинова",
     education: "Образование",
     experience: "Опыт",

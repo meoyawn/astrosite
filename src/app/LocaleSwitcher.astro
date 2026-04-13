@@ -1,6 +1,6 @@
 ---
 import { getRelativeLocaleUrl } from "astro:i18n"
-import { locales, type Locale } from "./i18n"
+import { locales, normalizeLocaleHref, type Locale } from "./i18n"
 
 interface Props {
   currentLocale: Locale
@@ -14,16 +14,13 @@ const localeLabel: Record<Locale, string> = {
   en: "English",
   ru: "Русский",
 }
-
-const normalizeHref = (href: string): string =>
-  href !== "/" && href.endsWith("/") ? href.slice(0, -1) : href
 ---
 
-<nav aria-label={label} class="mb-6">
+<nav aria-label={label} class="m-0">
   <ul class="m-0 flex list-none gap-2 p-0 text-sm font-medium">
     {
       locales.map(locale => {
-        const href = normalizeHref(
+        const href = normalizeLocaleHref(
           path ? getRelativeLocaleUrl(locale, path) : getRelativeLocaleUrl(locale),
         )
 
