@@ -26,7 +26,7 @@ const {
 const currentLocale: Locale =
   locales.find(locale => locale === lang) ?? defaultLocale
 const pathWithoutLocalePrefix = Astro.url.pathname.replace(
-  /^\/(ru|tt)(?=\/|$)/,
+  /^\/(en|ru|tt)(?=\/|$)/,
   "",
 )
 const normalizedPath = pathWithoutLocalePrefix.replace(/\/$/, "") || "/"

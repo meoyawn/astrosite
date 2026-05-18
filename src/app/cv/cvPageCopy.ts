@@ -46,7 +46,7 @@ export const cvPageCopy: Record<Locale, CVPageCopy> = {
   },
   tt: {
     awards: "Бүләкләр һәм казанышлар",
-    cvTitle: "Адел Низамутдиновның CV",
+    cvTitle: "Гадел Низаметдиновның CV",
     education: "Белем",
     experience: "Эш тәрибәсе",
     iconAlt: {

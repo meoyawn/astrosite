@@ -1,8 +1,8 @@
 import { load } from "js-yaml"
 import type { Locale } from "../../i18n"
-import cvEnSource from "./cv.en.yaml?raw"
-import cvRuSource from "./cv.ru.yaml?raw"
-import cvTtSource from "./cv.tt.yaml?raw"
+import cvEnSource from "../../../pages/en/cv.en.yaml?raw"
+import cvRuSource from "../../../pages/ru/cv.ru.yaml?raw"
+import cvTtSource from "../../../pages/tt/cv.tt.yaml?raw"
 import type {
   Award,
   CV,

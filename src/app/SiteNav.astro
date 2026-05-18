@@ -1,6 +1,6 @@
 ---
 import { getRelativeLocaleUrl } from "astro:i18n"
-import { normalizeLocaleHref, type Locale } from "./i18n"
+import { defaultLocale, normalizeLocaleHref, type Locale } from "./i18n"
 import LocaleSwitcher from "./LocaleSwitcher.astro"
 
 type SiteNavPath = "home" | "consulting" | "cv"
@@ -46,10 +46,31 @@ const copyByLocale: Record<Locale, SiteNavCopy> = {
 const { currentLocale, currentPath, class: className } = Astro.props
 const copy = copyByLocale[currentLocale]
 const switcherPath = currentPath === "home" ? undefined : currentPath
-const hrefFor = (locale: Locale, path: SiteNavPath): string =>
+const usesDefaultLocalePrefix =
+  Astro.url.pathname === `/${defaultLocale}` ||
+  Astro.url.pathname.startsWith(`/${defaultLocale}/`)
+const unprefixDefaultLocaleHref = (href: string): string =>
+  href === `/${defaultLocale}`
+    ? "/"
+    : href.startsWith(`/${defaultLocale}/`)
+      ? href.slice(defaultLocale.length + 1)
+      : href
+const rawHrefFor = (locale: Locale, path: SiteNavPath): string =>
   normalizeLocaleHref(
-    path === "home" ? getRelativeLocaleUrl(locale) : getRelativeLocaleUrl(locale, path),
+    path === "home"
+      ? getRelativeLocaleUrl(locale)
+      : getRelativeLocaleUrl(locale, path),
   )
+
+function hrefFor(locale: Locale, path: SiteNavPath): string {
+  const href = rawHrefFor(locale, path)
+
+  if (!usesDefaultLocalePrefix && locale === defaultLocale) {
+    return unprefixDefaultLocaleHref(href)
+  }
+
+  return href
+}
 
 const links: { label: string; path: SiteNavPath }[] = [
   { label: copy.home, path: "home" },
@@ -76,10 +97,10 @@ const links: { label: string; path: SiteNavPath }[] = [
               href={hrefFor(currentLocale, link.path)}
               aria-current={isCurrent ? "page" : undefined}
               class:list={[
-                "text-base font-medium text-zinc-950 underline underline-offset-[3px] transition-colors",
+                "text-base font-medium text-zinc-950",
                 isCurrent
-                  ? "font-semibold decoration-[3px] decoration-zinc-950 underline-offset-[4px]"
-                  : "decoration-zinc-950/45 decoration-1 hover:decoration-zinc-950",
+                  ? "font-semibold underline decoration-[2px] decoration-zinc-950 underline-offset-[3px]"
+                  : "hover-underline",
               ]}
             >
               {link.label}

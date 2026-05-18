@@ -37,6 +37,7 @@ tasks:
       - rm -rf dist/
       - bun astro build
     sources:
+      - astro.config.ts
       - src/**/*
       - public/**/*
     generates:

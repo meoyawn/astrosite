@@ -1,6 +1,6 @@
 ---
 import { getRelativeLocaleUrl } from "astro:i18n"
-import { locales, normalizeLocaleHref, type Locale } from "./i18n"
+import { defaultLocale, locales, normalizeLocaleHref, type Locale } from "./i18n"
 
 interface Props {
   currentLocale: Locale
@@ -9,11 +9,33 @@ interface Props {
 }
 
 const { currentLocale, label, path } = Astro.props
+const usesDefaultLocalePrefix =
+  Astro.url.pathname === `/${defaultLocale}` ||
+  Astro.url.pathname.startsWith(`/${defaultLocale}/`)
 
 const localeLabel: Record<Locale, string> = {
   en: "EN",
   ru: "RU",
   tt: "TT",
+}
+
+const unprefixDefaultLocaleHref = (href: string): string =>
+  href === `/${defaultLocale}`
+    ? "/"
+    : href.startsWith(`/${defaultLocale}/`)
+      ? href.slice(defaultLocale.length + 1)
+      : href
+
+function hrefFor(locale: Locale): string {
+  const href = normalizeLocaleHref(
+    path ? getRelativeLocaleUrl(locale, path) : getRelativeLocaleUrl(locale),
+  )
+
+  if (!usesDefaultLocalePrefix && locale === defaultLocale) {
+    return unprefixDefaultLocaleHref(href)
+  }
+
+  return href
 }
 ---
 
@@ -21,9 +43,7 @@ const localeLabel: Record<Locale, string> = {
   <ul class="m-0 flex list-none gap-1 p-0 text-sm font-medium">
     {
       locales.map(locale => {
-        const href = normalizeLocaleHref(
-          path ? getRelativeLocaleUrl(locale, path) : getRelativeLocaleUrl(locale),
-        )
+        const href = hrefFor(locale)
 
         return (
           <li>
