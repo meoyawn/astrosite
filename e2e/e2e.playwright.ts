@@ -169,25 +169,28 @@ test.describe("e2e tests", () => {
     const response = await page.goto(`${builtOrigin}/consulting/`)
 
     expect(response?.ok() ?? false).toEqual(true)
+    const main = page.getByRole("main")
+
     await expect(
-      page.getByRole("heading", { level: 1, name: "Adel Nizamutdinov" }),
+      main.getByRole("heading", { level: 1, name: /consulting/i }),
     ).toBeVisible()
     await expect(
-      page.getByText(
-        "Senior software engineering consulting through Pneuma LLC.",
-      ),
-    ).toBeVisible()
-    await expect(
-      page.getByText(
-        "I help business clients build, repair, and review production software",
-      ),
-    ).toBeVisible()
-    await expect(
-      page.getByRole("link", { name: "mail@adelnz.com" }),
+      main.getByRole("link", { name: "mail@adelnz.com" }),
     ).toHaveAttribute("href", "mailto:mail@adelnz.com")
     await expect(
-      page.getByText("New Mexico limited liability company"),
-    ).toBeVisible()
+      main.getByRole("link", { name: "Listenbox" }),
+    ).toHaveAttribute("href", "https://listenbox.app")
+    await expect(
+      main.getByRole("link", { name: "Arrowbox" }),
+    ).toHaveAttribute("href", "https://arrowbox.co")
+    await expect(
+      main.getByRole("link", { name: "ResponsibleAPI" }),
+    ).toHaveAttribute("href", "https://responsibleapi.com")
+    await expect(main.getByRole("link", { name: "CV" })).toHaveAttribute(
+      "href",
+      "/cv",
+    )
+    await expect(main.getByText(/Pneuma LLC/)).toBeVisible()
   })
 
   test("shared localized nav links home, consulting, and cv pages", async ({
