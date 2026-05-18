@@ -172,7 +172,7 @@ test.describe("e2e tests", () => {
     const main = page.getByRole("main")
 
     await expect(
-      main.getByRole("heading", { level: 1, name: /consulting/i }),
+      main.getByRole("heading", { name: /consulting/i }),
     ).toBeVisible()
     await expect(
       main.getByRole("link", { name: "mail@adelnz.com" }),

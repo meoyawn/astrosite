@@ -11,6 +11,7 @@
     ],
     "resolveJsonModule": true,
     "strictNullChecks": true,
+    "types": ["bun"],
     "verbatimModuleSyntax": true,
     "skipLibCheck": true,
     "skipDefaultLibCheck": true
