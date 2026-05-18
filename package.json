@@ -3,9 +3,6 @@
   "version": "0.0.1",
   "private": true,
   "type": "module",
-  "scripts": {
-    "dev": "astro dev"
-  },
   "dependencies": {
     "clsx": "^2.1.1",
     "date-fns": "^4.2.1",
@@ -33,7 +30,6 @@
     "sharp": "^0.34.5",
     "tailwindcss": "^4.3.0",
     "typescript": "^6.0.3",
-    "vitest": "^4.1.6",
     "wrangler": "^4.92.0"
   }
 }
