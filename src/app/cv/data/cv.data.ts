@@ -1,8 +1,8 @@
 import { load } from "js-yaml"
 import type { Locale } from "../../i18n"
-import cvEnSource from "../../../pages/en/cv.en.yaml?raw"
-import cvRuSource from "../../../pages/ru/cv.ru.yaml?raw"
-import cvTtSource from "../../../pages/tt/cv.tt.yaml?raw"
+import cvEnSource from "../../../pages/en/cv.yaml?raw"
+import cvRuSource from "../../../pages/ru/cv.yaml?raw"
+import cvTtSource from "../../../pages/tt/cv.yaml?raw"
 import type {
   Award,
   CV,
@@ -137,9 +137,9 @@ const loadCV = (source: string, sourceName: string): CV =>
   parseCV(normalizeCV(load(source)), sourceName)
 
 export const cvByLocale: Record<Locale, CV> = {
-  en: loadCV(cvEnSource, "cv.en.yaml"),
-  ru: loadCV(cvRuSource, "cv.ru.yaml"),
-  tt: loadCV(cvTtSource, "cv.tt.yaml"),
+  en: loadCV(cvEnSource, "en/cv.yaml"),
+  ru: loadCV(cvRuSource, "ru/cv.yaml"),
+  tt: loadCV(cvTtSource, "tt/cv.yaml"),
 }
 
 export const getCV = (locale: Locale): CV => cvByLocale[locale]

@@ -5,6 +5,7 @@ import { defineConfig } from "astro/config"
 import rehypeExternalLinks from "rehype-external-links"
 import { defaultLocale, locales } from "./src/app/i18n"
 
+/** Flatten src/pages/en routes into src/pages for the built default locale. */
 const mapDefaultLocaleToBareRoutes = () => ({
   name: "map-default-locale-to-bare-routes",
   hooks: {
