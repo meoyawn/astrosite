@@ -21,7 +21,7 @@ const { title, description, lang = "en" } = Astro.props
     <meta name="description" content={description ?? "Personal website"} />
   </head>
 
-  <body class={Astro.props.class}>
+  <body class:list={["bg-white text-zinc-950", Astro.props.class]}>
     <slot />
   </body>
 </html>

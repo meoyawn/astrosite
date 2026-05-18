@@ -67,22 +67,26 @@ const links: { label: string; path: SiteNavPath }[] = [
 >
   <ul class="m-0 flex list-none flex-row flex-wrap gap-x-4 gap-y-2 p-0">
     {
-      links.map(link => (
-        <li class="m-0 p-0">
-          <a
-            href={hrefFor(currentLocale, link.path)}
-            aria-current={currentPath === link.path ? "page" : undefined}
-            class:list={[
-              "text-base font-medium underline decoration-2 underline-offset-[3px] transition-colors",
-              currentPath === link.path
-                ? "text-sky-950 decoration-sky-600"
-                : "text-sky-800 decoration-sky-300 hover:text-sky-950 hover:decoration-sky-600",
-            ]}
-          >
-            {link.label}
-          </a>
-        </li>
-      ))
+      links.map(link => {
+        const isCurrent = currentPath === link.path
+
+        return (
+          <li class="m-0 p-0">
+            <a
+              href={hrefFor(currentLocale, link.path)}
+              aria-current={isCurrent ? "page" : undefined}
+              class:list={[
+                "text-base font-medium text-zinc-950 underline underline-offset-[3px] transition-colors",
+                isCurrent
+                  ? "font-semibold decoration-[3px] decoration-zinc-950 underline-offset-[4px]"
+                  : "decoration-zinc-950/45 decoration-1 hover:decoration-zinc-950",
+              ]}
+            >
+              {link.label}
+            </a>
+          </li>
+        )
+      })
     }
   </ul>
 

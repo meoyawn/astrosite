@@ -249,6 +249,29 @@ test.describe("e2e tests", () => {
             await expect(
               nav.getByRole("link", { name: navCase.links.cv.name }),
             ).toHaveAttribute("href", navCase.links.cv.href)
+
+            const activeLinkKey = pagePath.endsWith("/consulting/")
+              ? "consulting"
+              : pagePath.endsWith("/cv/")
+                ? "cv"
+                : "home"
+            const activeLinkName = navCase.links[activeLinkKey].name
+            const inactiveLinkNames = [
+              navCase.links.home.name,
+              navCase.links.consulting.name,
+              navCase.links.cv.name,
+            ].filter(linkName => linkName !== activeLinkName)
+
+            await expect(
+              nav.getByRole("link", { name: activeLinkName }),
+            ).toHaveAttribute("aria-current", "page")
+            await Promise.all(
+              inactiveLinkNames.map(async linkName => {
+                await expect(
+                  nav.getByRole("link", { name: linkName }),
+                ).not.toHaveAttribute("aria-current", "page")
+              }),
+            )
           } finally {
             await page.close()
           }
