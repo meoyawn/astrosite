@@ -1,31 +1,11 @@
-import { cpSync, existsSync, rmSync } from "node:fs"
-import { fileURLToPath } from "node:url"
 import mdx from "@astrojs/mdx"
 import { defineConfig } from "astro/config"
 import rehypeExternalLinks from "rehype-external-links"
 import { defaultLocale, locales } from "./src/app/i18n"
 
-/** Flatten src/pages/en routes into src/pages for the built default locale. */
-const mapDefaultLocaleToBareRoutes = () => ({
-  name: "map-default-locale-to-bare-routes",
-  hooks: {
-    "astro:build:done": ({ dir }: { dir: URL }) => {
-      const distPath = fileURLToPath(dir)
-      const defaultLocalePath = `${distPath}${defaultLocale}`
-
-      if (!existsSync(defaultLocalePath)) {
-        return
-      }
-
-      cpSync(defaultLocalePath, distPath, { recursive: true })
-      rmSync(defaultLocalePath, { recursive: true })
-    },
-  },
-})
-
 /** https://astro.build/config */
 export default defineConfig({
-  integrations: [mdx(), mapDefaultLocaleToBareRoutes()],
+  integrations: [mdx()],
   server: {
     host: true,
     port: 4321,

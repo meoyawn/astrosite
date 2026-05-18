@@ -1,6 +1,6 @@
 import { load } from "js-yaml"
 import type { Locale } from "../../i18n"
-import cvEnSource from "../../../pages/en/cv.yaml?raw"
+import cvEnSource from "../../../pages/cv.yaml?raw"
 import cvRuSource from "../../../pages/ru/cv.yaml?raw"
 import cvTtSource from "../../../pages/tt/cv.yaml?raw"
 import type {
