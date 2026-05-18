@@ -9,6 +9,7 @@ tasks:
     run: once
     cmd: bun oxlint .
     sources:
+      - bun.lock
       - "**/*.ts"
       - exclude: dist/**/*
       - exclude: node_modules/**/*
@@ -17,12 +18,14 @@ tasks:
     run: once
     cmd: bun astro check --tsconfig src/tsconfig.json
     sources:
+      - bun.lock
       - src/**/*
 
   typecheck:tooling:
     run: once
     cmd: bun tsc -p tsconfig.json
     sources:
+      - bun.lock
       - "**/*.ts"
       - exclude: src/**/*
       - exclude: dist/**/*
@@ -37,6 +40,7 @@ tasks:
       - rm -rf dist/
       - bun astro build
     sources:
+      - bun.lock
       - astro.config.ts
       - src/**/*
       - public/**/*
@@ -51,6 +55,7 @@ tasks:
       - bun playwright install chromium
       - bun playwright test
     sources:
+      - bun.lock
       - "dist/**/*"
       - "e2e/**/*"
 
@@ -58,6 +63,7 @@ tasks:
     run: once
     cmd: bun test
     sources:
+      - bun.lock
       - "src/**/*.ts"
 
   test:
@@ -86,4 +92,5 @@ tasks:
     cmds:
       - bun wrangler pages deploy dist/
     sources:
+      - bun.lock
       - dist/**/*
