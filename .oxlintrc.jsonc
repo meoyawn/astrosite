@@ -1,6 +1,7 @@
 {
   "$schema": "./node_modules/oxlint/configuration_schema.json",
   "plugins": ["typescript", "jsdoc"],
+  "jsPlugins": ["oxlint-tailwindcss"],
   "categories": {
     "correctness": "error",
     "nursery": "off",
@@ -55,6 +56,29 @@
         ],
         "eqeqeq": ["error", "always"],
         "no-console": "error",
+        "tailwindcss/consistent-variant-order": "warn",
+        "tailwindcss/enforce-canonical": "warn",
+        "tailwindcss/enforce-consistent-important-position": "warn",
+        "tailwindcss/enforce-consistent-line-wrapping": "off",
+        "tailwindcss/enforce-consistent-variable-syntax": "warn",
+        "tailwindcss/enforce-logical": "off",
+        "tailwindcss/enforce-negative-arbitrary-values": "warn",
+        "tailwindcss/enforce-physical": "off",
+        "tailwindcss/enforce-shorthand": "warn",
+        "tailwindcss/enforce-sort-order": "warn",
+        "tailwindcss/max-class-count": "off",
+        "tailwindcss/no-arbitrary-value": "off",
+        "tailwindcss/no-conflicting-classes": "error",
+        "tailwindcss/no-contradicting-variants": "warn",
+        "tailwindcss/no-dark-without-light": "warn",
+        "tailwindcss/no-deprecated-classes": "error",
+        "tailwindcss/no-duplicate-classes": "error",
+        "tailwindcss/no-hardcoded-colors": "warn",
+        "tailwindcss/no-restricted-classes": "off",
+        "tailwindcss/no-unknown-classes": "error",
+        "tailwindcss/no-unnecessary-arbitrary-value": "warn",
+        "tailwindcss/no-unnecessary-whitespace": "error",
+        "tailwindcss/prefer-theme-tokens": "off",
       },
     },
     {
@@ -68,12 +92,6 @@
          * Tests compare JSON module values to OpenAPI shapes with explicit assertions.
          */
         "@typescript-eslint/no-unsafe-type-assertion": "off",
-      },
-    },
-    {
-      "files": ["scripts/**/*.ts"],
-      "rules": {
-        "no-console": "off",
       },
     },
   ],
