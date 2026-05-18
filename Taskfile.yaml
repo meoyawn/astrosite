@@ -7,10 +7,12 @@ tasks:
 
   lint:
     run: once
-    cmd: bun oxlint .
+    cmd: bun eslint .
     sources:
       - bun.lock
+      - eslint.config.ts
       - "**/*.ts"
+      - "**/*.astro"
       - exclude: dist/**/*
       - exclude: node_modules/**/*
 
