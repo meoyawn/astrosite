@@ -1,8 +1,9 @@
 import { existsSync, readdirSync, readFileSync, statSync } from "node:fs"
-import { join } from "node:path"
+import { join, relative } from "node:path"
 import { expect, test } from "@playwright/test"
 import postcss from "postcss"
 
+const builtOrigin = "http://built.local"
 const distDir = "dist"
 
 const collectHtmlFiles = (dirPath: string): string[] =>
@@ -22,8 +23,60 @@ const collectStylesheetHrefs = (html: string): string[] =>
     match => (match[1] === undefined ? [] : [match[1]]),
   )
 
+const contentTypeFor = (filePath: string): string => {
+  if (filePath.endsWith(".css")) {
+    return "text/css"
+  }
+
+  if (filePath.endsWith(".html")) {
+    return "text/html"
+  }
+
+  if (filePath.endsWith(".svg")) {
+    return "image/svg+xml"
+  }
+
+  return "application/octet-stream"
+}
+
+const filePathFor = (pathname: string): string => {
+  const requestedPath = decodeURIComponent(pathname).replace(/^\//, "")
+
+  return join(distDir, requestedPath === "" ? "index.html" : requestedPath)
+}
+
+const pagePathFor = (htmlFile: string): string =>
+  `/${relative(distDir, htmlFile)}`
+
 test.describe("built global css", () => {
-  test("every emitted html file references parseable css assets", () => {
+  test("every emitted html file references parseable css assets", async ({
+    page,
+  }) => {
+    await page.route("**/*", async route => {
+      const requestUrl = new URL(route.request().url())
+
+      if (requestUrl.origin !== builtOrigin) {
+        await route.abort()
+        return
+      }
+
+      const filePath = filePathFor(requestUrl.pathname)
+
+      if (!existsSync(filePath)) {
+        await route.fulfill({
+          status: 404,
+          body: "Not found",
+          contentType: "text/plain",
+        })
+        return
+      }
+
+      await route.fulfill({
+        path: filePath,
+        contentType: contentTypeFor(filePath),
+      })
+    })
+
     expect(
       existsSync(distDir),
       "Expected dist/ to exist before running this test.",
@@ -44,6 +97,25 @@ test.describe("built global css", () => {
         stylesheetHrefs.length,
         `Expected ${htmlFile} to reference at least one stylesheet.`,
       ).toBeGreaterThan(0)
+
+      const response = await page.goto(`${builtOrigin}${pagePathFor(htmlFile)}`)
+
+      expect(
+        response?.ok() ?? false,
+        `Expected Playwright to load built HTML file: ${htmlFile}.`,
+      ).toEqual(true)
+
+      const loadedStylesheetHrefs = await page
+        .locator('link[rel="stylesheet"]')
+        .evaluateAll(links =>
+          links.flatMap(link => {
+            const href = link.getAttribute("href")
+
+            return href === null ? [] : [href]
+          }),
+        )
+
+      expect(loadedStylesheetHrefs).toEqual(stylesheetHrefs)
 
       for (const href of stylesheetHrefs) {
         const stylesheetPath = join(distDir, href.replace(/^\//, ""))

@@ -5,61 +5,31 @@ tasks:
     cmds:
       - agent --yolo
 
-  lint-src:
-    run: once
-    cmds:
-      - bun oxlint src/
-    sources:
-      - src/**/*
-
-  lint-tooling:
-    run: once
-    cmds:
-      - bun oxlint . --ignore-pattern 'src/**'
-    sources:
-      - "**/*.ts"
-      - exclude: "src/**/*"
-      - exclude: "node_modules/**/*"
-
   lint:
     run: once
-    deps:
-      - lint-src
-      - lint-tooling
-
-  typecheck-src:
-    run: once
-    cmds:
-      - bun astro check --tsconfig src/tsconfig.json
-    sources:
-      - src/**/*
-
-  typecheck-tooling:
-    run: once
-    cmds:
-      - bun tsc -p tsconfig.json
+    cmd: bun oxlint .
     sources:
       - "**/*.ts"
-      - exclude: "src/**/*"
-      - exclude: "node_modules/**/*"
+      - exclude: dist/**/*
+      - exclude: node_modules/**/*
 
-  typecheck:
+  typecheck:src:
     run: once
-    deps:
-      - typecheck-src
-      - typecheck-tooling
-
-  dev:
-    cmds:
-      - bun astro dev
-
-  check-src:
-    run: once
-    deps:
-      - lint-src
-      - typecheck-src
+    cmd: bun astro check --tsconfig src/tsconfig.json
     sources:
       - src/**/*
+
+  typecheck:tooling:
+    run: once
+    cmd: bun tsc -p tsconfig.json
+    sources:
+      - "**/*.ts"
+      - exclude: src/**/*
+      - exclude: dist/**/*
+      - exclude: node_modules/**/*
+
+  dev:
+    cmd: bun astro dev
 
   build:
     run: once
@@ -72,30 +42,34 @@ tasks:
     generates:
       - dist/**/*
 
-  test-e2e:
+  test:e2e:
     run: once
     deps:
       - build
     cmd: bun playwright test
     sources:
-      - dist/**/*
-      - e2e/**/*
+      - "dist/**/*"
+      - "e2e/**/*"
 
-  test:
+  test:unit:
     run: once
     cmd: bun test
     sources:
-      - "**/*.ts"
-      - exclude: "e2e/**/*"
-      - exclude: "node_modules/**/*"
+      - "src/**/*.ts"
+
+  test:
+    run: once
+    deps:
+      - test:unit
+      - test:e2e
 
   check:
     run: once
     deps:
       - lint
-      - typecheck
+      - typecheck:src
+      - typecheck:tooling
       - test
-      - test-e2e
 
   deploy:
     deps:
