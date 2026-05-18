@@ -48,7 +48,7 @@ const filePathFor = (pathname: string): string => {
 const pagePathFor = (htmlFile: string): string =>
   `/${relative(distDir, htmlFile)}`
 
-test.describe("built global css", () => {
+test.describe("e2e tests", () => {
   test("every emitted html file references parseable css assets", async ({
     page,
   }) => {

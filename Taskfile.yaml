@@ -46,7 +46,9 @@ tasks:
     run: once
     deps:
       - build
-    cmd: bun playwright test
+    cmds:
+      - bun playwright install chromium
+      - bun playwright test
     sources:
       - "dist/**/*"
       - "e2e/**/*"
