@@ -27,12 +27,15 @@ const { copy, cv, locale } = Astro.props
   lang={locale}
   currentPath="cv"
   navClass="print:hidden"
-  class="
-    print:prose-xs mx-0 prose
-    max-w-none px-0
-    pb-6 prose-sky
-    sm:mx-12 sm:pb-12 md:mx-16 md:pb-16 print:m-0 prose-p:my-2 prose-p:print:my-2 prose-ul:my-1 prose-ul:print:my-0
-  "
+  class:list={[
+    "mx-0 prose max-w-none",
+    "px-0 pb-6",
+    "prose-sky",
+    "sm:mx-12 sm:pb-12 md:mx-16 md:pb-16",
+    "print:m-0 print:text-xs",
+    "prose-p:my-2 prose-p:print:my-2",
+    "prose-ul:my-1 prose-ul:print:my-0",
+  ]}
 >
   <section>
     <h1>{cv.head.name}</h1>
