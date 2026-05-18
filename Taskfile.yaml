@@ -63,13 +63,19 @@ tasks:
       - test:unit
       - test:e2e
 
-  check:
+  check-impl:
     run: once
     deps:
       - lint
       - typecheck:src
       - typecheck:tooling
       - test
+
+  check:
+    run: once
+    cmds:
+      - bun i
+      - task: check-impl
 
   deploy:
     deps:
