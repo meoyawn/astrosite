@@ -5,7 +5,7 @@ description: Senior software engineering consulting for production software.
 lang: en
 ---
 
-# Software engineering consulting
+# Software Development Consulting
 
 I work with teams that need an experienced engineer on a difficult software
 problem: shipping a product, cleaning up a codebase, integrating APIs, or

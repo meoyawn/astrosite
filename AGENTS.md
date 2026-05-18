@@ -17,6 +17,12 @@
 - never disable, skip or ignore tests
 - never edit [tsconfig.json](tsconfig.json) unless explicitly asked
 
+## i18n sync
+
+- keep translations in [src/pages/ru](src/pages/ru/) and
+  [src/pages/tt](src/pages/tt/) in sync with original pages in
+  [src/pages](src/pages/)
+
 ## CLI tools
 
 - never call `node`, call `bun` instead
