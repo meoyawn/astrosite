@@ -16,6 +16,9 @@ tasks:
       - exclude: dist/**/*
       - exclude: node_modules/**/*
 
+  lint:fix:
+    cmd: bun eslint . --fix
+
   typecheck:src:
     run: once
     cmd: bun astro check --tsconfig src/tsconfig.json
