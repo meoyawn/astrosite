@@ -1,7 +1,7 @@
 import { existsSync, readdirSync, readFileSync, statSync } from "node:fs"
 import { join } from "node:path"
+import { expect, test } from "@playwright/test"
 import postcss from "postcss"
-import { describe, expect, test } from "vitest"
 
 const distDir = "dist"
 
@@ -22,7 +22,7 @@ const collectStylesheetHrefs = (html: string): string[] =>
     match => (match[1] === undefined ? [] : [match[1]]),
   )
 
-describe("built global css", () => {
+test.describe("built global css", () => {
   test("every emitted html file references parseable css assets", () => {
     expect(
       existsSync(distDir),

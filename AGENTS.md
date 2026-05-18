@@ -31,7 +31,7 @@
   - if a package is missing, stop and ask to add it to `package.json`
   - if a package is present, call through `bun`
 - never run code formatting unless explicitly asked
-- [never call `vitest`](docs/package.jsonc), `bun test` instead
+- never call `vitest` or `bun test` directly
 - `rg`, `ast-grep`, `jq` are available for calling
 - never call `wc`, call `scc` instead (both on files and folders)
 - never pass multiple paths to `scc`. Single dir/file only.

@@ -31,3 +31,5 @@ coverage/
 
 *.jpg
 *.png
+
+test-results/

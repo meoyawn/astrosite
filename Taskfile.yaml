@@ -49,35 +49,6 @@ tasks:
       - typecheck-src
       - typecheck-tooling
 
-  test-src:
-    run: once
-    cmds:
-      - bun test src/
-    sources:
-      - src/**/*
-
-  test-tooling:
-    run: once
-    cmds:
-      - bun test scripts/
-    sources:
-      - "scripts/**/*"
-
-  test:
-    run: once
-    deps:
-      - test-src
-      - test-tooling
-
-  test-coverage:
-    run: once
-    cmds:
-      - bun test --coverage
-    sources:
-      - "**/*.ts"
-      - exclude: "e2e/**/*"
-      - exclude: "node_modules/**/*"
-
   dev:
     cmds:
       - bun astro dev
@@ -87,21 +58,11 @@ tasks:
     deps:
       - lint-src
       - typecheck-src
-      - test-src
     sources:
       - src/**/*
 
-  check:
-    run: once
-    deps:
-      - lint
-      - typecheck
-      - test
-
   build:
     run: once
-    deps:
-      - check
     cmds:
       - rm -rf dist/
       - bun astro build
@@ -115,15 +76,30 @@ tasks:
     run: once
     deps:
       - build
-    cmds:
-      - bun test e2e/
+    cmd: bun playwright test
     sources:
       - dist/**/*
       - e2e/**/*
 
+  test:
+    run: once
+    cmd: bun test
+    sources:
+      - "**/*.ts"
+      - exclude: "e2e/**/*"
+      - exclude: "node_modules/**/*"
+
+  check:
+    run: once
+    deps:
+      - lint
+      - typecheck
+      - test
+      - test-e2e
+
   deploy:
     deps:
-      - test-e2e
+      - check
     cmds:
       - bun wrangler pages deploy dist/
     sources:

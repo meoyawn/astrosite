@@ -15,9 +15,7 @@ flowchart TD
     typecheck_tooling["typecheck-tooling<br/>bun tsc -p tsconfig.json"]
     typecheck["typecheck"]
 
-    test_src["test-src<br/>bun test src/"]
-    test_tooling["test-tooling<br/>bun test scripts/"]
-    test["test"]
+    test["test<br/>bun test"]
 
     check_src["check-src"]
     check["check"]
@@ -25,14 +23,13 @@ flowchart TD
 
   subgraph BuildAndDeploy["Build and Deploy"]
     build["build<br/>rm -rf dist/<br/>bun astro build"]
-    test_e2e["test-e2e<br/>bun test e2e/"]
+    test_e2e["test-e2e<br/>bun playwright test"]
     deploy["deploy<br/>bun wrangler pages deploy dist/"]
   end
 
   subgraph Standalone
     cursor["cursor<br/>agent --yolo"]
     dev["dev<br/>bun astro dev"]
-    test_coverage["test-coverage<br/>bun test --coverage"]
   end
 
   lint_src --> lint
@@ -41,34 +38,29 @@ flowchart TD
   typecheck_src --> typecheck
   typecheck_tooling --> typecheck
 
-  test_src --> test
-  test_tooling --> test
-
   lint_src --> check_src
   typecheck_src --> check_src
-  test_src --> check_src
 
   lint --> check
   typecheck --> check
   test --> check
+  test_e2e --> check
 
-  check --> build
   build --> test_e2e
-  test_e2e --> deploy
+  check --> deploy
 ```
 
 ## Aggregate Tasks
 
 - `lint` depends on `lint-src` and `lint-tooling`.
 - `typecheck` depends on `typecheck-src` and `typecheck-tooling`.
-- `test` depends on `test-src` and `test-tooling`.
-- `check-src` runs the `src/`-only lint, typecheck, and test tasks.
-- `check` runs the full lint, typecheck, and test aggregates.
-- `build` requires `check` before running the Astro build.
-- `deploy` requires `test-e2e`, which requires `build`.
+- `test` runs `bun test`.
+- `test-e2e` runs `bun playwright test` after `build`.
+- `check-src` runs the `src/`-only lint and typecheck tasks.
+- `check` runs the full lint, typecheck, `test`, and `test-e2e` tasks.
+- `deploy` requires `check`.
 
 ## Standalone Tasks
 
 - `cursor` runs `agent --yolo`.
 - `dev` runs `bun astro dev`.
-- `test-coverage` runs `bun test --coverage`.
