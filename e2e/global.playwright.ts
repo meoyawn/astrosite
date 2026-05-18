@@ -1,6 +1,6 @@
 import { existsSync, readdirSync, readFileSync, statSync } from "node:fs"
 import { join, relative } from "node:path"
-import { expect, test } from "@playwright/test"
+import { expect, type Page, test } from "@playwright/test"
 import postcss from "postcss"
 
 const builtOrigin = "http://built.local"
@@ -42,41 +42,47 @@ const contentTypeFor = (filePath: string): string => {
 const filePathFor = (pathname: string): string => {
   const requestedPath = decodeURIComponent(pathname).replace(/^\//, "")
 
-  return join(distDir, requestedPath === "" ? "index.html" : requestedPath)
+  if (requestedPath === "" || requestedPath.endsWith("/")) {
+    return join(distDir, `${requestedPath}index.html`)
+  }
+
+  return join(distDir, requestedPath)
 }
 
 const pagePathFor = (htmlFile: string): string =>
   `/${relative(distDir, htmlFile)}`
 
+const routeBuiltFiles = async (page: Page): Promise<void> => {
+  await page.route("**/*", async route => {
+    const requestUrl = new URL(route.request().url())
+
+    if (requestUrl.origin !== builtOrigin) {
+      await route.abort()
+      return
+    }
+
+    const filePath = filePathFor(requestUrl.pathname)
+
+    if (!existsSync(filePath)) {
+      await route.fulfill({
+        status: 404,
+        body: "Not found",
+        contentType: "text/plain",
+      })
+      return
+    }
+
+    await route.fulfill({
+      path: filePath,
+      contentType: contentTypeFor(filePath),
+    })
+  })
+}
+
 test.describe("e2e tests", () => {
   test("every emitted html file references parseable css assets", async ({
-    page,
+    browser,
   }) => {
-    await page.route("**/*", async route => {
-      const requestUrl = new URL(route.request().url())
-
-      if (requestUrl.origin !== builtOrigin) {
-        await route.abort()
-        return
-      }
-
-      const filePath = filePathFor(requestUrl.pathname)
-
-      if (!existsSync(filePath)) {
-        await route.fulfill({
-          status: 404,
-          body: "Not found",
-          contentType: "text/plain",
-        })
-        return
-      }
-
-      await route.fulfill({
-        path: filePath,
-        contentType: contentTypeFor(filePath),
-      })
-    })
-
     expect(
       existsSync(distDir),
       "Expected dist/ to exist before running this test.",
@@ -89,46 +95,92 @@ test.describe("e2e tests", () => {
       "Expected at least one built HTML file in dist/.",
     ).toBeGreaterThan(0)
 
-    for (const htmlFile of htmlFiles) {
-      const html = readFileSync(htmlFile, "utf8")
-      const stylesheetHrefs = collectStylesheetHrefs(html)
+    await Promise.all(
+      htmlFiles.map(async htmlFile => {
+        const page = await browser.newPage()
 
-      expect(
-        stylesheetHrefs.length,
-        `Expected ${htmlFile} to reference at least one stylesheet.`,
-      ).toBeGreaterThan(0)
+        try {
+          await routeBuiltFiles(page)
 
-      const response = await page.goto(`${builtOrigin}${pagePathFor(htmlFile)}`)
+          const html = readFileSync(htmlFile, "utf8")
+          const stylesheetHrefs = collectStylesheetHrefs(html)
 
-      expect(
-        response?.ok() ?? false,
-        `Expected Playwright to load built HTML file: ${htmlFile}.`,
-      ).toEqual(true)
+          expect(
+            stylesheetHrefs.length,
+            `Expected ${htmlFile} to reference at least one stylesheet.`,
+          ).toBeGreaterThan(0)
 
-      const loadedStylesheetHrefs = await page
-        .locator('link[rel="stylesheet"]')
-        .evaluateAll(links =>
-          links.flatMap(link => {
-            const href = link.getAttribute("href")
+          const response = await page.goto(
+            `${builtOrigin}${pagePathFor(htmlFile)}`,
+          )
 
-            return href === null ? [] : [href]
-          }),
-        )
+          expect(
+            response?.ok() ?? false,
+            `Expected Playwright to load built HTML file: ${htmlFile}.`,
+          ).toEqual(true)
 
-      expect(loadedStylesheetHrefs).toEqual(stylesheetHrefs)
+          const loadedStylesheetHrefs = await page
+            .locator('link[rel="stylesheet"]')
+            .evaluateAll(links =>
+              links.flatMap(link => {
+                const href = link.getAttribute("href")
 
-      for (const href of stylesheetHrefs) {
-        const stylesheetPath = join(distDir, href.replace(/^\//, ""))
+                return href === null ? [] : [href]
+              }),
+            )
 
-        expect(
-          existsSync(stylesheetPath),
-          `Expected ${htmlFile} to reference an existing stylesheet: ${href}.`,
-        ).toEqual(true)
+          expect(loadedStylesheetHrefs).toEqual(stylesheetHrefs)
 
-        expect(() =>
-          postcss.parse(readFileSync(stylesheetPath, "utf8")),
-        ).not.toThrow()
-      }
-    }
+          for (const href of stylesheetHrefs) {
+            const stylesheetPath = join(distDir, href.replace(/^\//, ""))
+
+            expect(
+              existsSync(stylesheetPath),
+              `Expected ${htmlFile} to reference an existing stylesheet: ${href}.`,
+            ).toEqual(true)
+
+            expect(() =>
+              postcss.parse(readFileSync(stylesheetPath, "utf8")),
+            ).not.toThrow()
+          }
+        } finally {
+          await page.close()
+        }
+      }),
+    )
+  })
+
+  test("consulting page presents business consulting details", async ({
+    page,
+  }) => {
+    await routeBuiltFiles(page)
+
+    expect(
+      existsSync(join(distDir, "consulting", "index.html")),
+      "Expected /consulting/ to be emitted as static HTML.",
+    ).toEqual(true)
+
+    const response = await page.goto(`${builtOrigin}/consulting/`)
+
+    expect(response?.ok() ?? false).toEqual(true)
+    await expect(
+      page.getByRole("heading", { level: 1, name: "Adel Nizamutdinov" }),
+    ).toBeVisible()
+    await expect(
+      page.getByText(
+        "Senior software engineering consulting through Pneuma LLC.",
+      ),
+    ).toBeVisible()
+    await expect(
+      page.getByText(
+        "I help business clients build, repair, and review production software",
+      ),
+    ).toBeVisible()
+    await expect(
+      page.getByRole("link", { name: "mail@adelnz.com" }),
+    ).toHaveAttribute("href", "mailto:mail@adelnz.com")
+    await expect(
+      page.getByText("New Mexico limited liability company"),
+    ).toBeVisible()
   })
 })

@@ -7,22 +7,15 @@
 
 - dev server port is in [astro.config.ts](astro.config.ts)
 - never launch the dev server, it's already running
-- never address the server through `localhost`, use ipv6 `[::1]` only
-- never use dev server URL without shell quoting it (because ipv6 symbols)
 - when trying to debug problems, start with simple `curl`
-- take page screenshots using `scripts/screenshot.ts <url> <output-path>`
 
 ## Rules
 
 - never add `oxlint-disable-next-line` unless explicitly asked
-- never edit [package.json](package.json). Stop and ask the human
+- never edit [package.json](package.json) unless explicitly asked
 - never edit [bunfig.toml](bunfig.toml) unless explicitly asked
 - never disable, skip or ignore tests
 - never edit [tsconfig.json](tsconfig.json) unless explicitly asked
-
-## Feedback/Verification
-
-- never edit `src/**/*` without verifying with `task check-src` afterwards
 
 ## CLI tools
 
