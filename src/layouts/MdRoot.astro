@@ -1,5 +1,5 @@
 ---
-import HtmlRoot from "./HtmlRoot.astro"
+import SiteShell from "./SiteShell.astro"
 
 interface Props {
   frontmatter: Partial<Record<"description" | "lang" | "title", string>>
@@ -10,11 +10,11 @@ const {
 } = Astro.props
 ---
 
-<HtmlRoot
+<SiteShell
   title={title!}
   description={description}
   lang={lang}
-  class="prose mx-auto my-6 max-w-prose px-4 sm:my-12 md:my-16"
+  class="prose mx-auto max-w-prose px-6 pb-6 sm:px-8 sm:pb-12 md:pb-16"
 >
   <slot />
-</HtmlRoot>
+</SiteShell>

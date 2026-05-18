@@ -1,0 +1,60 @@
+---
+import SiteNav from "../app/SiteNav.astro"
+import { defaultLocale, locales, type Locale } from "../app/i18n"
+import HtmlRoot from "./HtmlRoot.astro"
+
+type SiteNavPath = "home" | "consulting" | "cv"
+
+interface Props {
+  class?: string | undefined
+  currentPath?: SiteNavPath | undefined
+  description?: string | undefined
+  lang?: string | undefined
+  navClass?: string | undefined
+  title: string
+}
+
+const {
+  title,
+  description,
+  lang = defaultLocale,
+  currentPath: explicitCurrentPath,
+  navClass,
+  class: contentClass,
+} = Astro.props
+
+const currentLocale: Locale =
+  locales.find(locale => locale === lang) ?? defaultLocale
+const pathWithoutLocalePrefix = Astro.url.pathname.replace(
+  /^\/(ru|tt)(?=\/|$)/,
+  "",
+)
+const normalizedPath = pathWithoutLocalePrefix.replace(/\/$/, "") || "/"
+const inferredCurrentPath: SiteNavPath | undefined =
+  normalizedPath === "/"
+    ? "home"
+    : normalizedPath === "/consulting"
+      ? "consulting"
+      : normalizedPath === "/cv"
+        ? "cv"
+        : undefined
+const currentPath = explicitCurrentPath ?? inferredCurrentPath
+---
+
+<HtmlRoot
+  title={title}
+  description={description}
+  lang={currentLocale}
+>
+  <header
+    class:list={[
+      "mx-auto mt-6 max-w-prose px-6 sm:mt-12 sm:px-8 md:mt-16",
+      navClass,
+    ]}
+  >
+    <SiteNav currentLocale={currentLocale} currentPath={currentPath} />
+  </header>
+  <main class={contentClass}>
+    <slot />
+  </main>
+</HtmlRoot>

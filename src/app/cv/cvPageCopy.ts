@@ -2,7 +2,6 @@ import type { Locale } from "../i18n"
 
 export interface CVPageCopy {
   awards: string
-  backToHomeLabel: string
   cvTitle: string
   education: string
   experience: string
@@ -13,14 +12,12 @@ export interface CVPageCopy {
     website: string
   }
   summary: string
-  switcherLabel: string
   workedOn: string
 }
 
 export const cvPageCopy: Record<Locale, CVPageCopy> = {
   en: {
     awards: "Honors & awards",
-    backToHomeLabel: "Home",
     cvTitle: "Adel Nizamutdinov's CV",
     education: "Education",
     experience: "Experience",
@@ -31,12 +28,10 @@ export const cvPageCopy: Record<Locale, CVPageCopy> = {
       website: "website",
     },
     summary: "Summary",
-    switcherLabel: "Switch language",
     workedOn: "Worked on:",
   },
   ru: {
     awards: "Награды и достижения",
-    backToHomeLabel: "Главная",
     cvTitle: "Резюме Аделя Низамутдинова",
     education: "Образование",
     experience: "Опыт",
@@ -47,12 +42,10 @@ export const cvPageCopy: Record<Locale, CVPageCopy> = {
       website: "сайт",
     },
     summary: "О себе",
-    switcherLabel: "Сменить язык",
     workedOn: "Работал над:",
   },
   tt: {
     awards: "Бүләкләр һәм казанышлар",
-    backToHomeLabel: "Баш бит",
     cvTitle: "Адел Низамутдиновның CV",
     education: "Белем",
     experience: "Эш тәрибәсе",
@@ -63,7 +56,6 @@ export const cvPageCopy: Record<Locale, CVPageCopy> = {
       website: "сайт",
     },
     summary: "Кыскача",
-    switcherLabel: "Телне алыштыру",
     workedOn: "Эшләгән проектлар:",
   },
 }

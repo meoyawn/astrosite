@@ -46,7 +46,13 @@ const filePathFor = (pathname: string): string => {
     return join(distDir, `${requestedPath}index.html`)
   }
 
-  return join(distDir, requestedPath)
+  const directPath = join(distDir, requestedPath)
+
+  if (existsSync(directPath) && statSync(directPath).isDirectory()) {
+    return join(directPath, "index.html")
+  }
+
+  return directPath
 }
 
 const pagePathFor = (htmlFile: string): string =>
@@ -182,5 +188,167 @@ test.describe("e2e tests", () => {
     await expect(
       page.getByText("New Mexico limited liability company"),
     ).toBeVisible()
+  })
+
+  test("shared localized nav links home, consulting, and cv pages", async ({
+    browser,
+  }) => {
+    const navCases = [
+      {
+        pages: ["/", "/consulting/", "/cv/"],
+        navLabel: "Site navigation",
+        links: {
+          home: { name: "Home", href: "/" },
+          consulting: { name: "Consulting", href: "/consulting" },
+          cv: { name: "CV", href: "/cv" },
+        },
+      },
+      {
+        pages: ["/ru/", "/ru/consulting/", "/ru/cv/"],
+        navLabel: "Навигация по сайту",
+        links: {
+          home: { name: "Главная", href: "/ru" },
+          consulting: { name: "Консалтинг", href: "/ru/consulting" },
+          cv: { name: "Резюме", href: "/ru/cv" },
+        },
+      },
+      {
+        pages: ["/tt/", "/tt/consulting/", "/tt/cv/"],
+        navLabel: "Сайт навигациясе",
+        links: {
+          home: { name: "Баш бит", href: "/tt" },
+          consulting: { name: "Консалтинг", href: "/tt/consulting" },
+          cv: { name: "Резюме", href: "/tt/cv" },
+        },
+      },
+    ]
+
+    await Promise.all(
+      navCases.flatMap(navCase =>
+        navCase.pages.map(async pagePath => {
+          const page = await browser.newPage()
+
+          try {
+            await routeBuiltFiles(page)
+
+            const response = await page.goto(`${builtOrigin}${pagePath}`)
+
+            expect(response?.ok() ?? false).toEqual(true)
+
+            const nav = page.getByRole("navigation", {
+              name: navCase.navLabel,
+            })
+
+            await expect(nav).toBeVisible()
+            await expect(
+              nav.getByRole("link", { name: navCase.links.home.name }),
+            ).toHaveAttribute("href", navCase.links.home.href)
+            await expect(
+              nav.getByRole("link", { name: navCase.links.consulting.name }),
+            ).toHaveAttribute("href", navCase.links.consulting.href)
+            await expect(
+              nav.getByRole("link", { name: navCase.links.cv.name }),
+            ).toHaveAttribute("href", navCase.links.cv.href)
+          } finally {
+            await page.close()
+          }
+        }),
+      ),
+    )
+  })
+
+  test("cv print media hides shared nav", async ({ page }) => {
+    await routeBuiltFiles(page)
+
+    const response = await page.goto(`${builtOrigin}/cv/`)
+
+    expect(response?.ok() ?? false).toEqual(true)
+
+    const nav = page.getByRole("navigation", { name: "Site navigation" })
+
+    await expect(nav).toBeVisible()
+    await page.emulateMedia({ media: "print" })
+    await expect(nav).toBeHidden()
+  })
+
+  test("cv uses full mobile width while nav keeps mdx spacing", async ({
+    browser,
+  }) => {
+    async function navMetricsFor(
+      pathname: string,
+      viewport: { height: number; width: number },
+    ): Promise<{
+      width: number
+      x: number
+    }> {
+      const page = await browser.newPage({ viewport })
+
+      try {
+        await routeBuiltFiles(page)
+
+        const response = await page.goto(`${builtOrigin}${pathname}`)
+
+        expect(response?.ok() ?? false).toEqual(true)
+
+        const navBox = await page
+          .getByRole("navigation", { name: "Site navigation" })
+          .boundingBox()
+
+        if (navBox === null) {
+          throw new Error(`Expected nav to have a bounding box on ${pathname}.`)
+        }
+
+        return {
+          width: Math.round(navBox.width),
+          x: Math.round(navBox.x),
+        }
+      } finally {
+        await page.close()
+      }
+    }
+
+    const desktopViewport = { width: 1280, height: 720 }
+    const mobileViewport = { width: 390, height: 844 }
+
+    const [desktopHomeMetrics, desktopCvMetrics, desktopConsultingMetrics] =
+      await Promise.all([
+        navMetricsFor("/", desktopViewport),
+        navMetricsFor("/cv/", desktopViewport),
+        navMetricsFor("/consulting/", desktopViewport),
+      ])
+
+    expect(desktopCvMetrics).toEqual(desktopHomeMetrics)
+    expect(desktopConsultingMetrics).toEqual(desktopHomeMetrics)
+
+    const [mobileHomeMetrics, mobileCvMetrics, mobileConsultingMetrics] =
+      await Promise.all([
+        navMetricsFor("/", mobileViewport),
+        navMetricsFor("/cv/", mobileViewport),
+        navMetricsFor("/consulting/", mobileViewport),
+      ])
+
+    expect(mobileCvMetrics).toEqual(mobileHomeMetrics)
+    expect(mobileConsultingMetrics).toEqual(mobileHomeMetrics)
+
+    const page = await browser.newPage({ viewport: mobileViewport })
+
+    try {
+      await routeBuiltFiles(page)
+
+      const response = await page.goto(`${builtOrigin}/cv/`)
+
+      expect(response?.ok() ?? false).toEqual(true)
+
+      const mainBox = await page.locator("main").boundingBox()
+
+      if (mainBox === null) {
+        throw new Error("Expected cv content to have a bounding box.")
+      }
+
+      expect(Math.round(mainBox.x)).toEqual(0)
+      expect(Math.round(mainBox.width)).toEqual(390)
+    } finally {
+      await page.close()
+    }
   })
 })

@@ -1,12 +1,8 @@
 ---
-import { getRelativeLocaleUrl } from "astro:i18n"
 import { clsx } from "clsx"
-import { normalizeLocaleHref } from "../i18n"
-import LocaleSwitcher from "../LocaleSwitcher.astro"
-import SiteNavTextLink from "../SiteNavTextLink.astro"
 import { md2html } from "../markdown"
 import type { Locale } from "../i18n"
-import HtmlRoot from "../../layouts/HtmlRoot.astro"
+import SiteShell from "../../layouts/SiteShell.astro"
 import { fmtDate, fmtExpTime } from "./cv"
 import type { CV } from "./data/cv.types"
 import type { CVPageCopy } from "./cvPageCopy"
@@ -25,30 +21,20 @@ interface Props {
 }
 
 const { copy, cv, locale } = Astro.props
-
-const homeHref = normalizeLocaleHref(getRelativeLocaleUrl(locale))
 ---
 
-<HtmlRoot
+<SiteShell
   title={copy.cvTitle}
   lang={locale}
+  currentPath="cv"
+  navClass="print:hidden"
   class="
     prose prose-sky print:prose-xs
     prose-p:my-2 prose-p:print:my-2
     prose-ul:print:my-0 prose-ul:my-1
-    m-6 max-w-none sm:m-12 md:m-16 print:m-0
+    mx-0 max-w-none px-0 pb-6 sm:mx-12 sm:pb-12 md:mx-16 md:pb-16 print:m-0
   "
 >
-  <div
-    class="
-      mb-6 flex flex-row flex-nowrap items-center justify-between gap-3
-      print:hidden
-    "
-  >
-    <SiteNavTextLink href={homeHref}>{copy.backToHomeLabel}</SiteNavTextLink>
-    <LocaleSwitcher currentLocale={locale} path="cv" label={copy.switcherLabel} />
-  </div>
-
   <section>
     <h1>{cv.head.name}</h1>
     <h3>{cv.head.title}</h3>
@@ -140,4 +126,4 @@ const homeHref = normalizeLocaleHref(getRelativeLocaleUrl(locale))
       ))
     }
   </section>
-</HtmlRoot>
+</SiteShell>
