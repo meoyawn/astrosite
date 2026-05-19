@@ -56,10 +56,6 @@ export default [
     settings: {
       ...astroBase.settings,
       ...astroRecommended.settings,
-      tailwindcss: {
-        config: tailwindConfig,
-        cssConfigPath: tailwindConfig,
-      },
     },
     rules: {
       ...astroBase.rules,
@@ -70,12 +66,6 @@ export default [
   {
     ...mdx.flat,
     files: ["**/*.mdx"],
-    settings: {
-      tailwindcss: {
-        config: tailwindConfig,
-        cssConfigPath: tailwindConfig,
-      },
-    },
     plugins: {
       ...mdx.flat.plugins,
       local: localPlugin,
