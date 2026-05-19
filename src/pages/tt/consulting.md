@@ -37,6 +37,7 @@ production-системаларны кире контрольгә алу.
 
 ### Элемтә
 
-[mail@adelnz.com](mailto:mail@adelnz.com)
+[mail@adelnz.com](mailto:mail@adelnz.com) ·
+[LinkedIn](https://www.linkedin.com/in/adelnizamuddin/)
 
 Эш Pneuma LLC аша алып барыла.

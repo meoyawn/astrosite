@@ -37,6 +37,7 @@ matters, what should be built, and what should be left alone.
 
 ### Contact
 
-[mail@adelnz.com](mailto:mail@adelnz.com)
+[mail@adelnz.com](mailto:mail@adelnz.com) ·
+[LinkedIn](https://www.linkedin.com/in/adelnizamuddin/)
 
 Business conducted through Pneuma LLC.
