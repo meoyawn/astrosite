@@ -177,12 +177,14 @@ test.describe("e2e tests", () => {
     await expect(
       main.getByRole("link", { name: "mail@adelnz.com" }),
     ).toHaveAttribute("href", "mailto:mail@adelnz.com")
-    await expect(
-      main.getByRole("link", { name: "Listenbox" }),
-    ).toHaveAttribute("href", "https://listenbox.app")
-    await expect(
-      main.getByRole("link", { name: "Arrowbox" }),
-    ).toHaveAttribute("href", "https://arrowbox.co")
+    await expect(main.getByRole("link", { name: "Listenbox" })).toHaveAttribute(
+      "href",
+      "https://listenbox.app",
+    )
+    await expect(main.getByRole("link", { name: "Arrowbox" })).toHaveAttribute(
+      "href",
+      "https://arrowbox.co",
+    )
     await expect(
       main.getByRole("link", { name: "ResponsibleAPI" }),
     ).toHaveAttribute("href", "https://responsibleapi.com")
@@ -191,6 +193,20 @@ test.describe("e2e tests", () => {
       "/cv",
     )
     await expect(main.getByText(/Pneuma LLC/)).toBeVisible()
+  })
+
+  test("tatar consulting page sets html language", async ({ page }) => {
+    await routeBuiltFiles(page)
+
+    expect(
+      existsSync(join(distDir, "tt", "consulting", "index.html")),
+      "Expected /tt/consulting/ to be emitted as static HTML.",
+    ).toEqual(true)
+
+    const response = await page.goto(`${builtOrigin}/tt/consulting/`)
+
+    expect(response?.ok() ?? false).toEqual(true)
+    await expect(page.locator("html")).toHaveAttribute("lang", "tt")
   })
 
   test("shared localized nav links home, consulting, and cv pages", async ({
