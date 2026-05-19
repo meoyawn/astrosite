@@ -18,6 +18,7 @@ export interface Head {
   url: string
   linkedin: string
   github: string
+  twitter: string
 }
 
 export interface Experience {
@@ -64,5 +65,4 @@ export interface CV {
   education: Education[]
   awards: Award[]
   skills: string[]
-  "tech-skills": TechSkills
 }

@@ -297,6 +297,46 @@ test.describe("e2e tests", () => {
     await expect(nav).toBeHidden()
   })
 
+  test("cv exposes valid links", async ({ page }) => {
+    function isInvalidHref(href: string): boolean {
+      if (href.startsWith("/") || href.startsWith("#")) {
+        return false
+      }
+
+      try {
+        const url = new URL(href)
+
+        return url.protocol !== "https:" && url.protocol !== "mailto:"
+      } catch {
+        return true
+      }
+    }
+
+    await routeBuiltFiles(page)
+
+    const response = await page.goto(`${builtOrigin}/cv/`)
+
+    expect(response?.ok() ?? false).toEqual(true)
+
+    const hrefs = await page.locator("main a").evaluateAll(links =>
+      links.flatMap(link => {
+        const href = link.getAttribute("href")
+
+        return href === null ? [] : [href]
+      }),
+    )
+
+    expect(hrefs).toEqual(
+      expect.arrayContaining([
+        "mailto:mail@adelnz.com",
+        "https://www.linkedin.com/in/adelnizamuddin",
+        "https://adelnz.com",
+        "https://github.com/meoyawn",
+      ]),
+    )
+    expect(hrefs.filter(isInvalidHref)).toEqual([])
+  })
+
   test("cv uses full mobile width while nav keeps mdx spacing", async ({
     browser,
   }) => {

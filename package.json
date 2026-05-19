@@ -9,7 +9,8 @@
     "rehype-stringify": "^10.0.1",
     "remark-parse": "^11.0.0",
     "remark-rehype": "^11.1.2",
-    "unified": "11.0.5"
+    "unified": "11.0.5",
+    "valibot": "^1.4.0"
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.9",

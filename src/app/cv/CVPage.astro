@@ -50,13 +50,13 @@ const { copy, cv, locale } = Astro.props
       <!--<IconLink href={`tel:${cv.head}`} icon={phoneIcon}>-->
       <IconLink
         icon={linkedinIcon}
-        href={`https://linkedin.com/in/${cv.head.linkedin}`}
+        href={cv.head.linkedin}
         alt={copy.iconAlt.linkedin}
       />
       <IconLink icon={linkIcon} href={cv.head.url} alt={copy.iconAlt.website} />
       <IconLink
         icon={githubIcon}
-        href={`https://github.com/${cv.head.github}`}
+        href={cv.head.github}
         alt={copy.iconAlt.github}
       />
     </p>

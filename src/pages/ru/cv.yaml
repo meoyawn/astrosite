@@ -4,9 +4,9 @@ head:
   location: Казань, Татарстан
   email: mail@adelnz.com
   url: https://adelnz.com
-  linkedin: adelnizamuddin
-  github: meoyawn
-  twitter: meoyawn
+  linkedin: https://www.linkedin.com/in/adelnizamuddin
+  github: https://github.com/meoyawn
+  twitter: https://twitter.com/meoyawn
 
 summaryMD: |
   - 13 лет создаю и поддерживаю продукты на Java, Kotlin, TypeScript и Python
