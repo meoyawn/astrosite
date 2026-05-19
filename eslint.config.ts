@@ -10,13 +10,6 @@ import { suggestCanonicalClasses } from "./eslint/suggest-canonical-classes.ts"
 const tailwindConfig = new URL("./src/styles/global.css", import.meta.url)
   .pathname
 
-const localPlugin = {
-  rules: {
-    requireExternalAnchorSafety,
-    suggestCanonicalClasses,
-  },
-}
-
 function namedAstroConfig(name: string) {
   const config = astro.configs.base.find(config => config.name === name)
 
@@ -51,6 +44,14 @@ export default [
   astroPlugin,
   ...tailwind.configs["flat/recommended"],
   {
+    settings: {
+      tailwindcss: {
+        config: tailwindConfig,
+        cssConfigPath: tailwindConfig,
+      },
+    },
+  },
+  {
     ...astroBase,
     ...astroRecommended,
     settings: {
@@ -66,14 +67,6 @@ export default [
   {
     ...mdx.flat,
     files: ["**/*.mdx"],
-    plugins: {
-      ...mdx.flat.plugins,
-      local: localPlugin,
-    },
-    rules: {
-      ...mdx.flat.rules,
-      "local/requireExternalAnchorSafety": "error",
-    },
   },
   {
     files: ["**/*.{js,ts,astro,mdx}"],
@@ -88,12 +81,11 @@ export default [
   {
     files: ["**/*.{astro,mdx}"],
     plugins: {
-      local: localPlugin,
-    },
-    settings: {
-      tailwindcss: {
-        config: tailwindConfig,
-        cssConfigPath: tailwindConfig,
+      local: {
+        rules: {
+          requireExternalAnchorSafety,
+          suggestCanonicalClasses,
+        },
       },
     },
     rules: {
