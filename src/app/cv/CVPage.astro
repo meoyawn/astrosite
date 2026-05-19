@@ -119,9 +119,11 @@ const { copy, cv, locale } = Astro.props
       cv.awards.map(aw => (
         <Org org={aw.org}>
           <h4>
-            <a href={aw.url}>{aw.title}</a>
+            <a href={aw.url} target="_blank" rel="noreferrer">{aw.title}</a>
             <span> - </span>
-            <a href={aw.org.url}>{aw.org.name}</a>
+            <a href={aw.org.url} target="_blank" rel="noreferrer">
+              {aw.org.name}
+            </a>
           </h4>
           <span class="text-date">{fmtDate(aw.date, locale)}</span>
         </Org>
