@@ -188,6 +188,30 @@ test.describe("e2e tests", () => {
     await expect(
       main.getByRole("link", { name: "ResponsibleAPI" }),
     ).toHaveAttribute("href", "https://responsibleapi.com")
+    const selectedWorkLinks = [
+      "Listenbox",
+      "Arrowbox",
+      "ResponsibleAPI",
+      "GitHub",
+      "CV",
+    ]
+    const selectedWorkLinkBoxes = await Promise.all(
+      selectedWorkLinks.map(async linkName => {
+        const box = await main.getByRole("link", { name: linkName }).boundingBox()
+
+        if (box === null) {
+          throw new Error(`Expected selected work link to be visible: ${linkName}.`)
+        }
+
+        return box
+      }),
+    )
+    const selectedWorkLineTop = Math.round(selectedWorkLinkBoxes[0]?.y ?? 0)
+
+    expect(
+      selectedWorkLinkBoxes.map(box => Math.round(box.y)),
+      "Expected selected work links to render on one line.",
+    ).toEqual(selectedWorkLinks.map(() => selectedWorkLineTop))
     await expect(main.getByRole("link", { name: "CV" })).toHaveAttribute(
       "href",
       "/cv",
