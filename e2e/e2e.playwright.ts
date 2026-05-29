@@ -1,6 +1,7 @@
 import { existsSync, readdirSync, readFileSync, statSync } from "node:fs"
 import { join, relative } from "node:path"
 import { expect, type Page, test } from "@playwright/test"
+import { load } from "js-yaml"
 import postcss from "postcss"
 
 const builtOrigin = "http://built.local"
@@ -217,6 +218,73 @@ test.describe("e2e tests", () => {
       "/cv",
     )
     await expect(main.getByText(/Pneuma LLC/)).toBeVisible()
+  })
+
+  test("npm install article frontmatter matches open graph tags", async ({
+    page,
+  }) => {
+    function readArticleFrontmatter(markdownPath: string): {
+      description: string
+      title: string
+    } {
+      const frontmatterMatch = readFileSync(markdownPath, "utf8").match(
+        /^---\n(?<frontmatter>[\s\S]*?)\n---/,
+      )
+
+      if (frontmatterMatch?.groups?.frontmatter === undefined) {
+        throw new Error(`Expected article frontmatter in ${markdownPath}.`)
+      }
+
+      const frontmatter = load(frontmatterMatch.groups.frontmatter)
+
+      if (
+        typeof frontmatter !== "object" ||
+        frontmatter === null ||
+        !("description" in frontmatter) ||
+        !("title" in frontmatter) ||
+        typeof frontmatter.description !== "string" ||
+        typeof frontmatter.title !== "string"
+      ) {
+        throw new Error(
+          `Expected article title and description frontmatter in ${markdownPath}.`,
+        )
+      }
+
+      return {
+        description: frontmatter.description,
+        title: frontmatter.title,
+      }
+    }
+
+    await routeBuiltFiles(page)
+
+    const articlePath = join(
+      "src",
+      "content",
+      "writing",
+      "npm-install-is-dangerous.md",
+    )
+    const frontmatter = readArticleFrontmatter(articlePath)
+
+    expect(
+      existsSync(
+        join(distDir, "writing", "npm-install-is-dangerous", "index.html"),
+      ),
+      "Expected /writing/npm-install-is-dangerous/ to be emitted as static HTML.",
+    ).toEqual(true)
+
+    const response = await page.goto(
+      `${builtOrigin}/writing/npm-install-is-dangerous/`,
+    )
+
+    expect(response?.ok() ?? false).toEqual(true)
+    await expect(page.locator('meta[property="og:title"]')).toHaveAttribute(
+      "content",
+      frontmatter.title,
+    )
+    await expect(
+      page.locator('meta[property="og:description"]'),
+    ).toHaveAttribute("content", frontmatter.description)
   })
 
   test("tatar consulting page sets html language", async ({ page }) => {

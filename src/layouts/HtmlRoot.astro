@@ -19,6 +19,8 @@ const { title, description, lang = "en" } = Astro.props
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <title>{title}</title>
     <meta name="description" content={description ?? "Personal website"} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description ?? "Personal website"} />
   </head>
 
   <body class:list={["bg-white text-zinc-950", Astro.props.class]}>
