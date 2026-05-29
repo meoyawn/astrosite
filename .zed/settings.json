@@ -16,6 +16,12 @@
       }
     }
   },
+  // "context_servers": {
+  //   "code-review-graph": {
+  //     "command": "uvx",
+  //     "args": ["code-review-graph", "serve"]
+  //   }
+  // },
   "formatter": {
     "language_server": {
       "name": "oxfmt"
@@ -36,6 +42,20 @@
         "external": {
           "command": "bun",
           "arguments": ["oxfmt", "--stdin-filepath", "{buffer_path}"]
+        }
+      }
+    },
+    "Go": {
+      "formatter": {
+        "language_server": {
+          "name": "gopls"
+        }
+      }
+    },
+    "SQL": {
+      "formatter": {
+        "language_server": {
+          "name": "sqruff"
         }
       }
     }

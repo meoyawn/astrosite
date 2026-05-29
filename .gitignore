@@ -29,7 +29,6 @@ public/cv.json
 .task/
 coverage/
 
-*.jpg
 *.png
 
 test-results/
