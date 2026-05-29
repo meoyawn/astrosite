@@ -241,4 +241,5 @@ code you have chosen to execute.
 
 - [Inside Lazarus: How North Korea uses AI to industrialize attacks on developers](https://expel.com/blog/inside-lazarus-how-north-korea-uses-ai-to-industrialize-attacks-on-developers/)
 - [North Korea's Contagious Interview Campaign Spreads Across 5 Ecosystems, Delivering Staged RAT Payloads](https://socket.dev/blog/contagious-interview-campaign-spreads-across-5-ecosystems)
+- [North Korea's Contagious Interview Campaign](https://socket.dev/supply-chain-attacks/north-korea-s-contagious-interview-campaign) is Socket's live tracker for the ongoing Contagious Interview campaign, first discovered on March 13, 2025.
 - [pnpm: Mitigating supply chain attacks](https://pnpm.io/supply-chain-security)
