@@ -19,6 +19,7 @@ const { title, description, lang = "en" } = Astro.props
     <link rel="icon" type="image/svg+xml" sizes="any" href="/favicon.svg" />
     <title>{title}</title>
     <meta name="description" content={description ?? "Personal website"} />
+    <meta property="og:site_name" content="adelnz.com" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description ?? "Personal website"} />
   </head>

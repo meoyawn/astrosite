@@ -312,6 +312,10 @@ test.describe("e2e tests", () => {
     )
 
     expect(response?.ok() ?? false).toEqual(true)
+    await expect(page.locator('meta[property="og:site_name"]')).toHaveAttribute(
+      "content",
+      "adelnz.com",
+    )
     await expect(page.locator('meta[property="og:title"]')).toHaveAttribute(
       "content",
       frontmatter.title,
