@@ -12,8 +12,11 @@ export const collections = {
         entry.replace(/\/index\.md$/, "").replace(/\.md$/, ""),
     }),
     schema: z.object({
-      title: z.string(),
-      description: z.string(),
+      title: z.string().min(1),
+      /** SEO */
+      description: z.string().min(1),
+      /** article list */
+      teaser: z.string().min(1),
       /** Controls draft status: visible or not in the writing list */
       published_at: z.date().optional(),
     }),

@@ -1,6 +1,7 @@
 ---
 title: "`npm install` is extremely dangerous"
-description: Welcome to 2026
+description: How npm install can execute malicious lifecycle scripts in recruiter repos, plus safer npm, pnpm, and Bun workflows.
+teaser: Welcome to 2026
 published_at: 2026-05-29
 ---
 

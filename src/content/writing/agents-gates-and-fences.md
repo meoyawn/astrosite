@@ -1,4 +1,5 @@
 ---
 title: "Agents: gates and fences"
-description: Draft — boundaries and guardrails for agentic workflows
+description: Boundaries and guardrails for agentic workflows
+teaser: Boundaries and guardrails for agentic workflows
 ---

@@ -6,6 +6,7 @@ import { defaultLocale, locales } from "./src/app/i18n"
 /** https://astro.build/config */
 export default defineConfig({
   integrations: [mdx()],
+  trailingSlash: "always",
   server: {
     host: true,
     port: 4321,

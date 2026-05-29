@@ -1,2 +1,18 @@
-todos:
-  - ozonex-sdk blog post
+- title: Add canonical URLs
+  notes: |
+    Add absolute canonical support in HtmlRoot.astro.
+    Include canonical URLs in page head so tracking/query parameter variants
+    consolidate to the preferred URL.
+- title: Add sitemap
+  notes: |
+    Generate /sitemap.xml and advertise it from robots.txt with:
+    Sitemap: https://adelnz.com/sitemap.xml
+- title: Add article structured data
+  notes: |
+    Add BlogPosting JSON-LD on writing article pages with headline,
+    description, datePublished, author, url, and mainEntityOfPage.
+- title: Add social preview metadata
+  notes: |
+    Add article-specific Open Graph and Twitter Card metadata:
+    og:type, og:url, og:image, twitter:card, twitter:title,
+    twitter:description, and twitter:image.
