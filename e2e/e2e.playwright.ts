@@ -220,11 +220,13 @@ test.describe("e2e tests", () => {
     await expect(main.getByText(/Pneuma LLC/)).toBeVisible()
   })
 
-  test("npm install article frontmatter matches open graph tags", async ({
+  test("npm install article frontmatter matches article metadata and open graph tags", async ({
     page,
   }) => {
     function readArticleFrontmatter(markdownPath: string): {
       description: string
+      publishedAtDateTime: string
+      publishedAtText: string
       title: string
     } {
       const frontmatterMatch = readFileSync(markdownPath, "utf8").match(
@@ -241,6 +243,7 @@ test.describe("e2e tests", () => {
         typeof frontmatter !== "object" ||
         frontmatter === null ||
         !("description" in frontmatter) ||
+        !("published_at" in frontmatter) ||
         !("title" in frontmatter) ||
         typeof frontmatter.description !== "string" ||
         typeof frontmatter.title !== "string"
@@ -250,8 +253,39 @@ test.describe("e2e tests", () => {
         )
       }
 
+      const publishedAtValue = frontmatter.published_at
+
+      if (
+        !(publishedAtValue instanceof Date) &&
+        typeof publishedAtValue !== "string"
+      ) {
+        throw new Error(
+          `Expected article published_at frontmatter in ${markdownPath}.`,
+        )
+      }
+
+      const publishedAtDate =
+        publishedAtValue instanceof Date
+          ? publishedAtValue
+          : new Date(publishedAtValue)
+
+      if (Number.isNaN(publishedAtDate.getTime())) {
+        throw new Error(
+          `Expected valid article published_at frontmatter in ${markdownPath}.`,
+        )
+      }
+
+      const dateFormatter = new Intl.DateTimeFormat("en", {
+        day: "numeric",
+        month: "short",
+        timeZone: "UTC",
+        year: "numeric",
+      })
+
       return {
         description: frontmatter.description,
+        publishedAtDateTime: publishedAtDate.toISOString().slice(0, 10),
+        publishedAtText: dateFormatter.format(publishedAtDate),
         title: frontmatter.title,
       }
     }
@@ -285,6 +319,13 @@ test.describe("e2e tests", () => {
     await expect(
       page.locator('meta[property="og:description"]'),
     ).toHaveAttribute("content", frontmatter.description)
+    await expect(page.getByRole("main").locator("time")).toHaveAttribute(
+      "datetime",
+      frontmatter.publishedAtDateTime,
+    )
+    await expect(page.getByRole("main").locator("time")).toHaveText(
+      frontmatter.publishedAtText,
+    )
   })
 
   test("tatar consulting page sets html language", async ({ page }) => {
@@ -445,7 +486,7 @@ test.describe("e2e tests", () => {
     expect(hrefs.filter(isInvalidHref)).toEqual([])
   })
 
-  test("cv uses full mobile width while nav keeps mdx spacing", async ({
+  test("cv uses full mobile width while default pages use wider mdx spacing", async ({
     browser,
   }) => {
     async function navMetricsFor(
@@ -491,8 +532,9 @@ test.describe("e2e tests", () => {
         navMetricsFor("/consulting/", desktopViewport),
       ])
 
-    expect(desktopCvMetrics).toEqual(desktopHomeMetrics)
     expect(desktopConsultingMetrics).toEqual(desktopHomeMetrics)
+    expect(desktopHomeMetrics.width).toBeGreaterThan(desktopCvMetrics.width)
+    expect(desktopHomeMetrics.x).toBeLessThan(desktopCvMetrics.x)
 
     const [mobileHomeMetrics, mobileCvMetrics, mobileConsultingMetrics] =
       await Promise.all([

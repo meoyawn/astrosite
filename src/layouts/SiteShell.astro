@@ -20,9 +20,14 @@ const {
   lang = defaultLocale,
   currentPath: explicitCurrentPath,
   navClass,
-  class: contentClass,
+  class: explicitContentClass,
 } = Astro.props
 
+const defaultContentWidthClass = "max-w-3xl"
+const defaultContentClass = [
+  "mx-auto prose px-6 pb-6 sm:px-8 sm:pb-12 md:pb-16",
+  defaultContentWidthClass,
+]
 const currentLocale: Locale =
   locales.find(locale => locale === lang) ?? defaultLocale
 const pathWithoutLocalePrefix = Astro.url.pathname.replace(
@@ -39,6 +44,7 @@ const inferredCurrentPath: SiteNavPath | undefined =
         ? "cv"
         : undefined
 const currentPath = explicitCurrentPath ?? inferredCurrentPath
+const contentClass = explicitContentClass ?? defaultContentClass
 ---
 
 <HtmlRoot
@@ -48,13 +54,14 @@ const currentPath = explicitCurrentPath ?? inferredCurrentPath
 >
   <header
     class:list={[
-      "mx-auto mt-6 max-w-prose px-6 sm:mt-12 sm:px-8 md:mt-16",
+      "mx-auto mt-6 px-6 sm:mt-12 sm:px-8 md:mt-16",
+      currentPath === "cv" ? "max-w-prose" : defaultContentWidthClass,
       navClass,
     ]}
   >
     <SiteNav currentLocale={currentLocale} currentPath={currentPath} />
   </header>
-  <main class={contentClass}>
+  <main class:list={contentClass}>
     <slot />
   </main>
 </HtmlRoot>

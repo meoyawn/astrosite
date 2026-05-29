@@ -1,16 +1,16 @@
 ---
 import { getCollection, render } from "astro:content"
+import { defaultLocale } from "../../app/i18n"
 import MdRoot from "../../layouts/MdRoot.astro"
 
 // noinspection JSUnusedGlobalSymbols
 export async function getStaticPaths() {
   const writingEntries = await getCollection("writing")
-  const publishedEntries = writingEntries.filter(entry => entry.data.published_at)
-  publishedEntries.sort(
+  writingEntries.sort(
     (a, b) =>
       (b.data.published_at?.getTime() ?? 0) - (a.data.published_at?.getTime() ?? 0),
   )
-  return publishedEntries.map(entry => ({
+  return writingEntries.map(entry => ({
     params: { slug: entry.id },
     props: { entry },
   }))
@@ -18,6 +18,15 @@ export async function getStaticPaths() {
 
 const { entry } = Astro.props
 const { Content } = await render(entry)
+const publishedAt = entry.data.published_at
+const dateFormatter = new Intl.DateTimeFormat(defaultLocale, {
+  day: "numeric",
+  month: "short",
+  timeZone: "UTC",
+  year: "numeric",
+})
+const formatDate = (date: Date): string => dateFormatter.format(date)
+const dateTime = (date: Date): string => date.toISOString().slice(0, 10)
 ---
 
 <MdRoot
@@ -26,6 +35,15 @@ const { Content } = await render(entry)
     description: entry.data.description,
   }}
 >
-  <h1>{entry.data.title}</h1>
+  <h1 class="mb-0">{entry.data.title}</h1>
+  <p class="not-prose mt-2 mb-8 text-sm leading-6 font-medium text-zinc-500">
+    {
+      publishedAt ? (
+        <time datetime={dateTime(publishedAt)}>{formatDate(publishedAt)}</time>
+      ) : (
+        "Draft"
+      )
+    }
+  </p>
   <Content />
 </MdRoot>
