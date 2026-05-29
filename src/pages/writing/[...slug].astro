@@ -4,8 +4,8 @@ import MdRoot from "../../layouts/MdRoot.astro"
 
 // noinspection JSUnusedGlobalSymbols
 export async function getStaticPaths() {
-  const blogEntries = await getCollection("articles")
-  const publishedEntries = blogEntries.filter(entry => entry.data.published_at)
+  const writingEntries = await getCollection("writing")
+  const publishedEntries = writingEntries.filter(entry => entry.data.published_at)
   publishedEntries.sort(
     (a, b) =>
       (b.data.published_at?.getTime() ?? 0) - (a.data.published_at?.getTime() ?? 0),

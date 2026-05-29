@@ -1,21 +1,15 @@
 version: "3"
 
 tasks:
-  cursor:
-    cmds:
-      - agent --yolo
-
   lint:
     run: once
     cmd: bun eslint .
     sources:
       - bun.lock
-      - eslint.config.ts
-      - "**/*.ts"
-      - "**/*.astro"
-      - "**/*.mdx"
-      - exclude: dist/**/*
-      - exclude: node_modules/**/*
+      - "*.ts"
+      - e2e/**/*.ts
+      - eslint/**/*.ts
+      - src/**/*
 
   lint:fix:
     cmd: bun eslint . --fix
@@ -32,10 +26,9 @@ tasks:
     cmd: bun tsc -p tsconfig.json
     sources:
       - bun.lock
-      - "**/*.ts"
-      - exclude: src/**/*
-      - exclude: dist/**/*
-      - exclude: node_modules/**/*
+      - "*.ts"
+      - src/**/*.ts
+      - eslint/**/*.ts
 
   dev:
     cmd: bun astro dev

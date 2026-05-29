@@ -1,8 +1,6 @@
 ---
 title: "`npm install` is extremely dangerous"
-description:
-  A checklist for inspecting recruiter-supplied npm repos before any install
-  code can run.
+description: Welcome to 2026
 published_at: 2026-05-29
 ---
 
@@ -180,8 +178,8 @@ file, and local directory dependency specs in transitive dependencies.
 `minimumReleaseAge=1440` avoids packages published in the last 24 hours.
 `registry` avoids a repo-local registry override.
 
-If the lockfile generation fails, stop and inspect the failure. Do not switch
-to plain `pnpm install` to get unstuck.
+If the lockfile generation fails, stop and inspect the failure. Do not switch to
+plain `pnpm install` to get unstuck.
 
 Only after scanning the generated lockfile should you install dependencies, and
 even then keep scripts off:

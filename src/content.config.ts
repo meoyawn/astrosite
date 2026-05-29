@@ -4,9 +4,9 @@ import { defineCollection } from "astro:content"
 
 // noinspection JSUnusedGlobalSymbols
 export const collections = {
-  articles: defineCollection({
+  writing: defineCollection({
     loader: glob({
-      base: "src/content/articles",
+      base: "src/content/writing",
       pattern: "**/*.md",
       generateId: ({ entry }) =>
         entry.replace(/\/index\.md$/, "").replace(/\.md$/, ""),
@@ -14,7 +14,7 @@ export const collections = {
     schema: z.object({
       title: z.string(),
       description: z.string(),
-      /** Controls draft status: visible or not in the article list */
+      /** Controls draft status: visible or not in the writing list */
       published_at: z.date().optional(),
     }),
   }),

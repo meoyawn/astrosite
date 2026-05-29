@@ -6,7 +6,7 @@ interface Props {
 }
 
 const { title = "Writing" } = Astro.props
-const arr0 = await getCollection("articles")
+const arr0 = await getCollection("writing")
 const arr = arr0.filter(x => x.data.published_at)
 ---
 
@@ -17,7 +17,7 @@ const arr = arr0.filter(x => x.data.published_at)
       <ul>
         {arr.map(p => (
           <li>
-            <a href={`/article/${p.id}`}>{p.data.title}</a>
+            <a href={`/writing/${p.id}`}>{p.data.title}</a>
           </li>
         ))}
       </ul>
