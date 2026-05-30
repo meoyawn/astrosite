@@ -5,18 +5,22 @@
   --color-date: #6b7280;
 }
 
-.hover-underline {
+@utility hover-underline {
   text-decoration-color: color-mix(in oklab, currentColor 25%, transparent);
   text-decoration-line: underline;
   text-decoration-thickness: 2px;
   text-underline-offset: 3px;
   transition-duration: var(--default-transition-duration);
   transition-property:
-    color, background-color, border-color, outline-color,
-    text-decoration-color, fill, stroke;
+    color, background-color, border-color, outline-color, text-decoration-color,
+    fill, stroke;
   transition-timing-function: var(--default-transition-timing-function);
+
+  &:hover {
+    text-decoration-color: currentColor;
+  }
 }
 
-.hover-underline:hover {
-  text-decoration-color: currentColor;
+.prose :where(a):not(:where([class~="not-prose"], [class~="not-prose"] *)) {
+  @apply hover-underline;
 }
