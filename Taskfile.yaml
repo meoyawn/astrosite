@@ -88,8 +88,8 @@ tasks:
   deploy:
     deps:
       - check
-    cmds:
-      - bun wrangler pages deploy dist/
+    cmd: bun wrangler pages deploy dist/ --commit-dirty=true
     sources:
       - bun.lock
+      - Taskfile.yaml
       - dist/**/*

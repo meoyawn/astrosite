@@ -21,7 +21,7 @@ const normalizeExperience = (value: unknown): unknown =>
     ? {
         ...value,
         start: normalizeDate(value.start),
-        end: normalizeDate(value.end),
+        ...("end" in value ? { end: normalizeDate(value.end) } : {}),
       }
     : value
 
@@ -30,7 +30,7 @@ const normalizeEducation = (value: unknown): unknown =>
     ? {
         ...value,
         start: normalizeDate(value.start),
-        end: normalizeDate(value.end),
+        ...("end" in value ? { end: normalizeDate(value.end) } : {}),
       }
     : value
 

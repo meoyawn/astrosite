@@ -18,10 +18,9 @@ experience:
     org:
       name: Listenbox
       url: https://listenbox.app
-      imgURL: https://listenbox.app/images/logo.png
+      imgURL: https://listenbox.app/_astro/favicon.DM5dyM1q.svg
     location: Удаленно
     start: 2019-10-01
-    end: 2025-02-08
     products:
       - name: Listenbox
         url: https://listenbox.app

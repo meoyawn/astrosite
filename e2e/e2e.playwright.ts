@@ -490,6 +490,22 @@ test.describe("e2e tests", () => {
     expect(hrefs.filter(isInvalidHref)).toEqual([])
   })
 
+  test("cv shows ongoing Listenbox founder role", async ({ page }) => {
+    await routeBuiltFiles(page)
+
+    const response = await page.goto(`${builtOrigin}/cv/`)
+
+    expect(response?.ok() ?? false).toEqual(true)
+
+    const main = page.getByRole("main")
+    const listenboxRole = main.locator(".break-inside-avoid-page", {
+      has: page.getByRole("link", { name: "Listenbox", exact: true }),
+    }).first()
+
+    await expect(listenboxRole.getByRole("heading", { name: "Founder" })).toBeVisible()
+    await expect(listenboxRole.getByText(/October 2019 - Present/)).toBeVisible()
+  })
+
   test("cv uses full mobile width while default pages use wider mdx spacing", async ({
     browser,
   }) => {
