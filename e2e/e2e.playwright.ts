@@ -104,54 +104,50 @@ test.describe("e2e tests", () => {
 
     await Promise.all(
       htmlFiles.map(async htmlFile => {
-        const page = await browser.newPage()
+        await using page = await browser.newPage()
 
-        try {
-          await routeBuiltFiles(page)
+        await routeBuiltFiles(page)
 
-          const html = readFileSync(htmlFile, "utf8")
-          const stylesheetHrefs = collectStylesheetHrefs(html)
+        const html = readFileSync(htmlFile, "utf8")
+        const stylesheetHrefs = collectStylesheetHrefs(html)
 
-          expect(
-            stylesheetHrefs.length,
-            `Expected ${htmlFile} to reference at least one stylesheet.`,
-          ).toBeGreaterThan(0)
+        expect(
+          stylesheetHrefs.length,
+          `Expected ${htmlFile} to reference at least one stylesheet.`,
+        ).toBeGreaterThan(0)
 
-          const response = await page.goto(
-            `${builtOrigin}${pagePathFor(htmlFile)}`,
+        const response = await page.goto(
+          `${builtOrigin}${pagePathFor(htmlFile)}`,
+        )
+
+        expect(
+          response?.ok() ?? false,
+          `Expected Playwright to load built HTML file: ${htmlFile}.`,
+        ).toEqual(true)
+
+        const loadedStylesheetHrefs = await page
+          .locator('link[rel="stylesheet"]')
+          .evaluateAll(links =>
+            links.flatMap(link => {
+              const href = link.getAttribute("href")
+
+              return href === null ? [] : [href]
+            }),
           )
 
+        expect(loadedStylesheetHrefs).toEqual(stylesheetHrefs)
+
+        for (const href of stylesheetHrefs) {
+          const stylesheetPath = join(distDir, href.replace(/^\//, ""))
+
           expect(
-            response?.ok() ?? false,
-            `Expected Playwright to load built HTML file: ${htmlFile}.`,
+            existsSync(stylesheetPath),
+            `Expected ${htmlFile} to reference an existing stylesheet: ${href}.`,
           ).toEqual(true)
 
-          const loadedStylesheetHrefs = await page
-            .locator('link[rel="stylesheet"]')
-            .evaluateAll(links =>
-              links.flatMap(link => {
-                const href = link.getAttribute("href")
-
-                return href === null ? [] : [href]
-              }),
-            )
-
-          expect(loadedStylesheetHrefs).toEqual(stylesheetHrefs)
-
-          for (const href of stylesheetHrefs) {
-            const stylesheetPath = join(distDir, href.replace(/^\//, ""))
-
-            expect(
-              existsSync(stylesheetPath),
-              `Expected ${htmlFile} to reference an existing stylesheet: ${href}.`,
-            ).toEqual(true)
-
-            expect(() =>
-              postcss.parse(readFileSync(stylesheetPath, "utf8")),
-            ).not.toThrow()
-          }
-        } finally {
-          await page.close()
+          expect(() =>
+            postcss.parse(readFileSync(stylesheetPath, "utf8")),
+          ).not.toThrow()
         }
       }),
     )
@@ -407,26 +403,26 @@ test.describe("e2e tests", () => {
         navLabel: "Site navigation",
         links: {
           home: { name: "Home", href: "/" },
-          consulting: { name: "Consulting", href: "/consulting" },
-          cv: { name: "CV", href: "/cv" },
+          consulting: { name: "Consulting", href: "/consulting/" },
+          cv: { name: "CV", href: "/cv/" },
         },
       },
       {
         pages: ["/ru/", "/ru/consulting/", "/ru/cv/"],
         navLabel: "Навигация по сайту",
         links: {
-          home: { name: "Главная", href: "/ru" },
-          consulting: { name: "Консалтинг", href: "/ru/consulting" },
-          cv: { name: "Резюме", href: "/ru/cv" },
+          home: { name: "Главная", href: "/ru/" },
+          consulting: { name: "Консалтинг", href: "/ru/consulting/" },
+          cv: { name: "Резюме", href: "/ru/cv/" },
         },
       },
       {
         pages: ["/tt/", "/tt/consulting/", "/tt/cv/"],
         navLabel: "Сайт навигациясе",
         links: {
-          home: { name: "Баш бит", href: "/tt" },
-          consulting: { name: "Консалтинг", href: "/tt/consulting" },
-          cv: { name: "Резюме", href: "/tt/cv" },
+          home: { name: "Баш бит", href: "/tt/" },
+          consulting: { name: "Консалтинг", href: "/tt/consulting/" },
+          cv: { name: "Резюме", href: "/tt/cv/" },
         },
       },
     ]
@@ -434,57 +430,112 @@ test.describe("e2e tests", () => {
     await Promise.all(
       navCases.flatMap(navCase =>
         navCase.pages.map(async pagePath => {
-          const page = await browser.newPage()
+          await using page = await browser.newPage()
 
-          try {
-            await routeBuiltFiles(page)
+          await routeBuiltFiles(page)
 
-            const response = await page.goto(`${builtOrigin}${pagePath}`)
+          const response = await page.goto(`${builtOrigin}${pagePath}`)
 
-            expect(response?.ok() ?? false).toEqual(true)
+          expect(response?.ok() ?? false).toEqual(true)
 
-            const nav = page.getByRole("navigation", {
-              name: navCase.navLabel,
-            })
+          const nav = page.getByRole("navigation", {
+            name: navCase.navLabel,
+          })
 
-            await expect(nav).toBeVisible()
-            await expect(
-              nav.getByRole("link", { name: navCase.links.home.name }),
-            ).toHaveAttribute("href", navCase.links.home.href)
-            await expect(
-              nav.getByRole("link", { name: navCase.links.consulting.name }),
-            ).toHaveAttribute("href", navCase.links.consulting.href)
-            await expect(
-              nav.getByRole("link", { name: navCase.links.cv.name }),
-            ).toHaveAttribute("href", navCase.links.cv.href)
+          await expect(nav).toBeVisible()
+          await expect(
+            nav.getByRole("link", { name: navCase.links.home.name }),
+          ).toHaveAttribute("href", navCase.links.home.href)
+          await expect(
+            nav.getByRole("link", { name: navCase.links.consulting.name }),
+          ).toHaveAttribute("href", navCase.links.consulting.href)
+          await expect(
+            nav.getByRole("link", { name: navCase.links.cv.name }),
+          ).toHaveAttribute("href", navCase.links.cv.href)
 
-            const activeLinkKey = pagePath.endsWith("/consulting/")
-              ? "consulting"
-              : pagePath.endsWith("/cv/")
-                ? "cv"
-                : "home"
-            const activeLinkName = navCase.links[activeLinkKey].name
-            const inactiveLinkNames = [
-              navCase.links.home.name,
-              navCase.links.consulting.name,
-              navCase.links.cv.name,
-            ].filter(linkName => linkName !== activeLinkName)
+          const activeLinkKey = pagePath.endsWith("/consulting/")
+            ? "consulting"
+            : pagePath.endsWith("/cv/")
+              ? "cv"
+              : "home"
+          const activeLinkName = navCase.links[activeLinkKey].name
+          const inactiveLinkNames = [
+            navCase.links.home.name,
+            navCase.links.consulting.name,
+            navCase.links.cv.name,
+          ].filter(linkName => linkName !== activeLinkName)
 
-            await expect(
-              nav.getByRole("link", { name: activeLinkName }),
-            ).toHaveAttribute("aria-current", "page")
-            await Promise.all(
-              inactiveLinkNames.map(async linkName => {
-                await expect(
-                  nav.getByRole("link", { name: linkName }),
-                ).not.toHaveAttribute("aria-current", "page")
-              }),
-            )
-          } finally {
-            await page.close()
-          }
+          await expect(
+            nav.getByRole("link", { name: activeLinkName }),
+          ).toHaveAttribute("aria-current", "page")
+          await Promise.all(
+            inactiveLinkNames.map(async linkName => {
+              await expect(
+                nav.getByRole("link", { name: linkName }),
+              ).not.toHaveAttribute("aria-current", "page")
+            }),
+          )
         }),
       ),
+    )
+  })
+
+  test("locale switcher links use trailing-slash consulting routes", async ({
+    browser,
+  }) => {
+    const localeSwitcherCases = [
+      {
+        pagePath: "/consulting/",
+        navLabel: "Switch language",
+        links: {
+          en: { name: "EN", href: "/consulting/" },
+          ru: { name: "RU", href: "/ru/consulting/" },
+          tt: { name: "TT", href: "/tt/consulting/" },
+        },
+      },
+      {
+        pagePath: "/ru/consulting/",
+        navLabel: "Сменить язык",
+        links: {
+          en: { name: "EN", href: "/consulting/" },
+          ru: { name: "RU", href: "/ru/consulting/" },
+          tt: { name: "TT", href: "/tt/consulting/" },
+        },
+      },
+      {
+        pagePath: "/tt/consulting/",
+        navLabel: "Башка телләр",
+        links: {
+          en: { name: "EN", href: "/consulting/" },
+          ru: { name: "RU", href: "/ru/consulting/" },
+          tt: { name: "TT", href: "/tt/consulting/" },
+        },
+      },
+    ]
+
+    await Promise.all(
+      localeSwitcherCases.map(async switcherCase => {
+        await using page = await browser.newPage()
+
+        await routeBuiltFiles(page)
+
+        const response = await page.goto(`${builtOrigin}${switcherCase.pagePath}`)
+
+        expect(response?.ok() ?? false).toEqual(true)
+
+        const nav = page.getByRole("navigation", {
+          name: switcherCase.navLabel,
+        })
+
+        await expect(nav).toBeVisible()
+        await Promise.all(
+          Object.values(switcherCase.links).map(async link => {
+            await expect(
+              nav.getByRole("link", { name: link.name }),
+            ).toHaveAttribute("href", link.href)
+          }),
+        )
+      }),
     )
   })
 
@@ -568,29 +619,25 @@ test.describe("e2e tests", () => {
       width: number
       x: number
     }> {
-      const page = await browser.newPage({ viewport })
+      await using page = await browser.newPage({ viewport })
 
-      try {
-        await routeBuiltFiles(page)
+      await routeBuiltFiles(page)
 
-        const response = await page.goto(`${builtOrigin}${pathname}`)
+      const response = await page.goto(`${builtOrigin}${pathname}`)
 
-        expect(response?.ok() ?? false).toEqual(true)
+      expect(response?.ok() ?? false).toEqual(true)
 
-        const navBox = await page
-          .getByRole("navigation", { name: "Site navigation" })
-          .boundingBox()
+      const navBox = await page
+        .getByRole("navigation", { name: "Site navigation" })
+        .boundingBox()
 
-        if (navBox === null) {
-          throw new Error(`Expected nav to have a bounding box on ${pathname}.`)
-        }
+      if (navBox === null) {
+        throw new Error(`Expected nav to have a bounding box on ${pathname}.`)
+      }
 
-        return {
-          width: Math.round(navBox.width),
-          x: Math.round(navBox.x),
-        }
-      } finally {
-        await page.close()
+      return {
+        width: Math.round(navBox.width),
+        x: Math.round(navBox.x),
       }
     }
 
@@ -618,25 +665,21 @@ test.describe("e2e tests", () => {
     expect(mobileCvMetrics).toEqual(mobileHomeMetrics)
     expect(mobileConsultingMetrics).toEqual(mobileHomeMetrics)
 
-    const page = await browser.newPage({ viewport: mobileViewport })
+    await using page = await browser.newPage({ viewport: mobileViewport })
 
-    try {
-      await routeBuiltFiles(page)
+    await routeBuiltFiles(page)
 
-      const response = await page.goto(`${builtOrigin}/cv/`)
+    const response = await page.goto(`${builtOrigin}/cv/`)
 
-      expect(response?.ok() ?? false).toEqual(true)
+    expect(response?.ok() ?? false).toEqual(true)
 
-      const mainBox = await page.locator("main").boundingBox()
+    const mainBox = await page.locator("main").boundingBox()
 
-      if (mainBox === null) {
-        throw new Error("Expected cv content to have a bounding box.")
-      }
-
-      expect(Math.round(mainBox.x)).toEqual(0)
-      expect(Math.round(mainBox.width)).toEqual(390)
-    } finally {
-      await page.close()
+    if (mainBox === null) {
+      throw new Error("Expected cv content to have a bounding box.")
     }
+
+    expect(Math.round(mainBox.x)).toEqual(0)
+    expect(Math.round(mainBox.width)).toEqual(390)
   })
 })

@@ -56,6 +56,8 @@ const unprefixDefaultLocaleHref = (href: string): string =>
     : href.startsWith(`/${defaultLocale}/`)
       ? href.slice(defaultLocale.length + 1)
       : href
+const withTrailingSlash = (href: string): string =>
+  href === "/" || href.endsWith("/") ? href : `${href}/`
 const rawHrefFor = (locale: Locale, path: SiteNavPath): string =>
   normalizeLocaleHref(
     path === "home"
@@ -67,10 +69,10 @@ function hrefFor(locale: Locale, path: SiteNavPath): string {
   const href = rawHrefFor(locale, path)
 
   if (!usesDefaultLocalePrefix && locale === defaultLocale) {
-    return unprefixDefaultLocaleHref(href)
+    return withTrailingSlash(unprefixDefaultLocaleHref(href))
   }
 
-  return href
+  return withTrailingSlash(href)
 }
 
 const links: { label: string; path: SiteNavPath }[] = [

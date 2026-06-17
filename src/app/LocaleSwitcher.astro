@@ -25,6 +25,8 @@ const unprefixDefaultLocaleHref = (href: string): string =>
     : href.startsWith(`/${defaultLocale}/`)
       ? href.slice(defaultLocale.length + 1)
       : href
+const withTrailingSlash = (href: string): string =>
+  href === "/" || href.endsWith("/") ? href : `${href}/`
 
 function hrefFor(locale: Locale): string {
   const href = normalizeLocaleHref(
@@ -32,10 +34,10 @@ function hrefFor(locale: Locale): string {
   )
 
   if (!usesDefaultLocalePrefix && locale === defaultLocale) {
-    return unprefixDefaultLocaleHref(href)
+    return withTrailingSlash(unprefixDefaultLocaleHref(href))
   }
 
-  return href
+  return withTrailingSlash(href)
 }
 ---
 
