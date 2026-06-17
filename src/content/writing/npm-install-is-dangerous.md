@@ -1,9 +1,9 @@
 ---
-title: "`npm install` is extremely dangerous"
+title: "npm install is extremely dangerous"
 description:
-  How npm install can execute malicious lifecycle scripts in recruiter repos,
-  plus safer install-gate tools to look at before trusting recruiter code.
-teaser: Welcome to 2026
+  How install scripts in recruiter repos can run malicious dependency code, and
+  which install gates to use before trusting JavaScript projects.
+teaser: Treat dependency installation as code execution.
 published_at: 2026-05-29
 updated_at: 2026-06-18
 ---
@@ -27,7 +27,7 @@ machine that has real credentials.
 
 The pattern:
 
-- fake recruiter, fake company (https://novachainhub.com/), or compromised
+- fake recruiter, [fake company](https://novachainhub.com/), or compromised
   hiring conversation
 - private repo with a normal-looking engineering task
 - dependency added to `package.json`, often with a bland SDK/tooling name
@@ -85,9 +85,27 @@ The durable answer is the security shape:
 - prefer guards that wrap the package manager already used by the project
 - stop when a guard blocks, warns, or cannot explain what it is doing
 
+## Install gates at a glance
+
+Use the lightest guard that answers the risk you are testing:
+
+- [Aikido Safe Chain](https://github.com/AikidoSec/safe-chain/) wraps package
+  manager traffic and checks package downloads before they reach the machine.
+  Start here when the project can keep using its normal package manager.
+- [Socket Firewall Free](https://github.com/SocketDev/sfw-free) runs package
+  manager commands behind network filtering and malicious-dependency blocking.
+  Use it when you want a direct install gate around the existing command.
+- [Nub advisory gate](https://nubjs.com/docs/install#advisory-gate) changes the
+  installer path and makes lifecycle-script policy explicit. Use it when you
+  need an approval flow for install-time execution and can validate
+  package-manager compatibility.
+
+In all three cases, a block, warning, or unexplained dependency graph is the
+decision point. Stop there. Do not fall back to plain `npm install`.
+
 ## Aikido Safe Chain
 
-https://github.com/AikidoSec/safe-chain/
+[Aikido Safe Chain on GitHub](https://github.com/AikidoSec/safe-chain/)
 
 Aikido Safe Chain wraps package manager traffic and checks package downloads
 before they reach the machine. The important idea is that ordinary
@@ -99,7 +117,7 @@ assessment run.
 
 ## Socket Firewall Free
 
-https://github.com/SocketDev/sfw-free
+[Socket Firewall Free on GitHub](https://github.com/SocketDev/sfw-free)
 
 Socket Firewall Free is an explicit guard around package-manager commands. It
 runs the command with network traffic filtering and blocks malicious
@@ -111,7 +129,7 @@ scripts into harmless text.
 
 ## Nub advisory gate
 
-https://nubjs.com/docs/install#advisory-gate
+[Nub advisory gate documentation](https://nubjs.com/docs/install#advisory-gate)
 
 Nub can act as the installer for existing JavaScript projects. Its advisory gate
 and lifecycle-script policy are interesting because they make install-time
@@ -140,8 +158,7 @@ instead of falling back to plain `npm install`.
 
 ## More reading
 
-- https://expel.com/blog/inside-lazarus-how-north-korea-uses-ai-to-industrialize-attacks-on-developers/
-- https://socket.dev/blog/contagious-interview-campaign-spreads-across-5-ecosystems
-- https://socket.dev/supply-chain-attacks/north-korea-s-contagious-interview-campaign
-  is Socket's live tracker for the ongoing Contagious Interview campaign, first
-  discovered on March 13, 2025.
+- [Expel: Inside Lazarus, how North Korea uses AI to industrialize attacks on developers](https://expel.com/blog/inside-lazarus-how-north-korea-uses-ai-to-industrialize-attacks-on-developers/)
+- [Socket: Contagious Interview campaign spreads across five ecosystems](https://socket.dev/blog/contagious-interview-campaign-spreads-across-5-ecosystems)
+- [Socket's live Contagious Interview campaign tracker](https://socket.dev/supply-chain-attacks/north-korea-s-contagious-interview-campaign),
+  first discovered on March 13, 2025.

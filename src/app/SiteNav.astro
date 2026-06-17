@@ -46,6 +46,7 @@ const copyByLocale: Record<Locale, SiteNavCopy> = {
 const { currentLocale, currentPath, class: className } = Astro.props
 const copy = copyByLocale[currentLocale]
 const switcherPath = currentPath === "home" ? undefined : currentPath
+const shouldShowLocaleSwitcher = currentPath !== undefined
 const usesDefaultLocalePrefix =
   Astro.url.pathname === `/${defaultLocale}` ||
   Astro.url.pathname.startsWith(`/${defaultLocale}/`)
@@ -110,10 +111,13 @@ const links: { label: string; path: SiteNavPath }[] = [
       })
     }
   </ul>
-
-  <LocaleSwitcher
-    currentLocale={currentLocale}
-    path={switcherPath}
-    label={copy.switcherLabel}
-  />
+  {
+    shouldShowLocaleSwitcher ? (
+      <LocaleSwitcher
+        currentLocale={currentLocale}
+        path={switcherPath}
+        label={copy.switcherLabel}
+      />
+    ) : null
+  }
 </nav>

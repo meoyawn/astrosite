@@ -24,3 +24,30 @@
 .prose :where(a):not(:where([class~="not-prose"], [class~="not-prose"] *)) {
   @apply hover-underline;
 }
+
+.prose
+  :where(h1, h2, h3, h4, h5, h6):not(
+    :where([class~="not-prose"], [class~="not-prose"] *)
+  )
+  > :where(a[href^="#"]) {
+  color: inherit;
+  display: block;
+  text-decoration-color: transparent;
+}
+
+.prose
+  :where(h1, h2, h3, h4, h5, h6):not(
+    :where([class~="not-prose"], [class~="not-prose"] *)
+  )
+  > :where(a[href^="#"]:hover) {
+  text-decoration-color: currentColor;
+}
+
+.prose
+  :where(h1, h2, h3, h4, h5, h6):not(
+    :where([class~="not-prose"], [class~="not-prose"] *)
+  )
+  > :where(a[href^="#"]:focus-visible) {
+  outline: 2px solid currentColor;
+  outline-offset: 4px;
+}

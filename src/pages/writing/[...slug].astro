@@ -1,5 +1,6 @@
 ---
 import { getCollection, render } from "astro:content"
+import GithubSlugger from "github-slugger"
 import { defaultLocale } from "../../app/i18n"
 import MdRoot from "../../layouts/MdRoot.astro"
 
@@ -19,6 +20,8 @@ export async function getStaticPaths() {
 const { entry } = Astro.props
 const { Content } = await render(entry)
 const publishedAt = entry.data.published_at
+const updatedAt = entry.data.updated_at
+const titleSlugger = new GithubSlugger()
 const dateFormatter = new Intl.DateTimeFormat(defaultLocale, {
   day: "numeric",
   month: "short",
@@ -27,6 +30,10 @@ const dateFormatter = new Intl.DateTimeFormat(defaultLocale, {
 })
 const formatDate = (date: Date): string => dateFormatter.format(date)
 const dateTime = (date: Date): string => date.toISOString().slice(0, 10)
+const titleId = titleSlugger.slug(entry.data.title)
+const shouldShowUpdatedAt = Boolean(
+  publishedAt && updatedAt && dateTime(updatedAt) !== dateTime(publishedAt),
+)
 ---
 
 <MdRoot
@@ -35,11 +42,19 @@ const dateTime = (date: Date): string => date.toISOString().slice(0, 10)
     description: entry.data.description,
   }}
 >
-  <h1 class="mb-0">{entry.data.title}</h1>
+  <h1 id={titleId} class="mb-0">{entry.data.title}</h1>
   <p class="not-prose mt-2 mb-8 text-sm leading-6 font-medium text-zinc-500">
     {
       publishedAt ? (
-        <time datetime={dateTime(publishedAt)}>{formatDate(publishedAt)}</time>
+        <>
+          Published <time datetime={dateTime(publishedAt)}>{formatDate(publishedAt)}</time>
+          {shouldShowUpdatedAt && updatedAt ? (
+            <>
+              {". "}
+              Updated <time datetime={dateTime(updatedAt)}>{formatDate(updatedAt)}</time>
+            </>
+          ) : null}
+        </>
       ) : (
         "Draft"
       )

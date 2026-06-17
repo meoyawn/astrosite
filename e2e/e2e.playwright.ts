@@ -312,6 +312,12 @@ test.describe("e2e tests", () => {
     )
 
     expect(response?.ok() ?? false).toEqual(true)
+    await expect(
+      page.getByRole("navigation", { name: "Site navigation" }),
+    ).toBeVisible()
+    await expect(
+      page.getByRole("navigation", { name: "Switch language" }),
+    ).toBeHidden()
     await expect(page.locator('meta[property="og:site_name"]')).toHaveAttribute(
       "content",
       "adelnz.com",
@@ -323,13 +329,59 @@ test.describe("e2e tests", () => {
     await expect(
       page.locator('meta[property="og:description"]'),
     ).toHaveAttribute("content", frontmatter.description)
-    await expect(page.getByRole("main").locator("time")).toHaveAttribute(
+
+    const metadataTimes = page.getByRole("main").locator("time")
+
+    await expect(metadataTimes.first()).toHaveAttribute(
       "datetime",
       frontmatter.publishedAtDateTime,
     )
-    await expect(page.getByRole("main").locator("time")).toHaveText(
-      frontmatter.publishedAtText,
+    await expect(metadataTimes.first()).toHaveText(frontmatter.publishedAtText)
+  })
+
+  test("npm install article headings link to fragments and scroll there", async ({
+    page,
+  }) => {
+    await routeBuiltFiles(page)
+    await page.setViewportSize({ height: 900, width: 1280 })
+
+    const articleUrl = `${builtOrigin}/writing/npm-install-is-dangerous/`
+    const response = await page.goto(articleUrl)
+
+    expect(response?.ok() ?? false).toEqual(true)
+
+    const main = page.getByRole("main")
+    const heading = main.getByRole("heading", {
+      level: 2,
+      name: "Attack vector",
+    })
+
+    await expect(heading).toHaveAttribute("id", "attack-vector")
+    await expect(
+      heading.getByRole("link", { name: "Attack vector" }),
+    ).toHaveAttribute("href", "#attack-vector")
+
+    const beforeScrollY = await page.evaluate(() => window.scrollY)
+    const beforeHeadingTop = await heading.evaluate(
+      element => element.getBoundingClientRect().top,
     )
+
+    expect(beforeScrollY).toEqual(0)
+    expect(beforeHeadingTop).toBeGreaterThan(0)
+
+    await heading.click()
+
+    await expect(page).toHaveURL(`${articleUrl}#attack-vector`)
+    await expect
+      .poll(() => page.evaluate(() => window.scrollY))
+      .toBeGreaterThan(beforeScrollY)
+    await expect
+      .poll(() =>
+        heading.evaluate(element =>
+          Math.abs(Math.round(element.getBoundingClientRect().top)),
+        ),
+      )
+      .toBe(0)
   })
 
   test("tatar consulting page sets html language", async ({ page }) => {
