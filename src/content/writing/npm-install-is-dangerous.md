@@ -85,38 +85,37 @@ The durable answer is the security shape:
 - prefer guards that wrap the package manager already used by the project
 - stop when a guard blocks, warns, or cannot explain what it is doing
 
-The details belong in the current documentation for the tool you use, not in a
-blog post that will be stale next year.
-
 ## Aikido Safe Chain
 
-[Aikido Safe Chain](https://github.com/AikidoSec/safe-chain/) wraps package
-manager traffic and checks package downloads before they reach the machine. The
-important idea is that ordinary package-manager commands pass through a local
-guard that can block known malicious packages and apply package-age policy.
+https://github.com/AikidoSec/safe-chain/
+
+Aikido Safe Chain wraps package manager traffic and checks package downloads
+before they reach the machine. The important idea is that ordinary
+package-manager commands pass through a local guard that can block known
+malicious packages and apply package-age policy.
 
 If Safe Chain blocks a package, stop. Do not bypass the wrapper to make the
-assessment run. Read the current Safe Chain docs for installation, supported
-package managers, verification, package-age behavior, and CI setup.
+assessment run.
 
 ## Socket Firewall Free
 
-[Socket Firewall Free](https://github.com/SocketDev/sfw-free) is an explicit
-guard around package-manager commands. It runs the command with network traffic
-filtering and blocks malicious dependencies before installation.
+https://github.com/SocketDev/sfw-free
+
+Socket Firewall Free is an explicit guard around package-manager commands. It
+runs the command with network traffic filtering and blocks malicious
+dependencies before installation.
 
 Socket Firewall is an install gate, not a sandbox. It does not make a malicious
 workspace safe to open in a trusted editor, and it does not turn lifecycle
-scripts into harmless text. Read the current Socket docs for installation,
-supported ecosystems, CI setup, and whether the package manager in front of you
-is covered by the free edition.
+scripts into harmless text.
 
 ## Nub advisory gate
 
-[Nub](https://nubjs.com/docs/install#advisory-gate) can act as the installer for
-existing JavaScript projects. Its advisory gate and lifecycle-script policy are
-interesting because they make install-time execution explicit instead of
-silently trusting every dependency build script.
+https://nubjs.com/docs/install#advisory-gate
+
+Nub can act as the installer for existing JavaScript projects. Its advisory gate
+and lifecycle-script policy are interesting because they make install-time
+execution explicit instead of silently trusting every dependency build script.
 
 This is a stronger intervention than Safe Chain or Socket Firewall. Even when
 Nub preserves a project's lockfile format, you are still changing the installer
@@ -125,10 +124,9 @@ default move for an interview repo. Use it only when wrapper-based protection is
 not enough, when the project needs a lifecycle approval flow, or when you are
 already comfortable validating package-manager compatibility.
 
-Read the current Nub advisory-gate docs before using it. The decision that
-should survive over time is not a specific flag. It is this: do not run
-dependency build scripts unless the package, provenance, advisory status, and
-reason for execution are understood.
+The decision that should survive over time is not a specific flag. It is this:
+do not run dependency build scripts unless the package, provenance, advisory
+status, and reason for execution are understood.
 
 ## What still matters
 
@@ -142,8 +140,8 @@ instead of falling back to plain `npm install`.
 
 ## More reading
 
-- [Inside Lazarus: How North Korea uses AI to industrialize attacks on developers](https://expel.com/blog/inside-lazarus-how-north-korea-uses-ai-to-industrialize-attacks-on-developers/)
-- [North Korea's Contagious Interview Campaign Spreads Across 5 Ecosystems, Delivering Staged RAT Payloads](https://socket.dev/blog/contagious-interview-campaign-spreads-across-5-ecosystems)
-- [North Korea's Contagious Interview Campaign](https://socket.dev/supply-chain-attacks/north-korea-s-contagious-interview-campaign)
+- https://expel.com/blog/inside-lazarus-how-north-korea-uses-ai-to-industrialize-attacks-on-developers/
+- https://socket.dev/blog/contagious-interview-campaign-spreads-across-5-ecosystems
+- https://socket.dev/supply-chain-attacks/north-korea-s-contagious-interview-campaign
   is Socket's live tracker for the ongoing Contagious Interview campaign, first
   discovered on March 13, 2025.
