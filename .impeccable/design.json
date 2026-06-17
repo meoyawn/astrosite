@@ -1,0 +1,328 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-06-17T21:31:37Z",
+  "title": "Design System: Astrosite",
+  "extensions": {
+    "colorMeta": {
+      "background": {
+        "role": "neutral",
+        "displayName": "White Page",
+        "canonical": "#ffffff",
+        "tonalRamp": [
+          "oklch(15% 0 0)",
+          "oklch(25% 0 0)",
+          "oklch(35% 0 0)",
+          "oklch(50% 0 0)",
+          "oklch(65% 0 0)",
+          "oklch(80% 0 0)",
+          "oklch(90% 0 0)",
+          "oklch(100% 0 0)"
+        ]
+      },
+      "ink": {
+        "role": "neutral",
+        "displayName": "Zinc Ink",
+        "canonical": "oklch(14.1% 0.005 285.823)",
+        "tonalRamp": [
+          "oklch(14.1% 0.005 285.823)",
+          "oklch(22% 0.006 285.823)",
+          "oklch(32% 0.008 285.823)",
+          "oklch(44% 0.01 285.823)",
+          "oklch(56% 0.01 285.823)",
+          "oklch(70% 0.008 285.823)",
+          "oklch(84% 0.006 285.823)",
+          "oklch(94% 0.004 285.823)"
+        ]
+      },
+      "primary": {
+        "role": "primary",
+        "displayName": "Slate Title",
+        "canonical": "oklch(20.8% 0.042 265.755)",
+        "tonalRamp": [
+          "oklch(15% 0.042 265.755)",
+          "oklch(22% 0.042 265.755)",
+          "oklch(32% 0.042 265.755)",
+          "oklch(44% 0.04 265.755)",
+          "oklch(56% 0.035 265.755)",
+          "oklch(70% 0.028 265.755)",
+          "oklch(84% 0.02 265.755)",
+          "oklch(94% 0.012 265.755)"
+        ]
+      },
+      "secondary-text": {
+        "role": "neutral",
+        "displayName": "Reading Slate",
+        "canonical": "oklch(37.2% 0.044 257.287)",
+        "tonalRamp": [
+          "oklch(15% 0.044 257.287)",
+          "oklch(25% 0.044 257.287)",
+          "oklch(37.2% 0.044 257.287)",
+          "oklch(50% 0.038 257.287)",
+          "oklch(62% 0.032 257.287)",
+          "oklch(74% 0.026 257.287)",
+          "oklch(86% 0.018 257.287)",
+          "oklch(94% 0.01 257.287)"
+        ]
+      },
+      "body-muted": {
+        "role": "neutral",
+        "displayName": "Muted Body Zinc",
+        "canonical": "oklch(44.2% 0.017 285.786)",
+        "tonalRamp": [
+          "oklch(15% 0.017 285.786)",
+          "oklch(25% 0.017 285.786)",
+          "oklch(36% 0.017 285.786)",
+          "oklch(44.2% 0.017 285.786)",
+          "oklch(56% 0.014 285.786)",
+          "oklch(70% 0.011 285.786)",
+          "oklch(84% 0.007 285.786)",
+          "oklch(94% 0.004 285.786)"
+        ]
+      },
+      "metadata": {
+        "role": "neutral",
+        "displayName": "Metadata Zinc",
+        "canonical": "oklch(55.2% 0.016 285.938)",
+        "tonalRamp": [
+          "oklch(15% 0.016 285.938)",
+          "oklch(26% 0.016 285.938)",
+          "oklch(38% 0.016 285.938)",
+          "oklch(55.2% 0.016 285.938)",
+          "oklch(66% 0.013 285.938)",
+          "oklch(78% 0.01 285.938)",
+          "oklch(88% 0.006 285.938)",
+          "oklch(95% 0.004 285.938)"
+        ]
+      },
+      "date": {
+        "role": "neutral",
+        "displayName": "Date Gray",
+        "canonical": "#6b7280",
+        "tonalRamp": [
+          "#111827",
+          "#1f2937",
+          "#374151",
+          "#4b5563",
+          "#6b7280",
+          "#9ca3af",
+          "#d1d5db",
+          "#f3f4f6"
+        ]
+      },
+      "rule": {
+        "role": "neutral",
+        "displayName": "Rule Zinc",
+        "canonical": "oklch(92% 0.004 286.32)",
+        "tonalRamp": [
+          "oklch(18% 0.004 286.32)",
+          "oklch(30% 0.004 286.32)",
+          "oklch(44% 0.004 286.32)",
+          "oklch(58% 0.004 286.32)",
+          "oklch(72% 0.004 286.32)",
+          "oklch(84% 0.004 286.32)",
+          "oklch(92% 0.004 286.32)",
+          "oklch(96% 0.003 286.32)"
+        ]
+      },
+      "chip-border": {
+        "role": "neutral",
+        "displayName": "Soft Slate Border",
+        "canonical": "oklch(86.9% 0.022 252.894)",
+        "tonalRamp": [
+          "oklch(18% 0.022 252.894)",
+          "oklch(30% 0.022 252.894)",
+          "oklch(44% 0.022 252.894)",
+          "oklch(58% 0.022 252.894)",
+          "oklch(72% 0.022 252.894)",
+          "oklch(86.9% 0.022 252.894)",
+          "oklch(92% 0.014 252.894)",
+          "oklch(96% 0.008 252.894)"
+        ]
+      },
+      "cv-link": {
+        "role": "secondary",
+        "displayName": "CV Sky",
+        "canonical": "oklch(58.8% 0.158 241.966)",
+        "tonalRamp": [
+          "oklch(18% 0.12 241.966)",
+          "oklch(28% 0.14 241.966)",
+          "oklch(40% 0.15 241.966)",
+          "oklch(50% 0.158 241.966)",
+          "oklch(58.8% 0.158 241.966)",
+          "oklch(70% 0.12 241.966)",
+          "oklch(82% 0.075 241.966)",
+          "oklch(94% 0.035 241.966)"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "Page and article h1 text. Compact, heavy, never hero-scale."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Section headings such as Writing."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Writing list titles and prominent links."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Long-form prose with Tailwind Typography rhythm."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Dates, metadata, and compact language chips."
+      }
+    },
+    "shadows": [],
+    "motion": [
+      {
+        "name": "underline-color",
+        "value": "transition-duration: var(--default-transition-duration); transition-timing-function: var(--default-transition-timing-function)",
+        "purpose": "Only text decoration color transitions on hover links."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "sm",
+        "value": "640px"
+      },
+      {
+        "name": "md",
+        "value": "768px"
+      },
+      {
+        "name": "print",
+        "value": "print media"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Hover Link",
+      "kind": "custom",
+      "refersTo": "hover-link",
+      "description": "Default link treatment for prose and non-current nav links.",
+      "html": "<a class=\"ds-hover-link\" href=\"#\">Read the article</a>",
+      "css": ".ds-hover-link { color: #09090b; font: 500 1rem/1.5 ui-sans-serif, system-ui, sans-serif; text-decoration-line: underline; text-decoration-thickness: 2px; text-underline-offset: 3px; text-decoration-color: color-mix(in oklab, currentColor 25%, transparent); transition-property: color, background-color, border-color, outline-color, text-decoration-color, fill, stroke; transition-duration: 150ms; transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1); } .ds-hover-link:hover { text-decoration-color: currentColor; } .ds-hover-link:focus-visible { outline: 2px solid #0f172a; outline-offset: 3px; }"
+    },
+    {
+      "name": "Main Nav Link",
+      "kind": "nav",
+      "refersTo": "nav-link",
+      "description": "Compact top navigation link.",
+      "html": "<nav class=\"ds-nav\"><a class=\"ds-nav-link\" href=\"#\">Consulting</a><a class=\"ds-nav-link ds-nav-link-current\" href=\"#\" aria-current=\"page\">CV</a></nav>",
+      "css": ".ds-nav { display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: center; font-family: ui-sans-serif, system-ui, sans-serif; } .ds-nav-link { color: #09090b; font-size: 1rem; line-height: 1.5; font-weight: 500; text-decoration-line: underline; text-decoration-thickness: 2px; text-underline-offset: 3px; text-decoration-color: color-mix(in oklab, currentColor 25%, transparent); transition: text-decoration-color 150ms cubic-bezier(0.4, 0, 0.2, 1); } .ds-nav-link:hover { text-decoration-color: currentColor; } .ds-nav-link-current { font-weight: 600; text-decoration-color: #09090b; } .ds-nav-link:focus-visible { outline: 2px solid #0f172a; outline-offset: 3px; }"
+    },
+    {
+      "name": "Locale Chip",
+      "kind": "chip",
+      "refersTo": "locale-chip",
+      "description": "Language switcher chip, inactive state.",
+      "html": "<a class=\"ds-locale-chip\" href=\"#\">RU</a>",
+      "css": ".ds-locale-chip { display: inline-flex; align-items: center; justify-content: center; border: 1px solid #cbd5e1; border-radius: 4px; background: #ffffff; color: #334155; padding: 4px 12px; min-height: 28px; font: 500 0.875rem/1.25 ui-sans-serif, system-ui, sans-serif; text-decoration: none; transition: color 150ms cubic-bezier(0.4, 0, 0.2, 1), border-color 150ms cubic-bezier(0.4, 0, 0.2, 1); } .ds-locale-chip:hover { border-color: #0f172a; color: #0f172a; } .ds-locale-chip:focus-visible { outline: 2px solid #0f172a; outline-offset: 3px; }"
+    },
+    {
+      "name": "Locale Chip Active",
+      "kind": "chip",
+      "refersTo": "locale-chip-active",
+      "description": "Language switcher chip for the current locale.",
+      "html": "<a class=\"ds-locale-chip-active\" href=\"#\" aria-current=\"page\">EN</a>",
+      "css": ".ds-locale-chip-active { display: inline-flex; align-items: center; justify-content: center; border: 1px solid #0f172a; border-radius: 4px; background: #0f172a; color: #ffffff; padding: 4px 12px; min-height: 28px; font: 500 0.875rem/1.25 ui-sans-serif, system-ui, sans-serif; text-decoration: none; } .ds-locale-chip-active:focus-visible { outline: 2px solid #0f172a; outline-offset: 3px; }"
+    },
+    {
+      "name": "Writing List Item",
+      "kind": "card",
+      "refersTo": "writing-list-item",
+      "description": "Flat article teaser row with date, title, and compact summary.",
+      "html": "<article class=\"ds-writing-item\"><time class=\"ds-writing-date\" datetime=\"2026-06-17\">17 Jun 2026</time><a class=\"ds-writing-title\" href=\"#\">npm install is dangerous</a><p class=\"ds-writing-teaser\">A focused technical argument with enough context to decide what to do next.</p></article>",
+      "css": ".ds-writing-item { padding: 16px 0; border-top: 1px solid #e4e4e7; color: #09090b; font-family: ui-sans-serif, system-ui, sans-serif; } .ds-writing-date { display: block; margin-bottom: 4px; color: #71717a; font-size: 0.875rem; line-height: 1.5rem; font-weight: 500; font-variant-numeric: tabular-nums; } .ds-writing-title { display: inline; color: #0f172a; font-size: 1.125rem; line-height: 1.5rem; font-weight: 600; text-decoration-line: underline; text-decoration-thickness: 2px; text-underline-offset: 3px; text-decoration-color: color-mix(in oklab, currentColor 25%, transparent); transition: text-decoration-color 150ms cubic-bezier(0.4, 0, 0.2, 1); } .ds-writing-title:hover { text-decoration-color: currentColor; } .ds-writing-title:focus-visible { outline: 2px solid #0f172a; outline-offset: 3px; } .ds-writing-teaser { max-width: 44ch; margin: 4px 0 0; color: #52525b; font-size: 1rem; line-height: 1.75; }"
+    },
+    {
+      "name": "Article Date",
+      "kind": "custom",
+      "refersTo": "date",
+      "description": "Metadata line below article titles.",
+      "html": "<p class=\"ds-article-date\"><time datetime=\"2026-06-17\">17 Jun 2026</time></p>",
+      "css": ".ds-article-date { margin: 8px 0 32px; color: #71717a; font: 500 0.875rem/1.5rem ui-sans-serif, system-ui, sans-serif; }"
+    },
+    {
+      "name": "CV Icon Link",
+      "kind": "custom",
+      "refersTo": "cv-icon-link",
+      "description": "Compact CV contact link with a 16px icon.",
+      "html": "<a class=\"ds-cv-icon-link\" href=\"mailto:mail@example.com\"><svg aria-hidden=\"true\" viewBox=\"0 0 24 24\" width=\"16\" height=\"16\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><path d=\"M4 4h16v16H4z\"></path><path d=\"m4 7 8 6 8-6\"></path></svg><span>mail@example.com</span></a>",
+      "css": ".ds-cv-icon-link { display: inline-flex; align-items: center; gap: 4px; color: #0f172a; font: 400 1rem/1.75 ui-sans-serif, system-ui, sans-serif; text-decoration-line: underline; text-decoration-thickness: 1px; text-underline-offset: 2px; } .ds-cv-icon-link svg { flex: 0 0 16px; } .ds-cv-icon-link:focus-visible { outline: 2px solid #0f172a; outline-offset: 3px; }"
+    },
+    {
+      "name": "Details Summary",
+      "kind": "custom",
+      "refersTo": "hover-link",
+      "description": "Disclosure summary used for past projects on localized home pages.",
+      "html": "<details class=\"ds-details\"><summary class=\"ds-summary\">Past projects</summary><p>Arrowbox</p></details>",
+      "css": ".ds-details { margin-top: 24px; color: #09090b; font-family: ui-sans-serif, system-ui, sans-serif; } .ds-summary { cursor: pointer; color: #0f172a; font-weight: 600; text-decoration-line: underline; text-decoration-thickness: 2px; text-underline-offset: 3px; text-decoration-color: color-mix(in oklab, currentColor 25%, transparent); transition: text-decoration-color 150ms cubic-bezier(0.4, 0, 0.2, 1); } .ds-summary:hover { text-decoration-color: currentColor; } .ds-summary:focus-visible { outline: 2px solid #0f172a; outline-offset: 3px; } .ds-details p { margin: 8px 0 0; color: #52525b; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Plaintext Field Notebook",
+    "overview": "Astrosite is a calm technical notebook, not a portfolio campaign. The system should feel like a working engineer's public record: plain page, strong titles, compact navigation, readable prose, and just enough structure to make writing, consulting context, products, and CV evidence easy to scan.\n\nThe visual language is intentionally flat. White space, text weight, dividers, link underlines, and print-aware layout do the work that cards, shadows, hero panels, and decorative imagery would normally try to do. This restraint serves search clarity and long-form reading, while still leaving enough typographic contrast for a visitor to understand hierarchy quickly.\n\nThe system explicitly rejects the PRODUCT.md anti-references: generic SaaS landing-page patterns, decorative AI-generated editorial tropes, portfolio gloss, and visual flourishes that compete with reading, search clarity, or technical credibility.",
+    "keyCharacteristics": [
+      "Prose-first pages with narrow reading width and comfortable line-height.",
+      "Dense but calm hierarchy: bold headings, medium navigation, muted dates.",
+      "Flat surfaces: dividers and typographic weight replace cards and shadows.",
+      "Multilingual parity: English, Russian, and Tatar pages keep the same structure.",
+      "Print-aware CV: compact, readable, and low-chrome when printed."
+    ],
+    "rules": [
+      {
+        "name": "The Ink First Rule",
+        "body": "Body text stays near-black on white. Do not soften prose into pale gray for elegance.",
+        "section": "colors"
+      },
+      {
+        "name": "The Accent Is Evidence Rule",
+        "body": "Color only appears when it carries state, links, dates, or CV-specific link affordance. Do not add decorative accent fills.",
+        "section": "colors"
+      },
+      {
+        "name": "The Reading Is The Product Rule",
+        "body": "Do not introduce ornamental display faces, italic editorial treatments, or tracked uppercase section labels. The writing must remain the strongest signal.",
+        "section": "typography"
+      },
+      {
+        "name": "The No Negative Tracking Rule",
+        "body": "Letter spacing stays at `0`. This site does not use compressed display typography.",
+        "section": "typography"
+      },
+      {
+        "name": "The No Shadow Rule",
+        "body": "Do not add card shadows, glass panels, or soft glow effects. If a surface needs separation, use a divider, spacing, or a filled state.",
+        "section": "elevation"
+      },
+      {
+        "name": "The Divider Over Card Rule",
+        "body": "Writing lists use `border-y` and `divide-y`; they are not card grids.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "Do keep long prose on a narrow measure with the existing `prose` rhythm.",
+      "Do use `hover-underline` for normal prose and navigation links.",
+      "Do preserve multilingual parity across English, Russian, and Tatar surfaces.",
+      "Do use dividers and typographic weight before adding containers.",
+      "Do keep CV changes print-readable, compact, and low-chrome."
+    ],
+    "donts": [
+      "Don't use generic SaaS landing-page patterns.",
+      "Don't use decorative AI-generated editorial tropes.",
+      "Don't add portfolio gloss.",
+      "Don't add visual flourishes that compete with reading, search clarity, or technical credibility.",
+      "Don't add card grids, hero metrics, gradient text, glass panels, or ornamental imagery to article pages.",
+      "Don't use repeated tiny uppercase tracked labels above section headings.",
+      "Don't soften body copy below WCAG AA contrast."
+    ]
+  }
+}
