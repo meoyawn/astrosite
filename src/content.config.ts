@@ -15,10 +15,12 @@ export const collections = {
       title: z.string().min(1),
       /** SEO */
       description: z.string().min(1),
-      /** article list */
+      /** Article list */
       teaser: z.string().min(1),
       /** Controls draft status: visible or not in the writing list */
       published_at: z.date().optional(),
+
+      updated_at: z.date().optional(),
     }),
   }),
 } as const
