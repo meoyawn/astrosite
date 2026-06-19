@@ -168,9 +168,13 @@ test.describe("e2e tests", () => {
     expect(response?.ok() ?? false).toEqual(true)
     const main = page.getByRole("main")
 
+    const consultingHeading = main.getByRole("heading", {
+      name: /consulting/i,
+    })
+    await expect(consultingHeading).toBeVisible()
     await expect(
-      main.getByRole("heading", { name: /consulting/i }),
-    ).toBeVisible()
+      main.locator("h2 a, h3 a, h4 a, h5 a, h6 a"),
+    ).toHaveCount(0)
     await expect(
       main.getByRole("link", { name: "mail@adelnz.com" }),
     ).toHaveAttribute("href", "mailto:mail@adelnz.com")
@@ -178,26 +182,25 @@ test.describe("e2e tests", () => {
       "href",
       "https://listenbox.app",
     )
-    await expect(main.getByRole("link", { name: "Arrowbox" })).toHaveAttribute(
-      "href",
-      "https://arrowbox.co",
-    )
     await expect(
       main.getByRole("link", { name: "ResponsibleAPI" }),
     ).toHaveAttribute("href", "https://responsibleapi.com")
     const selectedWorkLinks = [
       "Listenbox",
-      "Arrowbox",
       "ResponsibleAPI",
       "GitHub",
       "CV",
     ]
     const selectedWorkLinkBoxes = await Promise.all(
       selectedWorkLinks.map(async linkName => {
-        const box = await main.getByRole("link", { name: linkName }).boundingBox()
+        const box = await main
+          .getByRole("link", { name: linkName })
+          .boundingBox()
 
         if (box === null) {
-          throw new Error(`Expected selected work link to be visible: ${linkName}.`)
+          throw new Error(
+            `Expected selected work link to be visible: ${linkName}.`,
+          )
         }
 
         return box
@@ -340,6 +343,13 @@ test.describe("e2e tests", () => {
   }) => {
     await routeBuiltFiles(page)
     await page.setViewportSize({ height: 900, width: 1280 })
+
+    expect(
+      readFileSync(
+        join(distDir, "..", "src", "content", "writing", "npm-install-is-dangerous.md"),
+        "utf8",
+      ),
+    ).toContain("## Attack vector")
 
     const articleUrl = `${builtOrigin}/writing/npm-install-is-dangerous/`
     const response = await page.goto(articleUrl)
@@ -519,7 +529,9 @@ test.describe("e2e tests", () => {
 
         await routeBuiltFiles(page)
 
-        const response = await page.goto(`${builtOrigin}${switcherCase.pagePath}`)
+        const response = await page.goto(
+          `${builtOrigin}${switcherCase.pagePath}`,
+        )
 
         expect(response?.ok() ?? false).toEqual(true)
 
@@ -601,12 +613,18 @@ test.describe("e2e tests", () => {
     expect(response?.ok() ?? false).toEqual(true)
 
     const main = page.getByRole("main")
-    const listenboxRole = main.locator(".break-inside-avoid-page", {
-      has: page.getByRole("link", { name: "Listenbox", exact: true }),
-    }).first()
+    const listenboxRole = main
+      .locator(".break-inside-avoid-page", {
+        has: page.getByRole("link", { name: "Listenbox", exact: true }),
+      })
+      .first()
 
-    await expect(listenboxRole.getByRole("heading", { name: "Founder" })).toBeVisible()
-    await expect(listenboxRole.getByText(/October 2019 - Present/)).toBeVisible()
+    await expect(
+      listenboxRole.getByRole("heading", { name: "Founder" }),
+    ).toBeVisible()
+    await expect(
+      listenboxRole.getByText(/October 2019 - Present/),
+    ).toBeVisible()
   })
 
   test("cv uses full mobile width while default pages use wider mdx spacing", async ({

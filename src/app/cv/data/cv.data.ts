@@ -1,9 +1,9 @@
 import { load } from "js-yaml"
 import * as v from "valibot"
-import type { Locale } from "../../i18n"
 import cvEnSource from "../../../pages/cv.yaml?raw"
 import cvRuSource from "../../../pages/ru/cv.yaml?raw"
 import cvTtSource from "../../../pages/tt/cv.yaml?raw"
+import type { Locale } from "../../i18n"
 import type { Award, CV, Education, Experience, Head, Org } from "./cv.types"
 
 const isRecord = (value: unknown): value is Record<string, unknown> =>

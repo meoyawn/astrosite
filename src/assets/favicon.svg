@@ -1,3 +1,3 @@
 <svg width="210" height="210" viewBox="0 0 210 210" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path d="M45 148.727L103.587 26.8985C103.952 26.1388 105.036 26.1443 105.394 26.9077L163.333 150.576C163.643 151.239 163.159 152 162.427 152H94.0385" stroke="black" stroke-width="20" stroke-linecap="square"/>
+<path d="M45 148.727L103.587 26.8985C103.952 26.1388 105.036 26.1443 105.394 26.9077L163.333 150.576C163.643 151.239 163.159 152 162.427 152H94.0385" transform="translate(0 8)" stroke="black" stroke-width="20" stroke-linecap="square"/>
 </svg>

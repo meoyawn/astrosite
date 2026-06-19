@@ -7,7 +7,10 @@ import remarkRehype from "remark-rehype"
 import { type Plugin, unified } from "unified"
 import { externalLinkOptions } from "./markdown-options.ts"
 
-/** `remark-parse` currently trips local typechecking, so we declare an equivalent plugin here. */
+/**
+ * `remark-parse` currently trips local typechecking, so we declare an
+ * equivalent plugin here.
+ */
 const remarkParsePlugin: Plugin<
   [(Readonly<RemarkParseOptions> | null | undefined)?],
   string,

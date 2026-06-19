@@ -4,8 +4,24 @@ import { defineConfig } from "astro/config"
 import rehypeAutolinkHeadings from "rehype-autolink-headings"
 import rehypeExternalLinks from "rehype-external-links"
 import rehypeSlug from "rehype-slug"
+import type { Root } from "hast"
+import type { Plugin } from "unified"
 import { defaultLocale, locales } from "./src/app/i18n"
 import { externalLinkOptions } from "./src/app/markdown-options.ts"
+
+const autolinkWritingHeadings = rehypeAutolinkHeadings({
+  behavior: "wrap",
+  test: ["h2", "h3", "h4", "h5", "h6"],
+})
+
+const isWritingContentPath = (path: string): boolean =>
+  path.includes("/src/content/writing/")
+
+const rehypeWritingAutolinkHeadings: Plugin<[], Root> = () => (tree, file) => {
+  if (isWritingContentPath(file.path)) {
+    autolinkWritingHeadings(tree)
+  }
+}
 
 /** https://astro.build/config */
 export default defineConfig({
@@ -26,10 +42,7 @@ export default defineConfig({
     processor: unified({
       rehypePlugins: [
         rehypeSlug,
-        [
-          rehypeAutolinkHeadings,
-          { behavior: "wrap", test: ["h2", "h3", "h4", "h5", "h6"] },
-        ],
+        rehypeWritingAutolinkHeadings,
         [rehypeExternalLinks, externalLinkOptions],
       ],
     }),

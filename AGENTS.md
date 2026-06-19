@@ -7,7 +7,8 @@
 
 - dev server port is in [astro.config.ts](astro.config.ts)
 - never launch the dev server, it's already running
-- when trying to debug problems, start with simple `curl` (need to escalate sandbox)
+- when trying to debug problems, start with simple `curl` (need to escalate
+  sandbox)
 
 ## Rules
 
