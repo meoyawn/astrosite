@@ -363,9 +363,27 @@ test.describe("e2e tests", () => {
     })
 
     await expect(heading).toHaveAttribute("id", "attack-vector")
-    await expect(
-      heading.getByRole("link", { name: "Attack vector" }),
-    ).toHaveAttribute("href", "#attack-vector")
+    const headingLink = heading.getByRole("link", { name: "Attack vector" })
+
+    await expect(headingLink).toHaveAttribute("href", "#attack-vector")
+    await expect
+      .poll(() =>
+        headingLink.evaluate(element => getComputedStyle(element, "::before").content),
+      )
+      .toEqual('"#"')
+    await expect
+      .poll(() =>
+        headingLink.evaluate(element => getComputedStyle(element, "::before").opacity),
+      )
+      .toEqual("0")
+
+    await headingLink.hover()
+
+    await expect
+      .poll(() =>
+        headingLink.evaluate(element => getComputedStyle(element, "::before").opacity),
+      )
+      .toEqual("1")
 
     const beforeScrollY = await page.evaluate(() => window.scrollY)
     const beforeHeadingTop = await heading.evaluate(

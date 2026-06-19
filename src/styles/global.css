@@ -30,6 +30,7 @@
     :where([class~="not-prose"], [class~="not-prose"] *)
   )
   > :where(a[href^="#"]) {
+  position: relative;
   color: inherit;
   display: block;
   text-decoration-color: transparent;
@@ -39,8 +40,31 @@
   :where(h1, h2, h3, h4, h5, h6):not(
     :where([class~="not-prose"], [class~="not-prose"] *)
   )
+  > :where(a[href^="#"])::before {
+  @apply pointer-events-none absolute right-full mr-2 text-zinc-400 opacity-0 transition-opacity;
+
+  content: "#";
+}
+
+.prose
+  :where(h1, h2, h3, h4, h5, h6):not(
+    :where([class~="not-prose"], [class~="not-prose"] *)
+  )
   > :where(a[href^="#"]:hover) {
   text-decoration-color: currentColor;
+}
+
+.prose
+  :where(h1, h2, h3, h4, h5, h6):not(
+    :where([class~="not-prose"], [class~="not-prose"] *)
+  )
+  > :where(a[href^="#"]:hover)::before,
+.prose
+  :where(h1, h2, h3, h4, h5, h6):not(
+    :where([class~="not-prose"], [class~="not-prose"] *)
+  )
+  > :where(a[href^="#"]:focus-visible)::before {
+  @apply opacity-100;
 }
 
 .prose
