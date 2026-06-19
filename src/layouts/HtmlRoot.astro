@@ -1,5 +1,6 @@
 ---
 import "../styles/global.css"
+import faviconUrl from "../assets/favicon.svg?url&no-inline"
 
 interface Props {
   title: string
@@ -16,7 +17,7 @@ const { title, description, lang = "en" } = Astro.props
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
-    <link rel="icon" type="image/svg+xml" sizes="any" href="/favicon.svg" />
+    <link rel="icon" type="image/svg+xml" sizes="any" href={faviconUrl} />
     <title>{title}</title>
     <meta name="description" content={description ?? "Personal website"} />
     <meta property="og:site_name" content="adelnz.com" />

@@ -33,6 +33,13 @@ tasks:
   dev:
     cmd: bun astro dev
 
+  favicon:png:
+    cmd: pkgx rsvg-convert --width 512 --height 512 --format png --output src/assets/favicon.png src/assets/favicon.svg
+    sources:
+      - src/assets/favicon.svg
+    generates:
+      - src/assets/favicon.png
+
   build:
     run: once
     cmds:
