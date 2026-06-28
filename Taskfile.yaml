@@ -61,6 +61,7 @@ tasks:
       - bun playwright install chromium
       - bun playwright test
     sources:
+      - playwright.config.ts
       - bun.lock
       - "dist/**/*"
       - "e2e/**/*"
