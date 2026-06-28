@@ -13,7 +13,7 @@
     "remark-parse": "^11.0.0",
     "remark-rehype": "^11.1.2",
     "unified": "11.0.5",
-    "valibot": "^1.4.1"
+    "valibot": "^1.4.2"
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.9",
@@ -21,24 +21,24 @@
     "@astrojs/mdx": "^7.0.0",
     "@astrojs/ts-plugin": "^1.10.9",
     "@eslint/js": "^10.0.1",
-    "@playwright/test": "^1.61.0",
+    "@playwright/test": "^1.61.1",
     "@tailwindcss/postcss": "^4.3.1",
     "@tailwindcss/typography": "^0.5.20",
     "@types/bun": "^1.3.14",
     "@types/js-yaml": "^4.0.9",
-    "@types/node": "^25.9.3",
-    "astro": "^7.0.0",
-    "eslint": "^10.5.0",
-    "eslint-plugin-astro": "^1.7.0",
+    "@types/node": "^26.0.1",
+    "astro": "^7.0.3",
+    "eslint": "^10.6.0",
+    "eslint-plugin-astro": "^2.1.1",
     "eslint-plugin-mdx": "^3.8.1",
-    "eslint-plugin-tailwindcss": "^3.18.3",
-    "globals": "^17.6.0",
-    "oxfmt": "^0.55.0",
-    "postcss": "^8.5.15",
+    "eslint-plugin-tailwindcss": "^4.0.4",
+    "globals": "^17.7.0",
+    "oxfmt": "^0.56.0",
+    "postcss": "^8.5.16",
     "tailwindcss": "^4.3.1",
     "typescript": "^6.0.3",
-    "typescript-eslint": "^8.61.1",
-    "vite": "^8.0.13",
-    "wrangler": "^4.101.0"
+    "typescript-eslint": "^8.62.0",
+    "vite": "^8.1.0",
+    "wrangler": "^4.105.0"
   }
 }

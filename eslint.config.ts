@@ -42,7 +42,7 @@ export default [
   js.configs.recommended,
   ...ts.configs.recommended,
   astroPlugin,
-  ...tailwind.configs["flat/recommended"],
+  tailwind.configs.recommended,
   {
     settings: {
       tailwindcss: {
@@ -81,6 +81,7 @@ export default [
   {
     files: ["**/*.{astro,mdx}"],
     plugins: {
+      tailwindcss: tailwind,
       local: {
         rules: {
           requireExternalAnchorSafety,
@@ -91,7 +92,7 @@ export default [
     rules: {
       "local/requireExternalAnchorSafety": "error",
       "local/suggestCanonicalClasses": "error",
-      "tailwindcss/no-custom-classname": "error",
+      "tailwindcss/no-custom-classname": ["error", { whitelist: ["not-prose"] }],
     },
   },
   {
