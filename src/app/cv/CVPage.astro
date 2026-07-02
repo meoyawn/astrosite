@@ -27,7 +27,8 @@ const orgTitleClass =
 const orgMetaClass =
   "m-0 mt-0.5 text-base leading-snug text-zinc-950 print:text-[12.5px]"
 const orgMutedClass = "m-0 text-base leading-snug text-date print:text-[12.5px]"
-const orgLinkClass = "hover-underline"
+const orgLinkClass = "text-(--tw-prose-links) hover-underline"
+const orgMetaLinkClass = `${orgLinkClass} font-medium`
 ---
 
 <SiteShell
@@ -49,7 +50,7 @@ const orgLinkClass = "hover-underline"
     <h1>{cv.head.name}</h1>
     <h3>{cv.head.title}</h3>
 
-    <p class="grid grid-cols-1 sm:grid-cols-2 print:grid-cols-2">
+    <p class="grid grid-cols-1 gap-x-8 gap-y-1.5 sm:grid-cols-2 print:grid-cols-2 print:gap-x-4 print:gap-y-0.5">
       <IconLink
         icon={emailIcon}
         href={`mailto:${cv.head.email}`}
@@ -88,7 +89,7 @@ const orgLinkClass = "hover-underline"
                 href={exp.org.url}
                 target="_blank"
                 rel="noreferrer"
-                class={orgLinkClass}
+                class={orgMetaLinkClass}
               >
                 {exp.org.name}
               </a>
@@ -155,7 +156,7 @@ const orgLinkClass = "hover-underline"
                 href={aw.org.url}
                 target="_blank"
                 rel="noreferrer"
-                class={orgLinkClass}
+                class={orgMetaLinkClass}
               >
                 {aw.org.name}
               </a>

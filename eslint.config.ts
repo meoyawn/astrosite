@@ -33,6 +33,7 @@ export default [
   {
     ignores: [
       ".astro/**",
+      ".agents/**",
       "coverage/**",
       "dist/**",
       "node_modules/**",

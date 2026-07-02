@@ -94,6 +94,14 @@ components:
     typography: "{typography.body}"
     rounded: "{rounded.none}"
     padding: "0"
+  cv-org-meta-link:
+    backgroundColor: "transparent"
+    textColor: "{colors.cv-link}"
+    fontSize: "1rem"
+    fontWeight: 500
+    lineHeight: 1.375
+    rounded: "{rounded.none}"
+    padding: "0"
 ---
 
 # Design System: Astrosite
@@ -140,8 +148,9 @@ and a single custom metadata gray.
 
 ### Secondary
 
-- **CV Sky** (`cv-link`): Used by the CV page through `prose-sky`. Keep it local
-  to the CV surface or clearly link-heavy contexts.
+- **CV Sky** (`cv-link`): Used by the CV page through `prose-sky` and manual
+  CV link classes. Keep it local to the CV surface or clearly link-heavy
+  contexts.
 
 ### Neutral
 
@@ -262,8 +271,19 @@ underlined on hover. Teasers cap around `44ch`.
 
 ### CV Link Row
 
-CV contact links use a 16px icon, `4px` gap, and direct text. The CV content
-area is print-aware and drops extra chrome through print utilities.
+CV contact links use a 16px icon, `4px` icon-to-text gap, and direct text. The
+contact grid uses one column by default and two columns from `sm`, with `32px`
+column gap and `6px` row gap for breathing room. Print keeps the same two-column
+shape with tighter `16px` column and `2px` row gaps. The CV content area is
+print-aware and drops extra chrome through print utilities.
+
+### CV Links
+
+CV prose, product, company, education, and award links use CV Sky with the
+shared `hover-underline` treatment. Company and award organization metadata
+links use medium weight (`500`) to match Tailwind Typography prose links. Links
+inside title/headline contexts inherit the surrounding title weight instead of
+forcing a lighter link style.
 
 ## 6. Do's and Don'ts
 
