@@ -9,9 +9,9 @@ head:
   twitter: https://twitter.com/meoyawn
 
 summaryMD: |
-  - 13 years of building and maintaining products in Java, Kotlin, Typescript & Python
+  - 14 years of experience building and maintaining products in Java, Kotlin, TypeScript, and Python
   - Bootstrapped a profitable SaaS to $3K MRR
-  - Built 2 developer teams from scratch
+  - Built 2 engineering teams from scratch
 
 experience:
   - title: Founder
@@ -26,8 +26,10 @@ experience:
         url: https://listenbox.app
       - name: ResponsibleAPI
         url: https://responsibleapi.com
+      - name: Arrowbox
+        url: https://arrowbox.co
     summaryMD: |
-      Working on my own products.
+      Building and maintaining my own products.
       - Bootstrapped a [profitable SaaS](https://listenbox.app) to $3K MRR
 
   - title: Senior Android Developer
@@ -44,15 +46,16 @@ experience:
       - name: Wheely for Chauffeurs
         url: https://play.google.com/store/apps/details?id=com.wheely.groundio
     summaryMD: |
-      Developed Passenger & Driver Android Apps. Interviewed Android developers.
+      Developed passenger and driver Android apps. Interviewed Android developers.
 
       - Redesigned the Passenger app
-      - Introduced UI (integration) tests
+      - Introduced UI integration tests
 
   - title: Lead Android Developer
     org:
       name: Infotech Group
       url: https://infotech.group/en
+      imgURL: https://avatars.githubusercontent.com/u/25385648?s=200&v=4
     start: 2016-05-01
     end: 2017-06-01
     location: Kazan, Tatarstan
@@ -62,7 +65,7 @@ experience:
       - name: Lighting Service
         url: https://play.google.com/store/apps/details?id=group.infotech.gorenie
     summaryMD: |
-      Developed Android apps. Hired and technically led Android developers.
+      Developed Android apps, hired developers, and provided technical leadership.
 
       - Created internal processes and infrastructure for Android development
       - Hired and led 3 Android developers
@@ -105,7 +108,7 @@ experience:
       - name: Roadtrippers
         url: https://play.google.com/store/apps/details?id=com.roadtrippers
     summaryMD: |
-      Developed Android apps. Hired and technically led Android developers. Did customer demos.
+      Developed Android apps, hired developers, provided technical leadership, and presented customer demos.
 
       - Built 4 apps from scratch
       - Created internal processes for Android development
@@ -125,10 +128,10 @@ education:
         url: https://web.archive.org/web/20140829110945/https://play.google.com/store/apps/details?id=com.stiggpwnz.vibes
         imgURL: https://web.archive.org/web/20221010221523im_/https://lh3.ggpht.com/iykRcs70ukktRV3JaA7akqNhrWB3o3DcFYBz3BsTie55BWYUn7yLf_QjQGEqw54JrRxX=w300
     degreeMD: |
-      [Specialist](https://academia.stackexchange.com/a/78098) of Applied Mathematics and Computer Science
+      [Specialist](https://academia.stackexchange.com/a/78098) in Applied Mathematics and Computer Science
 
 awards:
-  - title: 4th in Telegram Android Contest 2019
+  - title: 4th place in the Telegram Android Contest 2019
     url: https://t.me/contest/23
     org:
       name: Telegram
@@ -142,7 +145,7 @@ awards:
       url: https://telegram.org
     date: 2016-07-01
 
-  - title: 55th in 2011 ACM ICPC Sub-regionals
+  - title: 55th place in the 2011 ACM ICPC Subregional Contest
     url: https://neerc.ifmo.ru/archive/2011/southern/standings.html
     org:
       name: ACM

@@ -9,7 +9,7 @@ head:
   twitter: https://twitter.com/meoyawn
 
 summaryMD: |
-  - 13 лет создаю и поддерживаю продукты на Java, Kotlin, TypeScript и Python
+  - 14 лет создаю и поддерживаю продукты на Java, Kotlin, TypeScript и Python
   - Развил прибыльный SaaS до $3K MRR с нуля
   - Собрал 2 команды разработки с нуля
 
@@ -26,8 +26,10 @@ experience:
         url: https://listenbox.app
       - name: ResponsibleAPI
         url: https://responsibleapi.com
+      - name: Arrowbox
+        url: https://arrowbox.co
     summaryMD: |
-      Работаю над собственными продуктами.
+      Создаю и поддерживаю собственные продукты.
       - Развил [прибыльный SaaS](https://listenbox.app) до $3K MRR с нуля
 
   - title: Старший Android-разработчик
@@ -46,12 +48,13 @@ experience:
     summaryMD: |
       Разрабатывал Android-приложения для пассажиров и водителей. Проводил собеседования Android-разработчиков.
       - Переработал приложение для пассажиров
-      - Внедрил UI-тесты
+      - Внедрил UI-интеграционные тесты
 
   - title: Ведущий Android-разработчик
     org:
       name: Infotech Group
       url: https://infotech.group/en
+      imgURL: https://avatars.githubusercontent.com/u/25385648?s=200&v=4
     start: 2016-05-01
     end: 2017-06-01
     location: Казань, Татарстан
@@ -61,7 +64,7 @@ experience:
       - name: Служба Горения
         url: https://play.google.com/store/apps/details?id=group.infotech.gorenie
     summaryMD: |
-      Разрабатывал Android-приложения. Нанимал и технически руководил Android-разработчиками.
+      Разрабатывал Android-приложения, нанимал разработчиков и обеспечивал техническое руководство.
       - Выстроил внутренние процессы и инфраструктуру для Android-разработки
       - Нанял и руководил 3 Android-разработчиками
       - Создал 2 приложения с нуля
@@ -102,7 +105,7 @@ experience:
       - name: Roadtrippers
         url: https://play.google.com/store/apps/details?id=com.roadtrippers
     summaryMD: |
-      Разрабатывал Android-приложения. Нанимал и технически руководил Android-разработчиками. Проводил демо для заказчиков.
+      Разрабатывал Android-приложения, нанимал разработчиков, обеспечивал техническое руководство и проводил демо для заказчиков.
       - Создал 4 приложения с нуля
       - Выстроил внутренние процессы для Android-разработки
       - Нанял и руководил 3 Android-разработчиками

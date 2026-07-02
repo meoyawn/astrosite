@@ -9,7 +9,7 @@ head:
   twitter: https://twitter.com/meoyawn
 
 summaryMD: |
-  - 13 ел Java, Kotlin, Typescript һәм Python телләрендә программалар язу һәм аларны эшләтеп тору
+  - 14 ел Java, Kotlin, TypeScript һәм Python телләрендә программалар язу һәм аларны эшләтеп тору
   - SaaS-программа ясап, аны аена $3K табыш китерә торган иттем
   - 2 программистлар командасын нульдән җыйдым
 
@@ -26,8 +26,10 @@ experience:
         url: https://listenbox.app
       - name: ResponsibleAPI
         url: https://responsibleapi.com
+      - name: Arrowbox
+        url: https://arrowbox.co
     summaryMD: |
-      Үз проектларымны ясадым.
+      Үз проектларымны язам һәм эшләтеп торам.
       - [SaaS-программа](https://listenbox.app) ясап, аны аена $3K табыш китерә торган иттем
 
   - title: Өлкән Android программисты
@@ -46,12 +48,13 @@ experience:
     summaryMD: |
       Пассажирлар һәм йөртүчеләр өчен Android программалары яздым. Android программистлары белән әңгәмәләр үткәрдем.
       - Пассажирлар программасының дизайнын яңарттым
-      - Интерфейс (UI) өлешенә тестлар яздым
+      - UI-интеграция тестлары яздым
 
   - title: Баш Android программисты
     org:
       name: Infotech Group
       url: https://infotech.group/en
+      imgURL: https://avatars.githubusercontent.com/u/25385648?s=200&v=4
     start: 2016-05-01
     end: 2017-06-01
     location: Казан, Татарстан
@@ -61,7 +64,7 @@ experience:
       - name: Служба Горения
         url: https://play.google.com/store/apps/details?id=group.infotech.gorenie
     summaryMD: |
-      Android программалары яздым. Android программистларын эшкә алдым һәм аларга баш булдым.
+      Android программалары яздым, программистларны эшкә алдым һәм техник җитәкчелек иттем.
       - Android программалары язу өчен эчке тәртип һәм нигез көйләдем
       - 3 Android программистын эшкә алдым һәм аларга җитәкчелек иттем
       - 2 программаны нульдән яздым
@@ -102,7 +105,7 @@ experience:
       - name: Roadtrippers
         url: https://play.google.com/store/apps/details?id=com.roadtrippers
     summaryMD: |
-      Android программалары яздым. Android программистларын эшкә алдым һәм аларга баш булдым. Клиентларга программаларның ничек эшләгәнен күрсәттем.
+      Android программалары яздым, программистларны эшкә алдым, техник җитәкчелек иттем һәм клиентларга демолар күрсәттем.
       - 4 программаны нульдән яздым
       - Android программалары язу өчен эчке тәртип көйләдем
       - 3 Android программистын эшкә алдым һәм аларга җитәкчелек иттем

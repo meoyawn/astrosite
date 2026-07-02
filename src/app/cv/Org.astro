@@ -8,24 +8,26 @@ interface Props {
 const { org } = Astro.props
 ---
 
-<div class="flex break-inside-avoid-page flex-row gap-2">
+<div
+  class="grid break-inside-avoid-page grid-cols-[3rem_minmax(0,1fr)] gap-x-4 py-3 first:pt-0 print:grid-cols-[1.75rem_minmax(0,1fr)] print:gap-x-2.5 print:py-2"
+>
   <a
-    class="not-prose mt-6 shrink-0"
+    class="not-prose block shrink-0"
     target="_blank"
     rel="noreferrer"
     href={org.url}
   >
     <img
       loading="eager"
-      width={24}
-      height={24}
-      class="h-6 w-6 object-cover"
+      width={48}
+      height={48}
+      class="size-12 rounded-xl object-cover print:size-7 print:rounded-sm"
       src={org.imgURL ?? images[org.url as keyof typeof images]}
       alt={org.name}
     />
   </a>
 
-  <div class="flex flex-col">
+  <div class="min-w-0">
     <slot />
   </div>
 </div>

@@ -20,6 +20,14 @@ interface Props {
 }
 
 const { copy, cv, locale } = Astro.props
+
+const orgHeaderClass = "not-prose mb-2 print:mb-1.5"
+const orgTitleClass =
+  "m-0 text-lg font-bold leading-tight text-zinc-950 print:text-[13.5px]"
+const orgMetaClass =
+  "m-0 mt-0.5 text-base leading-snug text-zinc-950 print:text-[12.5px]"
+const orgMutedClass = "m-0 text-base leading-snug text-date print:text-[12.5px]"
+const orgLinkClass = "hover-underline"
 ---
 
 <SiteShell
@@ -32,9 +40,9 @@ const { copy, cv, locale } = Astro.props
     "px-0 pb-6",
     "prose-sky",
     "sm:mx-12 sm:pb-12 md:mx-16 md:pb-16",
-    "print:m-0 print:text-xs",
-    "prose-p:my-2 prose-p:print:my-2",
-    "prose-ul:my-1 prose-ul:print:my-0",
+    "print:m-0 print:text-[12.5px] print:leading-[1.45]",
+    "prose-p:my-2 prose-p:print:my-2.5",
+    "prose-ul:my-1 prose-ul:print:my-1",
   ]}
 >
   <section>
@@ -73,20 +81,21 @@ const { copy, cv, locale } = Astro.props
     {
       cv.experience.map(exp => (
         <Org org={exp.org}>
-          <Fragment>{exp.title ? <h4>{exp.title}</h4> : null}</Fragment>
-
-          <p>
-            <a
-              href={exp.org.url}
-              target="_blank"
-              rel="noreferrer"
-              class:list={{ "font-semibold": !exp.title }}
-            >
-              {exp.org.name}
-            </a>
-            <br />
-            <span class="text-date">{fmtExpTime({ ...exp, locale })}</span>
-          </p>
+          <div class={orgHeaderClass}>
+            {exp.title ? <h4 class={orgTitleClass}>{exp.title}</h4> : null}
+            <p class={exp.title ? orgMetaClass : orgTitleClass}>
+              <a
+                href={exp.org.url}
+                target="_blank"
+                rel="noreferrer"
+                class={orgLinkClass}
+              >
+                {exp.org.name}
+              </a>
+            </p>
+            <p class={orgMutedClass}>{fmtExpTime({ ...exp, locale })}</p>
+            <p class={orgMutedClass}>{exp.location}</p>
+          </div>
 
           <Fragment set:html={md2html(exp.summaryMD)} />
           <Products products={exp.products} intro={copy.workedOn} />
@@ -101,11 +110,23 @@ const { copy, cv, locale } = Astro.props
     {
       cv.education.map(ed => (
         <Org org={ed.org}>
-          <h4>{ed.org.name}</h4>
+          <div class={orgHeaderClass}>
+            <h4 class={orgTitleClass}>
+              <a
+                href={ed.org.url}
+                target="_blank"
+                rel="noreferrer"
+                class={orgLinkClass}
+              >
+                {ed.org.name}
+              </a>
+            </h4>
+            <p class={orgMutedClass}>
+              {fmtExpTime({ ...ed, duration: false, locale })}
+            </p>
+          </div>
+
           <Fragment set:html={md2html(ed.degreeMD)} />
-          <span class="text-date">
-            {fmtExpTime({ ...ed, duration: false, locale })}
-          </span>
           <Products products={ed.products} intro={copy.workedOn} />
         </Org>
       ))
@@ -118,14 +139,29 @@ const { copy, cv, locale } = Astro.props
     {
       cv.awards.map(aw => (
         <Org org={aw.org}>
-          <h4>
-            <a href={aw.url} target="_blank" rel="noreferrer">{aw.title}</a>
-            <span> - </span>
-            <a href={aw.org.url} target="_blank" rel="noreferrer">
-              {aw.org.name}
-            </a>
-          </h4>
-          <span class="text-date">{fmtDate(aw.date, locale)}</span>
+          <div class={orgHeaderClass}>
+            <h4 class={orgTitleClass}>
+              <a
+                href={aw.url}
+                target="_blank"
+                rel="noreferrer"
+                class={orgLinkClass}
+              >
+                {aw.title}
+              </a>
+            </h4>
+            <p class={orgMetaClass}>
+              <a
+                href={aw.org.url}
+                target="_blank"
+                rel="noreferrer"
+                class={orgLinkClass}
+              >
+                {aw.org.name}
+              </a>
+            </p>
+            <p class={orgMutedClass}>{fmtDate(aw.date, locale)}</p>
+          </div>
         </Org>
       ))
     }
