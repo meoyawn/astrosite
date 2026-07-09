@@ -9,7 +9,7 @@ const { org } = Astro.props
 ---
 
 <div
-  class="grid break-inside-avoid-page grid-cols-[3rem_minmax(0,1fr)] gap-x-4 py-3 first:pt-0 print:grid-cols-[1.75rem_minmax(0,1fr)] print:gap-x-2 print:py-1.5"
+  class="grid break-inside-avoid-page grid-cols-[3rem_minmax(0,1fr)] gap-x-4 py-3 first:pt-0 print:grid-cols-[2rem_minmax(0,1fr)] print:gap-x-2.5 print:py-2.5"
 >
   <a
     class="not-prose block shrink-0"
@@ -21,7 +21,7 @@ const { org } = Astro.props
       loading="eager"
       width={48}
       height={48}
-      class="size-12 rounded-xl object-cover print:size-7 print:rounded-sm"
+      class="size-12 rounded-xl object-cover print:size-8 print:rounded-sm"
       src={org.imgURL ?? images[org.url as keyof typeof images]}
       alt={org.name}
     />

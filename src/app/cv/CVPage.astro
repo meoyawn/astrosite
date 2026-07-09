@@ -21,12 +21,12 @@ interface Props {
 
 const { copy, cv, locale } = Astro.props
 
-const orgHeaderClass = "not-prose mb-2 print:mb-1"
+const orgHeaderClass = "not-prose mb-2 print:mb-1.5"
 const orgTitleClass =
-  "m-0 text-lg font-bold leading-tight text-zinc-950 print:text-[12.5px]"
+  "m-0 text-lg font-bold leading-tight text-zinc-950 print:text-[13px]"
 const orgMetaClass =
-  "m-0 mt-0.5 text-base leading-snug text-zinc-950 print:text-[11.5px]"
-const orgMutedClass = "m-0 text-base leading-snug text-date print:text-[11.5px]"
+  "m-0 mt-0.5 text-base leading-snug text-zinc-950 print:text-[12px]"
+const orgMutedClass = "m-0 text-base leading-snug text-date print:text-[12px]"
 const orgLinkClass = "text-(--tw-prose-links) hover-underline"
 const orgMetaLinkClass = `${orgLinkClass} font-medium`
 ---
@@ -41,19 +41,19 @@ const orgMetaLinkClass = `${orgLinkClass} font-medium`
     "px-0 pb-6",
     "prose-sky",
     "sm:mx-12 sm:pb-12 md:mx-16 md:pb-16",
-    "print:m-0 print:text-[11px] print:leading-[1.32]",
-    "prose-h1:print:mb-1 prose-h1:print:text-[22px]",
-    "prose-h3:print:mb-1 prose-h3:print:mt-2 prose-h3:print:text-[13px]",
-    "prose-p:my-2 prose-p:print:my-1",
-    "prose-ul:my-1 prose-ul:print:my-0.5",
-    "prose-li:print:my-0",
+    "print:m-0 print:text-[12px] print:leading-[1.45]",
+    "prose-h1:print:mb-1.5 prose-h1:print:text-[24px]",
+    "prose-h3:print:mb-1.5 prose-h3:print:mt-4 prose-h3:print:text-[13.5px]",
+    "prose-p:my-2 prose-p:print:my-1.5",
+    "prose-ul:my-1 prose-ul:print:my-1",
+    "prose-li:print:my-0.5",
   ]}
 >
   <section>
     <h1>{cv.head.name}</h1>
     <h3>{cv.head.title}</h3>
 
-    <p class="grid grid-cols-1 gap-x-8 gap-y-1.5 sm:grid-cols-2 print:grid-cols-2 print:gap-x-4 print:gap-y-0.5">
+    <p class="grid grid-cols-1 gap-x-8 gap-y-1.5 sm:grid-cols-2 print:grid-cols-2 print:gap-x-5 print:gap-y-1">
       <IconLink
         icon={emailIcon}
         href={`mailto:${cv.head.email}`}

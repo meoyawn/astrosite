@@ -11,7 +11,7 @@ head:
 summaryMD: |
   - Өлкән продукт инженеры: 14 ел Android программалары һәм SaaS продуктлары ясыйм
   - Табышлы SaaS нигезләдем һәм аны $3K MRR-га җиткердем
-  - Go, TypeScript, Kotlin, Java, PostgreSQL, Ansible, Python, SQLite һәм Terraform белән эшлим
+  - Go, TypeScript, Kotlin, Java, PostgreSQL, SQLite, Python, Ansible һәм Terraform белән эшлим
 
 experience:
   - title: Нигезләүче
@@ -21,7 +21,6 @@ experience:
       imgURL: https://listenbox.app/_astro/favicon.DM5dyM1q.svg
     location: Дистанцион
     start: 2019-10-01
-    end: 2025-02-01
     products:
       - name: Listenbox
         url: https://listenbox.app
@@ -30,7 +29,7 @@ experience:
       - name: Arrowbox
         url: https://arrowbox.co
     summaryMD: |
-      Табышлы SaaS-ны идеядан production-га кадәр нигезләдем, ясадым һәм алып бардым; $3K MRR-га җиткердем.
+      Табышлы SaaS-ны идеядан production-га кадәр нигезләдем, ясадым һәм алып барам; $3K MRR-га җиткердем.
 
       - Хәзерге backend һәм frontend-ны Go һәм TypeScript белән ясадым
       - PostgreSQL нигезендәге продукт функцияләрен проектладым һәм эшләтеп тордым

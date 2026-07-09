@@ -11,7 +11,7 @@ head:
 summaryMD: |
   - Senior product engineer with 14 years building Android apps and SaaS products
   - Founded a profitable SaaS that reached $3K MRR
-  - Work with Go, TypeScript, Kotlin, Java, PostgreSQL, Ansible, Python, SQLite, and Terraform
+  - Work with Go, TypeScript, Kotlin, Java, PostgreSQL, SQLite, Python, Ansible, and Terraform
 
 experience:
   - title: Founder
@@ -21,7 +21,6 @@ experience:
       imgURL: https://listenbox.app/_astro/favicon.DM5dyM1q.svg
     location: Remote
     start: 2019-10-01
-    end: 2025-02-01
     products:
       - name: Listenbox
         url: https://listenbox.app
@@ -30,7 +29,7 @@ experience:
       - name: Arrowbox
         url: https://arrowbox.co
     summaryMD: |
-      Founded and ran a profitable SaaS from idea to production; reached $3K MRR.
+      Founded and run a profitable SaaS from idea to production; reached $3K MRR.
 
       - Built the current backend and frontend with Go and TypeScript
       - Designed and maintained PostgreSQL-backed product features

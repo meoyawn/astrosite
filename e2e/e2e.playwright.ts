@@ -649,7 +649,7 @@ test.describe("e2e tests", () => {
     expect(hrefs.filter(isInvalidHref)).toEqual([])
   })
 
-  test("cv shows Listenbox founder role", async ({ page }) => {
+  test("cv shows ongoing Listenbox founder role", async ({ page }) => {
     await routeBuiltFiles(page)
 
     const response = await page.goto(`${builtOrigin}/cv/`)
@@ -667,7 +667,7 @@ test.describe("e2e tests", () => {
       listenboxRole.getByRole("heading", { name: "Founder" }),
     ).toBeVisible()
     await expect(
-      listenboxRole.getByText(/October 2019 - February 2025/),
+      listenboxRole.getByText(/October 2019 - Present/),
     ).toBeVisible()
   })
 

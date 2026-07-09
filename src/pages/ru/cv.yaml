@@ -11,7 +11,7 @@ head:
 summaryMD: |
   - Старший продуктовый инженер: 14 лет создаю Android-приложения и SaaS-продукты
   - Основал прибыльный SaaS, который вырос до $3K MRR
-  - Работаю с Go, TypeScript, Kotlin, Java, PostgreSQL, Ansible, Python, SQLite и Terraform
+  - Работаю с Go, TypeScript, Kotlin, Java, PostgreSQL, SQLite, Python, Ansible и Terraform
 
 experience:
   - title: Основатель
@@ -21,7 +21,6 @@ experience:
       imgURL: https://listenbox.app/_astro/favicon.DM5dyM1q.svg
     location: Удаленно
     start: 2019-10-01
-    end: 2025-02-01
     products:
       - name: Listenbox
         url: https://listenbox.app
@@ -30,7 +29,7 @@ experience:
       - name: Arrowbox
         url: https://arrowbox.co
     summaryMD: |
-      Основал и вел прибыльный SaaS от идеи до production; развил до $3K MRR.
+      Основал и веду прибыльный SaaS от идеи до production; развил до $3K MRR.
 
       - Построил текущий backend и frontend на Go и TypeScript
       - Проектировал и поддерживал функции на PostgreSQL
