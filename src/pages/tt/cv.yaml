@@ -11,7 +11,7 @@ head:
 summaryMD: |
   - Өлкән продукт инженеры: 14 ел Android программалары һәм SaaS продуктлары ясыйм
   - Табышлы SaaS нигезләдем һәм аны $3K MRR-га җиткердем
-  - Go, Node.js, TypeScript, Kotlin, Java, PostgreSQL, SQLite, Python, Ansible һәм Terraform белән эшлим
+  - Go, TypeScript, Kotlin, Java, PostgreSQL, SQLite, Node.js, Python, Ansible һәм Terraform белән эшлим
 
 experience:
   - title: Нигезләүче
