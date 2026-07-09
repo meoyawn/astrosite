@@ -11,7 +11,7 @@ head:
 summaryMD: |
   - Senior product engineer with 14 years building Android apps and SaaS products
   - Founded a profitable SaaS that reached $3K MRR
-  - Work with Go, TypeScript, Kotlin, Java, PostgreSQL, SQLite, Python, Ansible, and Terraform
+  - Work with Go, Node.js, TypeScript, Kotlin, Java, PostgreSQL, SQLite, Python, Ansible, and Terraform
 
 experience:
   - title: Founder
@@ -31,7 +31,7 @@ experience:
     summaryMD: |
       Founded and run a profitable SaaS from idea to production; reached $3K MRR.
 
-      - Built the current backend and frontend with Go and TypeScript
+      - Built the current backend and frontend with Go, Node.js, and TypeScript
       - Designed and maintained PostgreSQL-backed product features
       - Automated deployments and infrastructure management with Terraform and Ansible
       - Owned production debugging, maintenance, reliability, customer support, SEO, and founder-led sales and marketing
@@ -160,7 +160,7 @@ awards:
 skills:
   - Product engineering - SaaS, product development, customer discovery, SEO
   - Languages - Go, TypeScript, Kotlin, Java, Python
-  - Backend and data - PostgreSQL, API design, backend services, SQLite
+  - Backend and data - PostgreSQL, Node.js, API design, backend services, SQLite
   - Frontend and mobile - TypeScript UI, Android
   - Delivery and operations - Ansible, CI/CD, Linux, Terraform
   - Founder customer work - support, sales, marketing

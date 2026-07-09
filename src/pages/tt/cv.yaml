@@ -11,7 +11,7 @@ head:
 summaryMD: |
   - Өлкән продукт инженеры: 14 ел Android программалары һәм SaaS продуктлары ясыйм
   - Табышлы SaaS нигезләдем һәм аны $3K MRR-га җиткердем
-  - Go, TypeScript, Kotlin, Java, PostgreSQL, SQLite, Python, Ansible һәм Terraform белән эшлим
+  - Go, Node.js, TypeScript, Kotlin, Java, PostgreSQL, SQLite, Python, Ansible һәм Terraform белән эшлим
 
 experience:
   - title: Нигезләүче
@@ -31,7 +31,7 @@ experience:
     summaryMD: |
       Табышлы SaaS-ны идеядан production-га кадәр нигезләдем, ясадым һәм алып барам; $3K MRR-га җиткердем.
 
-      - Хәзерге backend һәм frontend-ны Go һәм TypeScript белән ясадым
+      - Хәзерге backend һәм frontend-ны Go, Node.js һәм TypeScript белән ясадым
       - PostgreSQL нигезендәге продукт функцияләрен проектладым һәм эшләтеп тордым
       - Terraform һәм Ansible белән деплойны һәм инфраструктура белән идарә итүне автоматлаштырдым
       - Production-дагы проблемаларны табу, хезмәт күрсәтү, тотрыклылык, клиентларга ярдәм, SEO, нигезләүче буларак сатулар һәм маркетинг өчен җаваплы булдым
@@ -156,7 +156,7 @@ awards:
 skills:
   - Продукт инженериясе - SaaS, продукт ясау, customer discovery, SEO
   - Телләр - Go, TypeScript, Kotlin, Java, Python
-  - Backend һәм мәгълүмат - PostgreSQL, API проектлау, backend сервислар, SQLite
+  - Backend һәм мәгълүмат - PostgreSQL, Node.js, API проектлау, backend сервислар, SQLite
   - Frontend һәм mobile - TypeScript UI, Android
   - Чыгару һәм эксплуатация - Ansible, CI/CD, Linux, Terraform
   - Нигезләүченең клиент эше - ярдәм, сатулар, маркетинг

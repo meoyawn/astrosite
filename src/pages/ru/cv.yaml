@@ -11,7 +11,7 @@ head:
 summaryMD: |
   - Старший продуктовый инженер: 14 лет создаю Android-приложения и SaaS-продукты
   - Основал прибыльный SaaS, который вырос до $3K MRR
-  - Работаю с Go, TypeScript, Kotlin, Java, PostgreSQL, SQLite, Python, Ansible и Terraform
+  - Работаю с Go, Node.js, TypeScript, Kotlin, Java, PostgreSQL, SQLite, Python, Ansible и Terraform
 
 experience:
   - title: Основатель
@@ -31,7 +31,7 @@ experience:
     summaryMD: |
       Основал и веду прибыльный SaaS от идеи до production; развил до $3K MRR.
 
-      - Построил текущий backend и frontend на Go и TypeScript
+      - Построил текущий backend и frontend на Go, Node.js и TypeScript
       - Проектировал и поддерживал функции на PostgreSQL
       - Автоматизировал деплой и управление инфраструктурой через Terraform и Ansible
       - Отвечал за отладку production, поддержку, надежность, клиентскую поддержку, SEO, продажи и маркетинг как основатель
@@ -156,7 +156,7 @@ awards:
 skills:
   - Продуктовая разработка - SaaS, создание продуктов, customer discovery, SEO
   - Языки - Go, TypeScript, Kotlin, Java, Python
-  - Backend и данные - PostgreSQL, проектирование API, backend-сервисы, SQLite
+  - Backend и данные - PostgreSQL, Node.js, проектирование API, backend-сервисы, SQLite
   - Frontend и mobile - TypeScript UI, Android
   - Поставка и эксплуатация - Ansible, CI/CD, Linux, Terraform
   - Работа основателя с клиентами - поддержка, продажи, маркетинг
