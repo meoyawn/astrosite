@@ -21,12 +21,12 @@ interface Props {
 
 const { copy, cv, locale } = Astro.props
 
-const orgHeaderClass = "not-prose mb-2 print:mb-1.5"
+const orgHeaderClass = "not-prose mb-2 print:mb-1"
 const orgTitleClass =
-  "m-0 text-lg font-bold leading-tight text-zinc-950 print:text-[13.5px]"
+  "m-0 text-lg font-bold leading-tight text-zinc-950 print:text-[12.5px]"
 const orgMetaClass =
-  "m-0 mt-0.5 text-base leading-snug text-zinc-950 print:text-[12.5px]"
-const orgMutedClass = "m-0 text-base leading-snug text-date print:text-[12.5px]"
+  "m-0 mt-0.5 text-base leading-snug text-zinc-950 print:text-[11.5px]"
+const orgMutedClass = "m-0 text-base leading-snug text-date print:text-[11.5px]"
 const orgLinkClass = "text-(--tw-prose-links) hover-underline"
 const orgMetaLinkClass = `${orgLinkClass} font-medium`
 ---
@@ -41,9 +41,12 @@ const orgMetaLinkClass = `${orgLinkClass} font-medium`
     "px-0 pb-6",
     "prose-sky",
     "sm:mx-12 sm:pb-12 md:mx-16 md:pb-16",
-    "print:m-0 print:text-[12.5px] print:leading-[1.45]",
-    "prose-p:my-2 prose-p:print:my-2.5",
-    "prose-ul:my-1 prose-ul:print:my-1",
+    "print:m-0 print:text-[11px] print:leading-[1.32]",
+    "prose-h1:print:mb-1 prose-h1:print:text-[22px]",
+    "prose-h3:print:mb-1 prose-h3:print:mt-2 prose-h3:print:text-[13px]",
+    "prose-p:my-2 prose-p:print:my-1",
+    "prose-ul:my-1 prose-ul:print:my-0.5",
+    "prose-li:print:my-0",
   ]}
 >
   <section>
@@ -74,6 +77,13 @@ const orgMetaLinkClass = `${orgLinkClass} font-medium`
   <section>
     <h3>{copy.summary}</h3>
     <Fragment set:html={md2html(cv.summaryMD)} />
+  </section>
+
+  <section>
+    <h3>{copy.skills}</h3>
+    <ul class="print:columns-2 print:gap-x-6">
+      {cv.skills.map(skill => <li>{skill}</li>)}
+    </ul>
   </section>
 
   <section>

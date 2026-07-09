@@ -11,6 +11,7 @@ export interface CVPageCopy {
     linkedin: string
     website: string
   }
+  skills: string
   summary: string
   workedOn: string
 }
@@ -27,6 +28,7 @@ export const cvPageCopy: Record<Locale, CVPageCopy> = {
       linkedin: "linkedin",
       website: "website",
     },
+    skills: "Skills",
     summary: "Summary",
     workedOn: "Worked on:",
   },
@@ -41,6 +43,7 @@ export const cvPageCopy: Record<Locale, CVPageCopy> = {
       linkedin: "linkedin",
       website: "сайт",
     },
+    skills: "Навыки",
     summary: "О себе",
     workedOn: "Работал над:",
   },
@@ -55,6 +58,7 @@ export const cvPageCopy: Record<Locale, CVPageCopy> = {
       linkedin: "linkedin",
       website: "сайт",
     },
+    skills: "Күнекмәләр",
     summary: "Кыскача",
     workedOn: "Эшләгән проектлар:",
   },

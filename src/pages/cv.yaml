@@ -9,9 +9,9 @@ head:
   twitter: https://twitter.com/meoyawn
 
 summaryMD: |
-  - 14 years of experience building and maintaining products in Java, Kotlin, TypeScript, and Python
-  - Bootstrapped a profitable SaaS to $3K MRR
-  - Built 2 engineering teams from scratch
+  - Senior product engineer with 14 years building Android apps and SaaS products
+  - Founded a profitable SaaS that reached $3K MRR
+  - Work with Go, TypeScript, Kotlin, Java, PostgreSQL, Ansible, Python, SQLite, and Terraform
 
 experience:
   - title: Founder
@@ -21,6 +21,7 @@ experience:
       imgURL: https://listenbox.app/_astro/favicon.DM5dyM1q.svg
     location: Remote
     start: 2019-10-01
+    end: 2025-02-01
     products:
       - name: Listenbox
         url: https://listenbox.app
@@ -29,8 +30,12 @@ experience:
       - name: Arrowbox
         url: https://arrowbox.co
     summaryMD: |
-      Building and maintaining my own products.
-      - Bootstrapped a [profitable SaaS](https://listenbox.app) to $3K MRR
+      Founded and ran a profitable SaaS from idea to production; reached $3K MRR.
+
+      - Built the current backend and frontend with Go and TypeScript
+      - Designed and maintained PostgreSQL-backed product features
+      - Automated deployments and infrastructure management with Terraform and Ansible
+      - Owned production debugging, maintenance, reliability, customer support, SEO, and founder-led sales and marketing
 
   - title: Senior Android Developer
     org:
@@ -154,7 +159,9 @@ awards:
     date: 2011-10-01
 
 skills:
-  - Building and maintaining Android apps
-  - Building and maintaining SaaS apps
-  - Hiring and building teams from scratch
-  - Search engine optimization
+  - Product engineering - SaaS, product development, customer discovery, SEO
+  - Languages - Go, TypeScript, Kotlin, Java, Python
+  - Backend and data - PostgreSQL, API design, backend services, SQLite
+  - Frontend and mobile - TypeScript UI, Android
+  - Delivery and operations - Ansible, CI/CD, Linux, Terraform
+  - Founder customer work - support, sales, marketing

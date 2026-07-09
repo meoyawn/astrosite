@@ -9,9 +9,9 @@ head:
   twitter: https://twitter.com/meoyawn
 
 summaryMD: |
-  - 14 лет создаю и поддерживаю продукты на Java, Kotlin, TypeScript и Python
-  - Развил прибыльный SaaS до $3K MRR с нуля
-  - Собрал 2 команды разработки с нуля
+  - Старший продуктовый инженер: 14 лет создаю Android-приложения и SaaS-продукты
+  - Основал прибыльный SaaS, который вырос до $3K MRR
+  - Работаю с Go, TypeScript, Kotlin, Java, PostgreSQL, Ansible, Python, SQLite и Terraform
 
 experience:
   - title: Основатель
@@ -21,6 +21,7 @@ experience:
       imgURL: https://listenbox.app/_astro/favicon.DM5dyM1q.svg
     location: Удаленно
     start: 2019-10-01
+    end: 2025-02-01
     products:
       - name: Listenbox
         url: https://listenbox.app
@@ -29,8 +30,12 @@ experience:
       - name: Arrowbox
         url: https://arrowbox.co
     summaryMD: |
-      Создаю и поддерживаю собственные продукты.
-      - Развил [прибыльный SaaS](https://listenbox.app) до $3K MRR с нуля
+      Основал и вел прибыльный SaaS от идеи до production; развил до $3K MRR.
+
+      - Построил текущий backend и frontend на Go и TypeScript
+      - Проектировал и поддерживал функции на PostgreSQL
+      - Автоматизировал деплой и управление инфраструктурой через Terraform и Ansible
+      - Отвечал за отладку production, поддержку, надежность, клиентскую поддержку, SEO, продажи и маркетинг как основатель
 
   - title: Старший Android-разработчик
     org:
@@ -150,7 +155,9 @@ awards:
     date: 2011-10-01
 
 skills:
-  - Разработка и поддержка Android-приложений
-  - Разработка и поддержка SaaS-продуктов
-  - Найм сотрудников и создание команд с нуля
-  - Поисковая оптимизация
+  - Продуктовая разработка - SaaS, создание продуктов, customer discovery, SEO
+  - Языки - Go, TypeScript, Kotlin, Java, Python
+  - Backend и данные - PostgreSQL, проектирование API, backend-сервисы, SQLite
+  - Frontend и mobile - TypeScript UI, Android
+  - Поставка и эксплуатация - Ansible, CI/CD, Linux, Terraform
+  - Работа основателя с клиентами - поддержка, продажи, маркетинг

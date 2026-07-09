@@ -59,6 +59,9 @@ const filePathFor = (pathname: string): string => {
 const pagePathFor = (htmlFile: string): string =>
   `/${relative(distDir, htmlFile)}`
 
+const pdfPageCount = (pdf: Buffer): number =>
+  pdf.toString("latin1").match(/\/Type\s*\/Page\b/g)?.length ?? 0
+
 const routeBuiltFiles = async (page: Page): Promise<void> => {
   await page.route("**/*", async route => {
     const requestUrl = new URL(route.request().url())
@@ -583,6 +586,29 @@ test.describe("e2e tests", () => {
     await expect(nav).toBeHidden()
   })
 
+  test("cv print PDF is exactly two pages in A4 and US Letter", async ({
+    page,
+  }) => {
+    await routeBuiltFiles(page)
+
+    const response = await page.goto(`${builtOrigin}/cv/`)
+
+    expect(response?.ok() ?? false).toEqual(true)
+    await page.emulateMedia({ media: "print" })
+
+    for (const format of ["A4", "Letter"]) {
+      expect(
+        pdfPageCount(
+          await page.pdf({
+            format,
+            printBackground: true,
+          }),
+        ),
+        `Expected /cv/ printed as ${format} to be exactly two pages.`,
+      ).toEqual(2)
+    }
+  })
+
   test("cv exposes valid links", async ({ page }) => {
     function isInvalidHref(href: string): boolean {
       if (href.startsWith("/") || href.startsWith("#")) {
@@ -623,7 +649,7 @@ test.describe("e2e tests", () => {
     expect(hrefs.filter(isInvalidHref)).toEqual([])
   })
 
-  test("cv shows ongoing Listenbox founder role", async ({ page }) => {
+  test("cv shows Listenbox founder role", async ({ page }) => {
     await routeBuiltFiles(page)
 
     const response = await page.goto(`${builtOrigin}/cv/`)
@@ -641,7 +667,7 @@ test.describe("e2e tests", () => {
       listenboxRole.getByRole("heading", { name: "Founder" }),
     ).toBeVisible()
     await expect(
-      listenboxRole.getByText(/October 2019 - Present/),
+      listenboxRole.getByText(/October 2019 - February 2025/),
     ).toBeVisible()
   })
 

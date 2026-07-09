@@ -9,18 +9,19 @@ head:
   twitter: https://twitter.com/meoyawn
 
 summaryMD: |
-  - 14 ел Java, Kotlin, TypeScript һәм Python телләрендә программалар язу һәм аларны эшләтеп тору
-  - SaaS-программа ясап, аны аена $3K табыш китерә торган иттем
-  - 2 программистлар командасын нульдән җыйдым
+  - Өлкән продукт инженеры: 14 ел Android программалары һәм SaaS продуктлары ясыйм
+  - Табышлы SaaS нигезләдем һәм аны $3K MRR-га җиткердем
+  - Go, TypeScript, Kotlin, Java, PostgreSQL, Ansible, Python, SQLite һәм Terraform белән эшлим
 
 experience:
-  - title: Хуҗа
+  - title: Нигезләүче
     org:
       name: Listenbox
       url: https://listenbox.app
       imgURL: https://listenbox.app/_astro/favicon.DM5dyM1q.svg
     location: Дистанцион
     start: 2019-10-01
+    end: 2025-02-01
     products:
       - name: Listenbox
         url: https://listenbox.app
@@ -29,8 +30,12 @@ experience:
       - name: Arrowbox
         url: https://arrowbox.co
     summaryMD: |
-      Үз проектларымны язам һәм эшләтеп торам.
-      - [SaaS-программа](https://listenbox.app) ясап, аны аена $3K табыш китерә торган иттем
+      Табышлы SaaS-ны идеядан production-га кадәр нигезләдем, ясадым һәм алып бардым; $3K MRR-га җиткердем.
+
+      - Хәзерге backend һәм frontend-ны Go һәм TypeScript белән ясадым
+      - PostgreSQL нигезендәге продукт функцияләрен проектладым һәм эшләтеп тордым
+      - Terraform һәм Ansible белән деплойны һәм инфраструктура белән идарә итүне автоматлаштырдым
+      - Production-дагы проблемаларны табу, хезмәт күрсәтү, тотрыклылык, клиентларга ярдәм, SEO, нигезләүче буларак сатулар һәм маркетинг өчен җаваплы булдым
 
   - title: Өлкән Android программисты
     org:
@@ -150,7 +155,9 @@ awards:
     date: 2011-10-01
 
 skills:
-  - Android программалары язу һәм аларны эшләтеп тору
-  - SaaS программалары язу һәм аларны эшләтеп тору
-  - Эшкә алу һәм командаларны нульдән җыю
-  - Сайтларны эзләү системаларында алга чыгару (SEO)
+  - Продукт инженериясе - SaaS, продукт ясау, customer discovery, SEO
+  - Телләр - Go, TypeScript, Kotlin, Java, Python
+  - Backend һәм мәгълүмат - PostgreSQL, API проектлау, backend сервислар, SQLite
+  - Frontend һәм mobile - TypeScript UI, Android
+  - Чыгару һәм эксплуатация - Ansible, CI/CD, Linux, Terraform
+  - Нигезләүченең клиент эше - ярдәм, сатулар, маркетинг
