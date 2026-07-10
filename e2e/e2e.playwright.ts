@@ -1,11 +1,11 @@
 import { existsSync, readdirSync, readFileSync, statSync } from "node:fs"
-import { join, relative } from "node:path"
+import { join, relative, resolve } from "node:path"
 import { expect, type Page, test } from "@playwright/test"
 import { load } from "js-yaml"
 import postcss from "postcss"
 
 const builtOrigin = "http://built.local"
-const distDir = "dist"
+const distDir = resolve(process.env.DIST_DIR ?? "dist")
 
 const collectHtmlFiles = (dirPath: string): string[] =>
   readdirSync(dirPath).flatMap(entry => {
@@ -95,14 +95,14 @@ test.describe("e2e tests", () => {
   }) => {
     expect(
       existsSync(distDir),
-      "Expected dist/ to exist before running this test.",
+      `Expected ${distDir} to exist before running this test.`,
     ).toEqual(true)
 
     const htmlFiles = collectHtmlFiles(distDir)
 
     expect(
       htmlFiles.length,
-      "Expected at least one built HTML file in dist/.",
+      `Expected at least one built HTML file in ${distDir}.`,
     ).toBeGreaterThan(0)
 
     await Promise.all(
@@ -152,6 +152,56 @@ test.describe("e2e tests", () => {
             postcss.parse(readFileSync(stylesheetPath, "utf8")),
           ).not.toThrow()
         }
+      }),
+    )
+  })
+
+  test("every emitted html file references a processed SVG favicon", async ({
+    browser,
+  }) => {
+    const htmlFiles = collectHtmlFiles(distDir)
+
+    await Promise.all(
+      htmlFiles.map(async htmlFile => {
+        await using page = await browser.newPage()
+
+        await routeBuiltFiles(page)
+
+        const response = await page.goto(
+          `${builtOrigin}${pagePathFor(htmlFile)}`,
+        )
+
+        expect(response?.ok() ?? false).toEqual(true)
+
+        const favicon = page.locator(
+          'link[rel="icon"][type="image/svg+xml"]',
+        )
+
+        await expect(favicon).toHaveCount(1)
+
+        const href = await favicon.getAttribute("href")
+
+        if (href === null) {
+          throw new Error(`Expected ${htmlFile} to reference an SVG favicon.`)
+        }
+
+        expect(href).toMatch(/^\/[^?]+\.svg$/)
+        expect(href).not.toContain("/src/")
+
+        const faviconPath = join(distDir, href.replace(/^\//, ""))
+
+        expect(
+          existsSync(faviconPath),
+          `Expected ${htmlFile} to reference an existing favicon: ${href}.`,
+        ).toEqual(true)
+
+        const faviconResponse = await page.goto(`${builtOrigin}${href}`)
+
+        expect(faviconResponse?.ok() ?? false).toEqual(true)
+        expect(faviconResponse?.headers()["content-type"]).toContain(
+          "image/svg+xml",
+        )
+        await expect(page.locator("svg")).toHaveCount(1)
       }),
     )
   })
@@ -349,7 +399,7 @@ test.describe("e2e tests", () => {
 
     expect(
       readFileSync(
-        join(distDir, "..", "src", "content", "writing", "npm-install-is-dangerous.md"),
+        join("src", "content", "writing", "npm-install-is-dangerous.md"),
         "utf8",
       ),
     ).toContain("## Attack vector")

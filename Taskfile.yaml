@@ -66,6 +66,16 @@ tasks:
       - "dist/**/*"
       - "e2e/**/*"
 
+  test:e2e:dist:
+    run: once
+    cmds:
+      - bun playwright install chromium
+      - bun playwright test
+    sources:
+      - playwright.config.ts
+      - bun.lock
+      - "e2e/**/*"
+
   test:unit:
     run: once
     cmd: bun test
