@@ -3,35 +3,32 @@ version: "3"
 tasks:
   lint:
     run: once
-    cmd: bun eslint .
+    cmd: bun oxlint .
     sources:
+      - .oxlintrc.jsonc
       - bun.lock
       - "*.ts"
       - e2e/**/*.ts
-      - eslint/**/*.ts
+      - scripts/**/*.ts
       - src/**/*
+      - tooling/**/*.ts
 
   lint:fix:
-    cmd: bun eslint . --fix
+    cmd: bun oxlint . --fix
 
-  typecheck:src:
-    run: once
-    cmd: bun astro check --tsconfig src/tsconfig.json
-    sources:
-      - bun.lock
-      - src/**/*
-
-  typecheck:tooling:
+  typecheck:
     run: once
     cmd: bun tsc -p tsconfig.json
     sources:
       - bun.lock
       - "*.ts"
-      - src/**/*.ts
-      - eslint/**/*.ts
+      - e2e/**/*.ts
+      - scripts/**/*.ts
+      - src/**/*
+      - tooling/**/*.ts
 
   dev:
-    cmd: bun astro dev
+    cmd: bun vite --config vite.config.ts
 
   favicon:png:
     cmd: pkgx rsvg-convert --width 512 --height 512 --format png --output src/assets/favicon.png src/assets/favicon.svg
@@ -42,39 +39,81 @@ tasks:
 
   build:
     run: once
-    cmds:
-      - rm -rf dist/
-      - bun astro build
+    cmd: DIST_DIR=dist bun vite build --config vite.config.ts
     sources:
       - bun.lock
-      - astro.config.ts
+      - vite.config.ts
+      - tooling/vite-static-site/**/*
       - src/**/*
       - public/**/*
     generates:
       - dist/**/*
 
+  build:vite:
+    run: once
+    cmd: bun vite build --config vite.config.ts
+    sources:
+      - bun.lock
+      - vite.config.ts
+      - tooling/vite-static-site/**/*
+      - src/**/*
+      - public/**/*
+    generates:
+      - dist-vite/**/*
+
   test:e2e:
     run: once
     deps:
       - build
-    cmds:
-      - bun playwright install chromium
-      - bun playwright test
+      - playwright:install
+    env:
+      DIST_DIR: dist
+    cmd: bun playwright test e2e/e2e.playwright.ts
     sources:
+      - Taskfile.yaml
       - playwright.config.ts
       - bun.lock
       - "dist/**/*"
       - "e2e/**/*"
 
-  test:e2e:dist:
+  test:e2e:dist-vite:
     run: once
-    cmds:
-      - bun playwright install chromium
-      - bun playwright test
+    deps:
+      - build:vite
+      - playwright:install
+    env:
+      DIST_DIR: dist-vite
+    cmd: bun playwright test e2e/e2e.playwright.ts
     sources:
+      - Taskfile.yaml
       - playwright.config.ts
       - bun.lock
+      - "dist-vite/**/*"
       - "e2e/**/*"
+
+  test:e2e:dev:
+    run: once
+    deps:
+      - playwright:install
+    env:
+      SITE_URL: http://127.0.0.1:4321
+    cmd: >-
+      bun scripts/with-dev-server.ts
+      bun playwright test e2e/e2e.playwright.ts
+    sources:
+      - Taskfile.yaml
+      - playwright.config.ts
+      - bun.lock
+      - e2e/**/*
+      - scripts/with-dev-server.ts
+      - tooling/vite-static-site/**/*
+      - src/**/*
+
+  playwright:install:
+    run: once
+    cmd: bun playwright install chromium
+    sources:
+      - bun.lock
 
   test:unit:
     run: once
@@ -82,19 +121,20 @@ tasks:
     sources:
       - bun.lock
       - "src/**/*.ts"
+      - tooling/**/*.test.ts
 
   test:
     run: once
     deps:
       - test:unit
-      - test:e2e
+      - test:e2e:dist-vite
+      - test:e2e:dev
 
   check-impl:
     run: once
     deps:
       - lint
-      - typecheck:src
-      - typecheck:tooling
+      - typecheck
       - test
 
   check:
@@ -105,6 +145,7 @@ tasks:
 
   deploy:
     deps:
+      - build
       - check
     cmd: bun wrangler pages deploy dist/ --commit-dirty=true
     sources:

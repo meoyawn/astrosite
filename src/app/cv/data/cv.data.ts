@@ -1,10 +1,13 @@
-import { load } from "js-yaml"
 import * as v from "valibot"
-import cvEnSource from "../../../pages/cv.yaml?raw"
-import cvRuSource from "../../../pages/ru/cv.yaml?raw"
-import cvTtSource from "../../../pages/tt/cv.yaml?raw"
-import type { Locale } from "../../i18n"
-import type { Award, CV, Education, Experience, Head, Org } from "./cv.types"
+import type {
+  Award,
+  CV,
+  Education,
+  Experience,
+  Head,
+  Org,
+  Product,
+} from "./cv.types.ts"
 
 const isRecord = (value: unknown): value is Record<string, unknown> =>
   typeof value === "object" && value !== null && !Array.isArray(value)
@@ -64,7 +67,7 @@ const orgSchema: v.GenericSchema<unknown, Org> = v.object({
   url: v.string(),
 })
 
-const productSchema = v.object({
+const productSchema: v.GenericSchema<unknown, Product> = v.object({
   imgURL: v.exactOptional(v.string()),
   name: v.string(),
   url: v.string(),
@@ -106,7 +109,7 @@ const awardSchema: v.GenericSchema<unknown, Award> = v.object({
   url: v.string(),
 })
 
-const cvSchema: v.GenericSchema<unknown, CV> = v.object({
+export const cvSchema: v.GenericSchema<unknown, CV> = v.object({
   awards: v.array(awardSchema),
   education: v.array(educationSchema),
   experience: v.array(experienceSchema),
@@ -115,27 +118,14 @@ const cvSchema: v.GenericSchema<unknown, CV> = v.object({
   summaryMD: v.string(),
 })
 
-const parseCV = (value: unknown, sourceName: string): CV => {
-  const result = v.safeParse(cvSchema, value)
+export const parseCV = (value: unknown, sourceName: string): CV => {
+  const result = v.safeParse(cvSchema, normalizeCV(value))
 
   if (!result.success) {
     throw new TypeError(
-      `${sourceName} does not match the expected shape: ${v.summarize(
-        result.issues,
-      )}`,
+      `${sourceName} does not match the CV schema: ${v.summarize(result.issues)}`,
     )
   }
 
   return result.output
 }
-
-const loadCV = (source: string, sourceName: string): CV =>
-  parseCV(normalizeCV(load(source)), sourceName)
-
-export const cvByLocale: Record<Locale, CV> = {
-  en: loadCV(cvEnSource, "en/cv.yaml"),
-  ru: loadCV(cvRuSource, "ru/cv.yaml"),
-  tt: loadCV(cvTtSource, "tt/cv.yaml"),
-}
-
-export const getCV = (locale: Locale): CV => cvByLocale[locale]

@@ -4,8 +4,16 @@ import { expect, type Page, test } from "@playwright/test"
 import { load } from "js-yaml"
 import postcss from "postcss"
 
-const builtOrigin = "http://built.local"
+const siteUrl = process.env.SITE_URL?.replace(/\/$/, "")
+const builtOrigin = siteUrl ?? "http://built.local"
 const distDir = resolve(process.env.DIST_DIR ?? "dist")
+const devRoutesPath = "/@vite-static-site/routes.json"
+
+interface HtmlTarget {
+  diskPath: string | undefined
+  fileName: string
+  pagePath: string
+}
 
 const collectHtmlFiles = (dirPath: string): string[] =>
   readdirSync(dirPath).flatMap(entry => {
@@ -59,10 +67,80 @@ const filePathFor = (pathname: string): string => {
 const pagePathFor = (htmlFile: string): string =>
   `/${relative(distDir, htmlFile)}`
 
+const pagePathForFileName = (fileName: string): string => {
+  if (fileName === "index.html") {
+    return "/"
+  }
+
+  if (fileName.endsWith("/index.html")) {
+    return `/${fileName.slice(0, -"index.html".length)}`
+  }
+
+  return `/${fileName}`
+}
+
+let liveRouteFileNamesPromise: Promise<string[]> | undefined
+
+const liveRouteFileNames = async (): Promise<string[]> => {
+  liveRouteFileNamesPromise ??= fetch(`${builtOrigin}${devRoutesPath}`).then(
+    async response => {
+      if (!response.ok) {
+        throw new Error(
+          `Expected ${builtOrigin}${devRoutesPath} to return the live route manifest.`,
+        )
+      }
+
+      const value: unknown = await response.json()
+
+      if (
+        !Array.isArray(value) ||
+        !value.every(item => typeof item === "string")
+      ) {
+        throw new TypeError(
+          "Expected the live route manifest to contain file names.",
+        )
+      }
+
+      return value
+    },
+  )
+
+  return liveRouteFileNamesPromise
+}
+
+const collectHtmlTargets = async (): Promise<HtmlTarget[]> => {
+  if (siteUrl !== undefined) {
+    return (await liveRouteFileNames()).map(fileName => ({
+      diskPath: undefined,
+      fileName,
+      pagePath: pagePathForFileName(fileName),
+    }))
+  }
+
+  return collectHtmlFiles(distDir).map(diskPath => {
+    const fileName = relative(distDir, diskPath)
+
+    return {
+      diskPath,
+      fileName,
+      pagePath: pagePathFor(diskPath),
+    }
+  })
+}
+
+const routeExists = async (fileName: string): Promise<boolean> =>
+  siteUrl === undefined
+    ? existsSync(join(distDir, fileName))
+    : (await liveRouteFileNames()).includes(fileName)
+
 const pdfPageCount = (pdf: Buffer): number =>
   pdf.toString("latin1").match(/\/Type\s*\/Page\b/g)?.length ?? 0
 
 const routeBuiltFiles = async (page: Page): Promise<void> => {
+  if (siteUrl !== undefined) {
+    return
+  }
+
   await page.route("**/*", async route => {
     const requestUrl = new URL(route.request().url())
 
@@ -93,39 +171,31 @@ test.describe("e2e tests", () => {
   test("every emitted html file references parseable css assets", async ({
     browser,
   }) => {
-    expect(
-      existsSync(distDir),
-      `Expected ${distDir} to exist before running this test.`,
-    ).toEqual(true)
+    if (siteUrl === undefined) {
+      expect(
+        existsSync(distDir),
+        `Expected ${distDir} to exist before running this test.`,
+      ).toEqual(true)
+    }
 
-    const htmlFiles = collectHtmlFiles(distDir)
+    const htmlTargets = await collectHtmlTargets()
 
     expect(
-      htmlFiles.length,
-      `Expected at least one built HTML file in ${distDir}.`,
+      htmlTargets.length,
+      `Expected at least one HTML route from ${siteUrl ?? distDir}.`,
     ).toBeGreaterThan(0)
 
     await Promise.all(
-      htmlFiles.map(async htmlFile => {
+      htmlTargets.map(async target => {
         await using page = await browser.newPage()
 
         await routeBuiltFiles(page)
 
-        const html = readFileSync(htmlFile, "utf8")
-        const stylesheetHrefs = collectStylesheetHrefs(html)
-
-        expect(
-          stylesheetHrefs.length,
-          `Expected ${htmlFile} to reference at least one stylesheet.`,
-        ).toBeGreaterThan(0)
-
-        const response = await page.goto(
-          `${builtOrigin}${pagePathFor(htmlFile)}`,
-        )
+        const response = await page.goto(`${builtOrigin}${target.pagePath}`)
 
         expect(
           response?.ok() ?? false,
-          `Expected Playwright to load built HTML file: ${htmlFile}.`,
+          `Expected Playwright to load HTML route: ${target.pagePath}.`,
         ).toEqual(true)
 
         const loadedStylesheetHrefs = await page
@@ -138,19 +208,45 @@ test.describe("e2e tests", () => {
             }),
           )
 
-        expect(loadedStylesheetHrefs).toEqual(stylesheetHrefs)
+        expect(
+          loadedStylesheetHrefs.length,
+          `Expected ${target.pagePath} to reference at least one stylesheet.`,
+        ).toBeGreaterThan(0)
 
-        for (const href of stylesheetHrefs) {
-          const stylesheetPath = join(distDir, href.replace(/^\//, ""))
+        if (target.diskPath !== undefined) {
+          expect(loadedStylesheetHrefs).toEqual(
+            collectStylesheetHrefs(readFileSync(target.diskPath, "utf8")),
+          )
+        }
 
-          expect(
-            existsSync(stylesheetPath),
-            `Expected ${htmlFile} to reference an existing stylesheet: ${href}.`,
-          ).toEqual(true)
+        for (const href of loadedStylesheetHrefs) {
+          if (target.diskPath !== undefined) {
+            const stylesheetPath = join(distDir, href.replace(/^\//, ""))
 
-          expect(() =>
-            postcss.parse(readFileSync(stylesheetPath, "utf8")),
-          ).not.toThrow()
+            expect(
+              existsSync(stylesheetPath),
+              `Expected ${target.fileName} to reference an existing stylesheet: ${href}.`,
+            ).toEqual(true)
+
+            expect(() =>
+              postcss.parse(readFileSync(stylesheetPath, "utf8")),
+            ).not.toThrow()
+          } else {
+            const stylesheetUrl = new URL(href, builtOrigin)
+
+            stylesheetUrl.searchParams.set("direct", "")
+            const stylesheetResponse = await page.request.get(
+              stylesheetUrl.toString(),
+            )
+
+            expect(stylesheetResponse.ok()).toEqual(true)
+            expect(stylesheetResponse.headers()["content-type"]).toContain(
+              "text/css",
+            )
+            const stylesheet = await stylesheetResponse.text()
+
+            expect(() => postcss.parse(stylesheet)).not.toThrow()
+          }
         }
       }),
     )
@@ -159,41 +255,41 @@ test.describe("e2e tests", () => {
   test("every emitted html file references a processed SVG favicon", async ({
     browser,
   }) => {
-    const htmlFiles = collectHtmlFiles(distDir)
+    const htmlTargets = await collectHtmlTargets()
 
     await Promise.all(
-      htmlFiles.map(async htmlFile => {
+      htmlTargets.map(async target => {
         await using page = await browser.newPage()
 
         await routeBuiltFiles(page)
 
-        const response = await page.goto(
-          `${builtOrigin}${pagePathFor(htmlFile)}`,
-        )
+        const response = await page.goto(`${builtOrigin}${target.pagePath}`)
 
         expect(response?.ok() ?? false).toEqual(true)
 
-        const favicon = page.locator(
-          'link[rel="icon"][type="image/svg+xml"]',
-        )
+        const favicon = page.locator('link[rel="icon"][type="image/svg+xml"]')
 
         await expect(favicon).toHaveCount(1)
 
         const href = await favicon.getAttribute("href")
 
         if (href === null) {
-          throw new Error(`Expected ${htmlFile} to reference an SVG favicon.`)
+          throw new Error(
+            `Expected ${target.pagePath} to reference an SVG favicon.`,
+          )
         }
 
         expect(href).toMatch(/^\/[^?]+\.svg$/)
         expect(href).not.toContain("/src/")
 
-        const faviconPath = join(distDir, href.replace(/^\//, ""))
+        if (target.diskPath !== undefined) {
+          const faviconPath = join(distDir, href.replace(/^\//, ""))
 
-        expect(
-          existsSync(faviconPath),
-          `Expected ${htmlFile} to reference an existing favicon: ${href}.`,
-        ).toEqual(true)
+          expect(
+            existsSync(faviconPath),
+            `Expected ${target.fileName} to reference an existing favicon: ${href}.`,
+          ).toEqual(true)
+        }
 
         const faviconResponse = await page.goto(`${builtOrigin}${href}`)
 
@@ -212,7 +308,7 @@ test.describe("e2e tests", () => {
     await routeBuiltFiles(page)
 
     expect(
-      existsSync(join(distDir, "consulting", "index.html")),
+      await routeExists("consulting/index.html"),
       "Expected /consulting/ to be emitted as static HTML.",
     ).toEqual(true)
 
@@ -225,9 +321,7 @@ test.describe("e2e tests", () => {
       name: /consulting/i,
     })
     await expect(consultingHeading).toBeVisible()
-    await expect(
-      main.locator("h2 a, h3 a, h4 a, h5 a, h6 a"),
-    ).toHaveCount(0)
+    await expect(main.locator("h2 a, h3 a, h4 a, h5 a, h6 a")).toHaveCount(0)
     await expect(
       main.getByRole("link", { name: "mail@adelnz.com" }),
     ).toHaveAttribute("href", "mailto:mail@adelnz.com")
@@ -238,12 +332,7 @@ test.describe("e2e tests", () => {
     await expect(
       main.getByRole("link", { name: "ResponsibleAPI" }),
     ).toHaveAttribute("href", "https://responsibleapi.com")
-    const selectedWorkLinks = [
-      "Listenbox",
-      "ResponsibleAPI",
-      "GitHub",
-      "CV",
-    ]
+    const selectedWorkLinks = ["Listenbox", "ResponsibleAPI", "GitHub", "CV"]
     const selectedWorkLinkBoxes = await Promise.all(
       selectedWorkLinks.map(async linkName => {
         const box = await main
@@ -353,9 +442,7 @@ test.describe("e2e tests", () => {
     const frontmatter = readArticleFrontmatter(articlePath)
 
     expect(
-      existsSync(
-        join(distDir, "writing", "npm-install-is-dangerous", "index.html"),
-      ),
+      await routeExists("writing/npm-install-is-dangerous/index.html"),
       "Expected /writing/npm-install-is-dangerous/ to be emitted as static HTML.",
     ).toEqual(true)
 
@@ -421,12 +508,16 @@ test.describe("e2e tests", () => {
     await expect(headingLink).toHaveAttribute("href", "#attack-vector")
     await expect
       .poll(() =>
-        headingLink.evaluate(element => getComputedStyle(element, "::before").content),
+        headingLink.evaluate(
+          element => getComputedStyle(element, "::before").content,
+        ),
       )
       .toEqual('"#"')
     await expect
       .poll(() =>
-        headingLink.evaluate(element => getComputedStyle(element, "::before").opacity),
+        headingLink.evaluate(
+          element => getComputedStyle(element, "::before").opacity,
+        ),
       )
       .toEqual("0")
 
@@ -434,7 +525,9 @@ test.describe("e2e tests", () => {
 
     await expect
       .poll(() =>
-        headingLink.evaluate(element => getComputedStyle(element, "::before").opacity),
+        headingLink.evaluate(
+          element => getComputedStyle(element, "::before").opacity,
+        ),
       )
       .toEqual("1")
 
@@ -465,7 +558,7 @@ test.describe("e2e tests", () => {
     await routeBuiltFiles(page)
 
     expect(
-      existsSync(join(distDir, "tt", "consulting", "index.html")),
+      await routeExists("tt/consulting/index.html"),
       "Expected /tt/consulting/ to be emitted as static HTML.",
     ).toEqual(true)
 

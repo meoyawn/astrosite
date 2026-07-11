@@ -1,26 +1,37 @@
-import { glob } from "astro/loaders"
-import { z } from "astro/zod"
-import { defineCollection } from "astro:content"
+import * as v from "valibot"
+import type { CollectionDefinition } from "../tooling/vite-static-site/content.ts"
 
-// noinspection JSUnusedGlobalSymbols
-export const collections = {
-  writing: defineCollection({
-    loader: glob({
-      base: "src/content/writing",
-      pattern: "**/*.md",
-      generateId: ({ entry }) =>
-        entry.replace(/\/index\.md$/, "").replace(/\.md$/, ""),
-    }),
-    schema: z.object({
-      title: z.string().min(1),
-      /** SEO */
-      description: z.string().min(1),
-      /** Article list */
-      teaser: z.string().min(1),
-      /** Controls draft status: visible or not in the writing list */
-      published_at: z.date().optional(),
+export const writingSchema = v.object({
+  title: v.pipe(v.string(), v.minLength(1)),
+  description: v.pipe(v.string(), v.minLength(1)),
+  teaser: v.pipe(v.string(), v.minLength(1)),
+  published_at: v.exactOptional(v.date()),
+  updated_at: v.exactOptional(v.date()),
+})
 
-      updated_at: z.date().optional(),
-    }),
-  }),
-} as const
+export type WritingData = v.InferOutput<typeof writingSchema>
+
+export const parseWritingData = (
+  value: unknown,
+  sourceName: string,
+): WritingData => {
+  const result = v.safeParse(writingSchema, value)
+
+  if (!result.success) {
+    throw new TypeError(
+      `${sourceName} does not match the writing collection schema: ${v.summarize(
+        result.issues,
+      )}`,
+    )
+  }
+
+  return result.output
+}
+
+const writing = {
+  directory: "src/content/writing",
+  pattern: /\.md$/,
+  schema: parseWritingData,
+} satisfies CollectionDefinition<WritingData>
+
+export const collections = { writing }

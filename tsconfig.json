@@ -1,16 +1,32 @@
 {
-  "extends": "astro/tsconfigs/strictest",
   "compilerOptions": {
-    "allowJs": true,
+    "allowImportingTsExtensions": true,
     "allowSyntheticDefaultImports": true,
+    "allowUnreachableCode": false,
+    "allowUnusedLabels": false,
+    "esModuleInterop": true,
+    "exactOptionalPropertyTypes": true,
+    "forceConsistentCasingInFileNames": true,
+    "isolatedModules": true,
+    "jsx": "preserve",
+    "jsxImportSource": "solid-js",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
     "noEmit": true,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitOverride": true,
+    "noImplicitReturns": true,
+    "noUncheckedIndexedAccess": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
     "resolveJsonModule": true,
-    "strictNullChecks": true,
-    "types": ["bun"],
-    "verbatimModuleSyntax": true,
+    "skipDefaultLibCheck": true,
     "skipLibCheck": true,
-    "skipDefaultLibCheck": true
+    "strict": true,
+    "target": "ESNext",
+    "types": ["bun"],
+    "verbatimModuleSyntax": true
   },
-  "include": ["**/*.ts"],
-  "exclude": ["src/**/*", "node_modules/**/*"]
+  "include": ["**/*.ts", "**/*.tsx"],
+  "exclude": ["dist", "dist-*", "node_modules", "test-results"]
 }
