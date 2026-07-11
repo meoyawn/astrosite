@@ -1,11 +1,11 @@
 # AGENTS.md
 
 - language: 100% TypeScript
-- framework: [Astro](https://astro.build)
+- framework: [SolidJS](https://www.solidjs.com/) with [Vite](https://vite.dev/)
 
 ## Dev server
 
-- dev server port is in [astro.config.ts](astro.config.ts)
+- dev server port is in [vite.config.ts](vite.config.ts)
 - never launch the dev server, it's already running
 - when trying to debug problems, start with simple `curl` (need to escalate
   sandbox)

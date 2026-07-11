@@ -1,6 +1,6 @@
 - title: Add canonical URLs
   notes: |
-    Add absolute canonical support in HtmlRoot.astro.
+    Add absolute canonical support in src/layouts/html-root.tsx.
     Include canonical URLs in page head so tracking/query parameter variants
     consolidate to the preferred URL.
 - title: Add sitemap

@@ -2,9 +2,6 @@
 dist/
 dist-vite/
 
-# generated types
-.astro/
-
 # dependencies
 node_modules/
 
@@ -26,7 +23,6 @@ pnpm-debug.log*
 public/cv.json
 .wrangler/
 
-.astro/
 .task/
 coverage/
 

@@ -1,6 +1,6 @@
 {
-  "files": ["src/layouts/HtmlRoot.astro"],
+  "files": ["src/layouts/html-root.tsx"],
   "insertBefore": "</body>",
-  "commentSyntax": "html",
+  "commentSyntax": "jsx",
   "cspChecked": true
 }
