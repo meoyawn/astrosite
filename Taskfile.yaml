@@ -1,5 +1,10 @@
 version: "3"
 
+includes:
+  vite-static-site:
+    taskfile: ../vite-static-site/Taskfile.yaml
+    dir: ../vite-static-site
+
 tasks:
   lint:
     run: once
@@ -18,6 +23,8 @@ tasks:
 
   typecheck:
     run: once
+    deps:
+      - vite-static-site:build
     cmd: bun tsc -p tsconfig.json
     sources:
       - bun.lock
@@ -28,6 +35,8 @@ tasks:
       - tooling/**/*.ts
 
   dev:
+    deps:
+      - vite-static-site:build
     cmd: bun vite --config vite.config.ts
 
   favicon:png:
@@ -39,11 +48,14 @@ tasks:
 
   build:
     run: once
+    deps:
+      - vite-static-site:build
     cmd: DIST_DIR=dist bun vite build --config vite.config.ts
     sources:
       - bun.lock
       - vite.config.ts
-      - tooling/vite-static-site/**/*
+      - ../vite-static-site/package.json
+      - ../vite-static-site/src/**/*
       - src/**/*
       - public/**/*
     generates:
@@ -51,11 +63,14 @@ tasks:
 
   build:vite:
     run: once
+    deps:
+      - vite-static-site:build
     cmd: bun vite build --config vite.config.ts
     sources:
       - bun.lock
       - vite.config.ts
-      - tooling/vite-static-site/**/*
+      - ../vite-static-site/package.json
+      - ../vite-static-site/src/**/*
       - src/**/*
       - public/**/*
     generates:
@@ -106,7 +121,8 @@ tasks:
       - bun.lock
       - e2e/**/*
       - scripts/with-dev-server.ts
-      - tooling/vite-static-site/**/*
+      - ../vite-static-site/package.json
+      - ../vite-static-site/src/**/*
       - src/**/*
 
   playwright:install:
@@ -139,6 +155,8 @@ tasks:
 
   check:
     run: once
+    deps:
+      - vite-static-site:build
     cmds:
       - bun i
       - task: check-impl

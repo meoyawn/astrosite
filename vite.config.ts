@@ -9,12 +9,11 @@ import remarkFrontmatter from "remark-frontmatter"
 import remarkMdxFrontmatter from "remark-mdx-frontmatter"
 import type { Plugin } from "unified"
 import { defineConfig } from "vite"
-import solid from "vite-plugin-solid"
 import { defaultLocale, locales } from "./src/app/i18n.ts"
 import { externalLinkOptions } from "./src/app/markdown-options.ts"
 import { collections } from "./src/content.config.ts"
-import { staticSite } from "./tooling/vite-static-site/index.ts"
-import { createMarkdownProcessor } from "./tooling/vite-static-site/markdown.ts"
+import { staticSite } from "vite-static-site"
+import { createMarkdownProcessor } from "vite-static-site/markdown"
 
 const autolinkWritingHeadings = rehypeAutolinkHeadings({
   behavior: "wrap",
@@ -66,7 +65,7 @@ export default defineConfig({
           prefixDefaultLocale: false,
         },
       },
-      integrations: [mdxPlugin, solid({ ssr: true })],
+      integrations: [mdxPlugin],
       markdown: {
         processor: markdownProcessor,
       },
