@@ -8,10 +8,10 @@ includes:
 tasks:
   lint:
     run: once
-    cmd: bun oxlint .
+    cmd: nubx oxlint .
     sources:
       - .oxlintrc.jsonc
-      - bun.lock
+      - nub.lock
       - "*.ts"
       - e2e/**/*.ts
       - scripts/**/*.ts
@@ -19,15 +19,15 @@ tasks:
       - tooling/**/*.ts
 
   lint:fix:
-    cmd: bun oxlint . --fix
+    cmd: nubx oxlint . --fix
 
   typecheck:
     run: once
     deps:
       - vite-static-site:build
-    cmd: bun tsc -p tsconfig.json
+    cmd: nubx tsc -p tsconfig.json
     sources:
-      - bun.lock
+      - nub.lock
       - "*.ts"
       - e2e/**/*.ts
       - scripts/**/*.ts
@@ -37,7 +37,7 @@ tasks:
   dev:
     deps:
       - vite-static-site:build
-    cmd: bun vite --config vite.config.ts
+    cmd: nubx vite --config vite.config.ts
 
   favicon:png:
     cmd: pkgx rsvg-convert --width 512 --height 512 --format png --output src/assets/favicon.png src/assets/favicon.svg
@@ -50,9 +50,9 @@ tasks:
     run: once
     deps:
       - vite-static-site:build
-    cmd: DIST_DIR=dist bun vite build --config vite.config.ts
+    cmd: DIST_DIR=dist nubx vite build --config vite.config.ts
     sources:
-      - bun.lock
+      - nub.lock
       - vite.config.ts
       - ../vite-static-site/package.json
       - ../vite-static-site/src/**/*
@@ -65,9 +65,9 @@ tasks:
     run: once
     deps:
       - vite-static-site:build
-    cmd: bun vite build --config vite.config.ts
+    cmd: nubx vite build --config vite.config.ts
     sources:
-      - bun.lock
+      - nub.lock
       - vite.config.ts
       - ../vite-static-site/package.json
       - ../vite-static-site/src/**/*
@@ -83,11 +83,11 @@ tasks:
       - playwright:install
     env:
       DIST_DIR: dist
-    cmd: bun playwright test e2e/e2e.playwright.ts
+    cmd: nubx playwright test e2e/e2e.playwright.ts
     sources:
       - Taskfile.yaml
       - playwright.config.ts
-      - bun.lock
+      - nub.lock
       - "dist/**/*"
       - "e2e/**/*"
 
@@ -98,11 +98,11 @@ tasks:
       - playwright:install
     env:
       DIST_DIR: dist-vite
-    cmd: bun playwright test e2e/e2e.playwright.ts
+    cmd: nubx playwright test e2e/e2e.playwright.ts
     sources:
       - Taskfile.yaml
       - playwright.config.ts
-      - bun.lock
+      - nub.lock
       - "dist-vite/**/*"
       - "e2e/**/*"
 
@@ -113,12 +113,12 @@ tasks:
     env:
       SITE_URL: http://127.0.0.1:4321
     cmd: >-
-      bun scripts/with-dev-server.ts
-      bun playwright test e2e/e2e.playwright.ts
+      nub scripts/with-dev-server.ts
+      nubx playwright test e2e/e2e.playwright.ts
     sources:
       - Taskfile.yaml
       - playwright.config.ts
-      - bun.lock
+      - nub.lock
       - e2e/**/*
       - scripts/with-dev-server.ts
       - ../vite-static-site/package.json
@@ -127,15 +127,15 @@ tasks:
 
   playwright:install:
     run: once
-    cmd: bun playwright install chromium
+    cmd: nubx playwright install chromium
     sources:
-      - bun.lock
+      - nub.lock
 
   test:unit:
     run: once
-    cmd: bun test
+    cmd: nubx vitest run
     sources:
-      - bun.lock
+      - nub.lock
       - "src/**/*.ts"
       - tooling/**/*.test.ts
 
@@ -158,15 +158,15 @@ tasks:
     deps:
       - vite-static-site:build
     cmds:
-      - bun i
+      - nub install
       - task: check-impl
 
   deploy:
     deps:
       - build
       - check
-    cmd: bun wrangler pages deploy dist/ --commit-dirty=true
+    cmd: nubx wrangler pages deploy dist/ --commit-dirty=true
     sources:
-      - bun.lock
+      - nub.lock
       - Taskfile.yaml
       - dist/**/*

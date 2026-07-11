@@ -13,7 +13,6 @@
 ## Rules
 
 - never add `oxlint-disable-next-line` unless explicitly asked
-- never edit [bunfig.toml](bunfig.toml) unless explicitly asked
 - never disable, skip or ignore tests
 - never edit [tsconfig.json](tsconfig.json) unless explicitly asked
 
@@ -25,12 +24,12 @@
 
 ## CLI tools
 
-- never call `node`, call `bun` instead
-- never call `npx` or `bunx`:
+- never call `node`, call `nub` instead
+- never call `npx` or `nubx`:
   - if a package is missing, stop and ask to add it to `package.json`
-  - if a package is present, call through `bun`
+  - if a package is present, call through `nubx`
 - never run code formatting unless explicitly asked
-- never call `vitest` or `bun test` directly
+- never call `vitest` directly
 - `rg`, `ast-grep`, `jq` are available for calling
 - never call `wc`, call `scc` instead (both on files and folders)
 - never pass multiple paths to `scc`. Single dir/file only.

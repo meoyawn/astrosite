@@ -24,7 +24,7 @@
     "skipLibCheck": true,
     "strict": true,
     "target": "ESNext",
-    "types": ["bun"],
+    "types": ["node", "vitest/globals"],
     "verbatimModuleSyntax": true
   },
   "include": ["**/*.ts", "**/*.tsx"],

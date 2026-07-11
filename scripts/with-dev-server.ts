@@ -1,4 +1,9 @@
 import {
+  spawn,
+  spawnSync,
+  type ChildProcess,
+} from "node:child_process"
+import {
   call,
   main,
   race,
@@ -20,7 +25,7 @@ type WatchdogMessage = {
 }
 
 type DevServer = {
-  process: Bun.Subprocess
+  process: ChildProcess
   processGroups: Set<number>
 }
 
@@ -36,35 +41,37 @@ const routesUrl = `${siteUrl}/@vite-static-site/routes.json`
 const readinessTimeout = 30_000
 const gracefulTimeout = 5_000
 const hardTimeout = 5_000
-const scriptPath = import.meta.path
+const scriptPath = import.meta.filename
 
 function spawnWatchdog(
   started: ReturnType<typeof withResolvers<WatchdogMessage>>,
 ) {
-  return Bun.spawn(
-    [process.execPath, scriptPath, watchdogArgument, String(process.pid)],
+  const watchdog = spawn(
+    process.execPath,
+    [scriptPath, watchdogArgument, String(process.pid)],
     {
       cwd: process.cwd(),
       detached: true,
-      env: Bun.env,
-      ipc(message) {
-        if (isWatchdogMessage(message)) {
-          started.resolve(message)
-        } else {
-          started.reject(new Error("Dev-server watchdog sent an invalid message."))
-        }
-      },
-      stderr: "inherit",
-      stdout: "inherit",
+      env: process.env,
+      stdio: ["ignore", "inherit", "inherit", "ipc"],
     },
   )
+  watchdog.on("message", message => {
+    if (isWatchdogMessage(message)) {
+      started.resolve(message)
+    } else {
+      started.reject(new Error("Dev-server watchdog sent an invalid message."))
+    }
+  })
+  watchdog.on("error", error => started.reject(error))
+  return watchdog
 }
 
 function useDevServer(): Operation<DevServer> {
   return resource(function* (provide) {
     const started = withResolvers<WatchdogMessage>("dev-server watchdog startup")
     const watchdog = spawnWatchdog(started)
-    const processGroups = new Set([watchdog.pid])
+    const processGroups = new Set([childPid(watchdog, "watchdog")])
 
     try {
       const message = yield* withTimeout(
@@ -76,7 +83,9 @@ function useDevServer(): Operation<DevServer> {
       yield* provide({ process: watchdog, processGroups })
     } finally {
       yield* stopProcessGroups(processGroups)
-      watchdog.disconnect()
+      if (watchdog.connected) {
+        watchdog.disconnect()
+      }
     }
   })
 }
@@ -158,14 +167,16 @@ function timeoutValue(timeout: number): Operation<"timed-out"> {
 }
 
 function processIdentities(): ProcessIdentity[] {
-  const result = Bun.spawnSync(["ps", "-axo", "pid=,pgid=,state="])
+  const result = spawnSync("ps", ["-axo", "pid=,pgid=,state="], {
+    encoding: "utf8",
+  })
 
-  if (result.exitCode !== 0) {
-    throw new Error(`ps exited with status ${result.exitCode}.`)
+  if (result.status !== 0) {
+    throw new Error(`ps exited with status ${result.status}.`)
   }
 
   const identities: ProcessIdentity[] = []
-  for (const line of result.stdout.toString().split("\n")) {
+  for (const line of result.stdout.split("\n")) {
     const [pidValue, pgidValue, state] = line.trim().split(/\s+/, 3)
 
     if (pidValue === undefined || pgidValue === undefined || state === undefined) {
@@ -231,9 +242,9 @@ function isWatchdogMessage(value: unknown): value is WatchdogMessage {
 
 async function runWatchdog(ownerValue: string | undefined): Promise<void> {
   const ownerPid = positiveInteger(ownerValue, "owner PID")
-  const ownerMonitor = Bun.spawn(
+  const ownerMonitor = spawn(
+    process.execPath,
     [
-      process.execPath,
       scriptPath,
       monitorArgument,
       String(ownerPid),
@@ -242,22 +253,20 @@ async function runWatchdog(ownerValue: string | undefined): Promise<void> {
     {
       cwd: process.cwd(),
       detached: true,
-      env: Bun.env,
-      stderr: "ignore",
-      stdin: "ignore",
-      stdout: "ignore",
+      env: process.env,
+      stdio: "ignore",
     },
   )
+  const ownerMonitorPid = childPid(ownerMonitor, "owner monitor")
   ownerMonitor.unref()
 
-  const devServer = Bun.spawn(["task", "dev"], {
+  const devServer = spawn("task", ["dev"], {
     cwd: process.cwd(),
-    env: Bun.env,
-    stderr: "inherit",
-    stdout: "inherit",
+    env: process.env,
+    stdio: ["ignore", "inherit", "inherit"],
   })
-  process.send?.({ monitorPid: ownerMonitor.pid, type: "started" })
-  process.exitCode = await devServer.exited
+  process.send?.({ monitorPid: ownerMonitorPid, type: "started" })
+  process.exitCode = await waitForExit(devServer)
   process.disconnect?.()
 }
 
@@ -280,7 +289,7 @@ async function runOwnerMonitor(
       return
     }
 
-    await Bun.sleep(25)
+    await sleepAsync(25)
   }
 }
 
@@ -302,7 +311,7 @@ async function waitForProcessGroupsExitAsync(
     liveProcessGroups(processGroups).length > 0 &&
     Date.now() < deadline
   ) {
-    await Bun.sleep(25)
+    await sleepAsync(25)
   }
 
   if (liveProcessGroups(processGroups).length > 0) {
@@ -329,13 +338,17 @@ async function runForeground(command: string[]): Promise<void> {
     const devServer = yield* useDevServer()
     yield* waitForDevServer(devServer)
 
-    const foreground = Bun.spawn(command, {
+    const [executable, ...arguments_] = command
+    if (executable === undefined) {
+      throw new Error("Expected a foreground executable to run.")
+    }
+
+    const foreground = spawn(executable, arguments_, {
       cwd: process.cwd(),
-      env: Bun.env,
-      stderr: "inherit",
-      stdout: "inherit",
+      env: process.env,
+      stdio: ["ignore", "inherit", "inherit"],
     })
-    const exitCode = yield* call(() => foreground.exited)
+    const exitCode = yield* call(() => waitForExit(foreground))
 
     if (exitCode !== 0) {
       throw new Error(
@@ -343,6 +356,25 @@ async function runForeground(command: string[]): Promise<void> {
       )
     }
   })
+}
+
+function waitForExit(child: ChildProcess): Promise<number> {
+  return new Promise((resolve, reject) => {
+    child.once("error", reject)
+    child.once("exit", code => resolve(code ?? 1))
+  })
+}
+
+function childPid(child: ChildProcess, name: string): number {
+  if (child.pid === undefined) {
+    throw new Error(`Expected ${name} process to have a PID.`)
+  }
+
+  return child.pid
+}
+
+function sleepAsync(timeout: number): Promise<void> {
+  return new Promise(resolve => setTimeout(resolve, timeout))
 }
 
 if (process.argv[2] === watchdogArgument) {

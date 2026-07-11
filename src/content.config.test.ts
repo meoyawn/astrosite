@@ -1,4 +1,4 @@
-import { describe, expect, test } from "bun:test"
+import { describe, expect, test } from "vitest"
 import { parseWritingData } from "./content.config.ts"
 
 describe("writing collection schema", () => {

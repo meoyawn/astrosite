@@ -6,7 +6,7 @@
   "lsp": {
     "oxfmt": {
       "binary": {
-        "path": "bun",
+        "path": "nubx",
         "arguments": ["oxfmt", "--lsp"]
       },
       "initialization_options": {
@@ -40,7 +40,7 @@
        */
       "formatter": {
         "external": {
-          "command": "bun",
+          "command": "nubx",
           "arguments": ["oxfmt", "--stdin-filepath", "{buffer_path}"]
         }
       }
