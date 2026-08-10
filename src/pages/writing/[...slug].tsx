@@ -5,7 +5,7 @@ import {
   type WritingEntry,
 } from "../../app/static-site-types.ts"
 import { SiteShell } from "../../layouts/site-shell.tsx"
-import { getCollection } from "vite-static-site/runtime"
+import { getCollection } from "solid-static/runtime"
 
 export interface ArticlePageProps {
   entry: WritingEntry

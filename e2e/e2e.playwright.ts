@@ -7,7 +7,7 @@ import postcss from "postcss"
 const siteUrl = process.env.SITE_URL?.replace(/\/$/, "")
 const builtOrigin = siteUrl ?? "http://built.local"
 const distDir = resolve(process.env.DIST_DIR ?? "dist")
-const devRoutesPath = "/@vite-static-site/routes.json"
+const devRoutesPath = "/@solid-static/routes.json"
 
 interface HtmlTarget {
   diskPath: string | undefined

@@ -1,5 +1,5 @@
 import * as v from "valibot"
-import type { CollectionDefinition } from "vite-static-site/content"
+import type { CollectionDefinition } from "solid-static/content"
 
 export const writingSchema = v.object({
   title: v.pipe(v.string(), v.minLength(1)),

@@ -37,7 +37,7 @@ if (siteUrl === undefined) {
 
 const watchdogArgument = "--dev-server-watchdog"
 const monitorArgument = "--dev-server-owner-monitor"
-const routesUrl = `${siteUrl}/@vite-static-site/routes.json`
+const routesUrl = `${siteUrl}/@solid-static/routes.json`
 const readinessTimeout = 30_000
 const gracefulTimeout = 5_000
 const hardTimeout = 5_000

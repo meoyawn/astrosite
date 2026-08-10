@@ -5,7 +5,7 @@ import {
   parseWritingEntry,
   type WritingEntry,
 } from "./static-site-types.ts"
-import { getCollection } from "vite-static-site/runtime"
+import { getCollection } from "solid-static/runtime"
 
 export interface WritingListProps {
   title?: string | undefined

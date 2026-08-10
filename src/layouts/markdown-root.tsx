@@ -1,5 +1,5 @@
 import type { Locale } from "../app/i18n.ts"
-import type { PageLayoutProps } from "vite-static-site/render"
+import type { PageLayoutProps } from "solid-static/render"
 import { SiteShell } from "./site-shell.tsx"
 
 interface MarkdownFrontmatter extends Record<string, unknown> {

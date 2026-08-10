@@ -47,9 +47,9 @@ importers:
       valibot:
         specifier: ^1.4.2
         version: 1.4.2(typescript@7.0.2)
-      vite-static-site:
-        specifier: file:../vite-static-site
-        version: file:../vite-static-site
+      solid-static:
+        specifier: file:../solid-static
+        version: file:../solid-static
     devDependencies:
       '@mdx-js/rollup':
         specifier: ^3.1.1
@@ -2467,8 +2467,8 @@ packages:
       '@testing-library/jest-dom':
         optional: true
 
-  vite-static-site@file:../vite-static-site:
-    resolution: {directory: ../vite-static-site, type: directory}
+  solid-static@file:../solid-static:
+    resolution: {directory: ../solid-static, type: directory}
 
   vite@8.1.4:
     resolution: {integrity: sha512-bTT9PsdWO+MQMNG9ZXIP/qM9wGh37DFxTV/sPq9cFpHr3w4jkgef032PkAL9jAqhk3Nz8NQw3O8n6/xFkqO4QQ==}
@@ -4915,7 +4915,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  vite-static-site@file:../vite-static-site:
+  solid-static@file:../solid-static:
     dependencies:
       '@mdx-js/rollup': 3.1.1(rollup@4.62.2)
       js-yaml: 5.2.1

@@ -12,8 +12,8 @@ import { defineConfig } from "vite"
 import { defaultLocale, locales } from "./src/app/i18n.ts"
 import { externalLinkOptions } from "./src/app/markdown-options.ts"
 import { collections } from "./src/content.config.ts"
-import { staticSite } from "vite-static-site"
-import { createMarkdownProcessor } from "vite-static-site/markdown"
+import { staticSite } from "solid-static"
+import { createMarkdownProcessor } from "solid-static/markdown"
 
 const autolinkWritingHeadings = rehypeAutolinkHeadings({
   behavior: "wrap",

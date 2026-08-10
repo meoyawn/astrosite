@@ -3,7 +3,7 @@ import { parseWritingData } from "../content.config.ts"
 import type {
   LoadedCollectionEntry,
   RenderedCollectionEntryFor,
-} from "vite-static-site/content"
+} from "solid-static/content"
 
 export type WritingEntry = RenderedCollectionEntryFor<
   typeof collections,
