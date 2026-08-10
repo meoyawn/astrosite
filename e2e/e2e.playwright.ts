@@ -412,6 +412,7 @@ test.describe("e2e tests", () => {
       name: "Interactive map of every travel destination",
     })
     const slider = page.getByRole("slider", { name: "Travel timeline" })
+    const sliderInput = page.locator("[data-travel-thumb] input")
 
     await expect(canvas).toBeVisible()
     await expect(slider).toBeVisible()
@@ -421,7 +422,14 @@ test.describe("e2e tests", () => {
       Date.parse("2023-06-01T00:00:00Z") / 86_400_000,
     )
 
-    await slider.fill(String(june2023Day))
+    await sliderInput.evaluate((element, value) => {
+      if (!(element instanceof HTMLInputElement)) {
+        throw new TypeError("Expected the Kobalte slider input.")
+      }
+
+      element.value = value
+      element.dispatchEvent(new Event("change", { bubbles: true }))
+    }, String(june2023Day))
     await expect(
       page.getByRole("heading", {
         level: 2,
@@ -442,7 +450,8 @@ test.describe("e2e tests", () => {
 
     await august2022.click()
     await expect(august2022).toHaveAttribute("aria-pressed", "true")
-    await expect(slider).toHaveValue(
+    await expect(page).toHaveURL(/\/travels\/#2022-08-05-kuala-lumpur$/)
+    await expect(sliderInput).toHaveValue(
       String(Math.floor(Date.parse("2022-08-05T00:00:00Z") / 86_400_000)),
     )
 
@@ -482,6 +491,108 @@ test.describe("e2e tests", () => {
     ).toBeInViewport()
     await page.evaluate(() => window.scrollTo(0, 0))
     await captureTravelScreenshot(page, "travels-mobile.png")
+  })
+
+  test("travel fragments restore the timeline and globe", async ({ page }) => {
+    test.setTimeout(60_000)
+    await routeBuiltFiles(page)
+    await page.setViewportSize({ height: 1000, width: 1600 })
+    await page.goto(`${builtOrigin}/travels/`)
+
+    const canvas = page.getByRole("img", {
+      name: "Interactive map of every travel destination",
+    })
+
+    await expect(canvas).toBeVisible()
+    await page.waitForTimeout(900)
+    const allJourneysGlobe = await canvas.screenshot()
+
+    await page.goto(
+      `${builtOrigin}/travels/#2014-08-31-new-york-city`,
+    )
+    await page.reload()
+    await expect(
+      page.getByRole("heading", {
+        level: 2,
+        name: "New York City, United States",
+      }),
+    ).toBeVisible()
+    await expect(
+      page.getByRole("button", { name: "31 Aug — 16 Sept 2014" }),
+    ).toHaveAttribute("aria-pressed", "true")
+    await expect(page.locator("[data-travel-thumb] input")).toHaveValue(
+      String(Math.floor(Date.parse("2014-08-31T00:00:00Z") / 86_400_000)),
+    )
+
+    await page.waitForTimeout(900)
+    expect((await canvas.screenshot()).equals(allJourneysGlobe)).toEqual(false)
+  })
+
+  test("wide travel timeline can be scrubbed beside the site navigation", async ({
+    page,
+  }) => {
+    await routeBuiltFiles(page)
+    await page.setViewportSize({ height: 1000, width: 1600 })
+    await page.goto(`${builtOrigin}/travels/`)
+
+    const slider = page.getByRole("slider", { name: "Travel timeline" })
+    const sliderInput = page.locator("[data-travel-thumb] input")
+    const sliderTrack = page.locator("[data-travel-track]")
+    const datePreview = page.locator("[data-travel-date-preview]")
+
+    await expect(slider).toBeVisible()
+    const initialValue = await sliderInput.inputValue()
+    const sliderBox = await sliderTrack.boundingBox()
+
+    if (sliderBox === null) {
+      throw new Error("Expected the travel timeline to have a bounding box.")
+    }
+
+    await page.mouse.move(
+      sliderBox.x + sliderBox.width * 0.2,
+      sliderBox.y + sliderBox.height / 2,
+    )
+    await page.mouse.down()
+    await expect(datePreview).toHaveAttribute("data-visible", "true")
+    await page.mouse.move(
+      sliderBox.x + sliderBox.width * 0.7,
+      sliderBox.y + sliderBox.height / 2,
+      { steps: 8 },
+    )
+    await expect(datePreview).toHaveText(/\d{1,2} [A-Z][a-z]{2} \d{4}/)
+    await captureTravelScreenshot(page, "travels-date-preview.png")
+    await page.mouse.up()
+
+    await expect(sliderInput).not.toHaveValue(initialValue)
+    await expect(datePreview).toHaveAttribute("data-visible", "false")
+    await expect(datePreview).toHaveCSS("opacity", "0")
+
+    await page.mouse.move(
+      sliderBox.x + sliderBox.width * 0.7,
+      sliderBox.y + sliderBox.height / 2,
+    )
+    await page.mouse.down()
+    await page.mouse.move(sliderBox.x, sliderBox.y + sliderBox.height / 2, {
+      steps: 8,
+    })
+    await page.mouse.up()
+
+    await expect(sliderInput).toHaveValue(initialValue)
+    await expect(
+      page.getByRole("heading", { level: 2, name: "Brest, Belarus" }),
+    ).toBeVisible()
+
+    const maximumValue = await sliderInput.getAttribute("max")
+
+    if (maximumValue === null) {
+      throw new Error("Expected the Kobalte slider to expose its maximum value.")
+    }
+
+    await slider.focus()
+    await slider.press("End")
+    await expect(sliderInput).toHaveValue(maximumValue)
+    await slider.press("Home")
+    await expect(sliderInput).toHaveValue(initialValue)
   })
 
   test("npm install article frontmatter matches article metadata and open graph tags", async ({

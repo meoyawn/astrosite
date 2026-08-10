@@ -27,7 +27,7 @@ export const SiteShell = (props: SiteShellProps) => {
     >
       {props.bodyStart}
       <header
-        class={`mx-auto mt-6 px-6 sm:mt-12 sm:px-8 md:mt-16 ${headerWidth} ${props.navClass ?? ""}`}
+        class={`mx-auto mt-6 bg-transparent px-6 sm:mt-12 sm:px-8 md:mt-16 ${headerWidth} ${props.navClass ?? ""}`}
       >
         <SiteNav
           currentLocale={props.lang}

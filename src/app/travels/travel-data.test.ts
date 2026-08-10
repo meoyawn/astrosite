@@ -149,6 +149,12 @@ describe("travel data", () => {
     )
   })
 
+  test("chooses the first dated stay at the start of the timeline", () => {
+    expect(findClosestEvent(isoDateToDayNumber("2013-07-28")).id).toEqual(
+      "2013-07-28-brest-departure",
+    )
+  })
+
   test("does not infer a departure from a nested border run", () => {
     const routes = buildTravelRoutes()
     const abuDhabi = placesById.get("abu-dhabi")

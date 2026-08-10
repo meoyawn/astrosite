@@ -6,18 +6,28 @@
 }
 
 body:has(#travel-island) {
-  display: grid;
+  position: relative;
+  display: block;
+  height: 100svh;
   min-height: 100svh;
-  grid-template-rows: auto minmax(0, 1fr);
   overflow: hidden;
 }
 
 body:has(#travel-island) > header {
-  position: relative;
+  position: absolute;
+  inset: 0 0 auto;
+  background: transparent;
+  pointer-events: none;
   z-index: 10;
 }
 
+body:has(#travel-island) > header :is(a, button) {
+  pointer-events: auto;
+}
+
 body:has(#travel-island) > main {
+  position: relative;
+  height: 100svh;
   min-height: 0;
   min-width: 0;
   width: 100%;
@@ -37,9 +47,7 @@ body:has(#travel-island) > main {
   min-width: 0;
   width: 100%;
   overflow: hidden;
-  background:
-    radial-gradient(circle at 72% 45%, rgb(241 245 249 / 55%), transparent 39%),
-    #fff;
+  background: #fff;
   color: var(--travel-ink);
   font-family:
     Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
@@ -47,7 +55,7 @@ body:has(#travel-island) > main {
 }
 
 [data-travel-visit]:focus-visible,
-[data-travel-timeline] input:focus-visible,
+[data-travel-thumb]:focus-visible,
 [data-travel-globe] canvas:focus-visible {
   outline: 2px solid var(--travel-blue);
   outline-offset: 5px;
@@ -56,18 +64,10 @@ body:has(#travel-island) > main {
 [data-travel-focus] {
   position: absolute;
   z-index: 4;
-  top: clamp(4.5rem, 9vh, 6.5rem);
+  top: clamp(7.5rem, 14vh, 8.5rem);
   left: clamp(1.5rem, 3.2vw, 3.25rem);
   width: min(29rem, 31vw);
   pointer-events: none;
-}
-
-[data-travel-focus] h1 {
-  margin: 0 0 clamp(2rem, 4vh, 3.25rem);
-  font-size: clamp(4.25rem, 5.2vw, 5.4rem);
-  font-weight: 720;
-  letter-spacing: -0.075em;
-  line-height: 0.84;
 }
 
 [data-travel-focus-place] {
@@ -93,13 +93,6 @@ body:has(#travel-island) > main {
   font-weight: 690;
   letter-spacing: -0.035em;
   line-height: 1.12;
-}
-
-[data-travel-focus] p {
-  margin: 0.55rem 0 0;
-  color: var(--travel-muted);
-  font-size: clamp(1rem, 1.25vw, 1.2rem);
-  line-height: 1.4;
 }
 
 [data-travel-visits] {
@@ -138,12 +131,9 @@ body:has(#travel-island) > main {
   position: absolute;
   z-index: 1;
   top: -8vh;
-  right: -7vw;
+  right: 0;
   bottom: -9vh;
-  left: 31vw;
-  min-width: 52rem;
-  -webkit-mask-image: linear-gradient(to right, transparent 0%, #000 12%, #000 100%);
-  mask-image: linear-gradient(to right, transparent 0%, #000 12%, #000 100%);
+  left: 0;
 }
 
 [data-travel-globe] canvas {
@@ -198,12 +188,13 @@ body:has(#travel-island) > main {
 }
 
 [data-travel-timeline] {
-  position: absolute;
+  position: relative;
   z-index: 5;
-  right: clamp(1.5rem, 3.2vw, 3.25rem);
-  bottom: clamp(2.6rem, 7vh, 5rem);
-  left: clamp(1.5rem, 3.2vw, 3.25rem);
-  height: 4.8rem;
+  width: min(40rem, calc(100vw - 3rem));
+  margin-bottom: 2rem;
+  pointer-events: auto;
+  touch-action: none;
+  user-select: none;
 }
 
 [data-travel-years] {
@@ -252,55 +243,89 @@ body:has(#travel-island) > main {
   left: auto;
 }
 
-[data-travel-timeline] input {
+[data-travel-track] {
   position: relative;
-  z-index: 2;
   width: 100%;
   height: 1.2rem;
-  margin: 0;
-  appearance: none;
-  background: transparent;
   cursor: ew-resize;
 }
 
-[data-travel-timeline] input::-webkit-slider-runnable-track {
+[data-travel-track]::before {
+  position: absolute;
+  top: 50%;
+  right: 0;
+  left: 0;
   height: 3px;
-  background: linear-gradient(
-    to right,
-    var(--travel-blue) 0%,
-    var(--travel-blue) var(--travel-progress),
-    #99a6b4 var(--travel-progress),
-    #99a6b4 100%
-  );
+  background: #99a6b4;
+  content: "";
+  transform: translateY(-50%);
 }
 
-[data-travel-timeline] input::-moz-range-track {
+[data-travel-fill] {
+  position: absolute;
+  top: 50%;
   height: 3px;
-  background: linear-gradient(
-    to right,
-    var(--travel-blue) 0%,
-    var(--travel-blue) var(--travel-progress),
-    #99a6b4 var(--travel-progress),
-    #99a6b4 100%
-  );
+  background: var(--travel-blue);
+  transform: translateY(-50%);
 }
 
-[data-travel-timeline] input::-webkit-slider-thumb {
+[data-travel-thumb] {
+  position: absolute;
+  top: 50%;
+  display: block;
   width: 1.5rem;
   height: 1.5rem;
-  margin-top: -0.67rem;
-  appearance: none;
+  margin-top: -0.75rem;
   border: 3px solid var(--travel-blue);
   border-radius: 50%;
   background: #fff;
+  cursor: ew-resize;
 }
 
-[data-travel-timeline] input::-moz-range-thumb {
-  width: 1.15rem;
-  height: 1.15rem;
-  border: 3px solid var(--travel-blue);
-  border-radius: 50%;
-  background: #fff;
+[data-travel-date-preview] {
+  position: absolute;
+  top: calc(100% + 0.35rem);
+  left: 50%;
+  padding: 0.3rem 0.48rem;
+  border-radius: 0.35rem;
+  background: var(--travel-ink);
+  box-shadow: 0 0.35rem 1rem rgb(15 23 42 / 16%);
+  color: #fff;
+  font-size: 0.74rem;
+  font-variant-numeric: tabular-nums;
+  font-weight: 620;
+  line-height: 1;
+  opacity: 0;
+  pointer-events: none;
+  transform: translate(-50%, -0.2rem);
+  transition:
+    opacity 150ms ease-out,
+    transform 150ms ease-out;
+  white-space: nowrap;
+}
+
+[data-travel-date-preview][data-visible="true"] {
+  opacity: 1;
+  transform: translate(-50%, 0);
+  transition-duration: 0ms;
+}
+
+[data-travel-date-preview][data-alignment="start"] {
+  transform: translate(0, -0.2rem);
+}
+
+[data-travel-date-preview][data-alignment="start"][data-visible="true"] {
+  transform: translate(0, 0);
+}
+
+[data-travel-date-preview][data-alignment="end"] {
+  right: 50%;
+  left: auto;
+  transform: translate(0, -0.2rem);
+}
+
+[data-travel-date-preview][data-alignment="end"][data-visible="true"] {
+  transform: translate(0, 0);
 }
 
 @media (max-width: 1000px) {
@@ -308,12 +333,18 @@ body:has(#travel-island) > main {
     width: 35vw;
   }
 
-  [data-travel-focus] h1 {
-    font-size: clamp(4rem, 8vw, 5.8rem);
+  [data-travel-globe] {
+    left: 0;
+  }
+}
+
+@media (min-width: 1000px) {
+  body:has(#travel-island) > header nav {
+    justify-content: flex-end;
   }
 
-  [data-travel-globe] {
-    left: 24vw;
+  [data-travel-focus] {
+    top: 4rem;
   }
 }
 
@@ -330,12 +361,7 @@ body:has(#travel-island) > main {
     top: auto;
     left: auto;
     width: auto;
-    padding: 4rem 1.25rem 0;
-  }
-
-  [data-travel-focus] h1 {
-    margin-bottom: 2.25rem;
-    font-size: clamp(4rem, 20vw, 6rem);
+    padding: 6.5rem 1.25rem 0;
   }
 
   [data-travel-focus] h2 {
@@ -360,18 +386,11 @@ body:has(#travel-island) > main {
     margin: -2rem 0 -4rem;
     flex: 0 0 auto;
     transform: translateX(-50%);
-    -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 10%, #000 92%, transparent 100%);
-    mask-image: linear-gradient(to bottom, transparent 0%, #000 10%, #000 92%, transparent 100%);
   }
 
   [data-travel-timeline] {
-    position: relative;
-    right: auto;
-    bottom: auto;
-    left: auto;
-    height: 5.2rem;
-    margin-top: auto;
-    padding: 0 1.25rem 1.25rem;
+    width: calc(100vw - 2.5rem);
+    margin-bottom: 1.5rem;
   }
 
   [data-travel-years] {
@@ -389,9 +408,20 @@ body:has(#travel-island) > main {
   [data-travel-years] span:last-child {
     visibility: visible;
   }
+
+  [data-travel-track] {
+    height: 2.75rem;
+  }
+}
+
+@media (min-width: 640px) and (max-width: 820px) {
+  [data-travel-focus] {
+    padding-top: 8rem;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
+  [data-travel-date-preview],
   [data-travel-visit] {
     transition: none;
   }

@@ -5,6 +5,7 @@ import {
   type GlobeViewState,
 } from "@deck.gl/core"
 import { ArcLayer, GeoJsonLayer, ScatterplotLayer } from "@deck.gl/layers"
+import { Slider } from "@kobalte/core/slider"
 import { createEffect, createMemo, createSignal, For, onCleanup, onMount, Show } from "solid-js"
 import { feature } from "topojson-client"
 import countriesTopology from "world-atlas/countries-110m.json"
@@ -124,6 +125,7 @@ export const TravelMap = () => {
   const [selectedDay, setSelectedDay] = createSignal(firstTravelDay)
   const [selectedEventId, setSelectedEventId] = createSignal<string>()
   const [selectedPlaceId, setSelectedPlaceId] = createSignal<string>()
+  const [isTimelineSliding, setIsTimelineSliding] = createSignal(false)
 
   const selectedEvent = createMemo(() => {
     const eventId = selectedEventId()
@@ -194,11 +196,27 @@ export const TravelMap = () => {
   const timelineValueText = createMemo(
     () => `${displayPlace()}, ${displayDate()}`,
   )
-  const timelineProgress = createMemo(
-    () =>
-      ((selectedDay() - firstTravelDay) / (lastTravelDay - firstTravelDay)) *
-      100,
-  )
+  const timelineExactDate = createMemo(function getTimelineExactDate() {
+    const isoDate = new Date(selectedDay() * 86_400_000)
+      .toISOString()
+      .slice(0, 10)
+
+    return formatDateRange(isoDate, isoDate)
+  })
+  const timelineDateAlignment = createMemo(function getTimelineDateAlignment() {
+    const progress =
+      (selectedDay() - firstTravelDay) / (lastTravelDay - firstTravelDay)
+
+    if (progress < 0.08) {
+      return "start"
+    }
+
+    if (progress > 0.92) {
+      return "end"
+    }
+
+    return "center"
+  })
   const selectedYear = createMemo(() =>
     new Date(selectedDay() * 86_400_000).getUTCFullYear(),
   )
@@ -228,6 +246,7 @@ export const TravelMap = () => {
   }
 
   const selectPlace = (place: TravelPlace): void => {
+    clearTravelFragment()
     setSelectedEventId(undefined)
     setSelectedPlaceId(place.id)
     flyTo(placePosition(place))
@@ -240,17 +259,94 @@ export const TravelMap = () => {
     flyTo(getEventCenter(event))
   }
 
-  const handleTimelineInput = (
-    inputEvent: InputEvent & { currentTarget: HTMLInputElement },
-  ): void => {
-    const day = Number(inputEvent.currentTarget.value)
+  function clearTravelFragment(): void {
+    if (location.hash !== "") {
+      history.replaceState(null, "", `${location.pathname}${location.search}`)
+    }
+  }
+
+  function selectVisit(event: TravelEvent): void {
+    selectEvent(event)
+
+    const fragment = `#${encodeURIComponent(event.id)}`
+
+    if (location.hash !== fragment) {
+      history.pushState(null, "", fragment)
+    }
+  }
+
+  function resetTravelSelection(): void {
+    setSelectedDay(firstTravelDay)
+    setSelectedEventId(undefined)
+    setSelectedPlaceId(undefined)
+
+    const prefersReducedMotion = matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches
+
+    deck?.setProps({
+      initialViewState: {
+        ...initialViewState,
+        transitionDuration: prefersReducedMotion ? 0 : 850,
+        transitionInterpolator: new LinearInterpolator([
+          "longitude",
+          "latitude",
+          "zoom",
+        ]),
+      },
+    })
+  }
+
+  function syncSelectionFromFragment(): void {
+    const encodedEventId = location.hash.slice(1)
+
+    if (encodedEventId === "") {
+      resetTravelSelection()
+      return
+    }
+
+    let eventId: string
+
+    try {
+      eventId = decodeURIComponent(encodedEventId)
+    } catch {
+      resetTravelSelection()
+      return
+    }
+
+    const event = travelData.timeline.find(item => item.id === eventId)
+
+    if (event === undefined) {
+      resetTravelSelection()
+      return
+    }
+
+    selectEvent(event)
+  }
+
+  function handleTimelineChange(values: number[]): void {
+    const day = values[0]
+
+    if (day === undefined) {
+      return
+    }
+
     const event = findClosestEvent(day)
 
+    clearTravelFragment()
     setSelectedDay(day)
 
     if (event.id !== selectedEventId()) {
       selectEvent(event, day)
     }
+  }
+
+  function handleTimelinePointerDown(): void {
+    setIsTimelineSliding(true)
+  }
+
+  function handleTimelinePointerEnd(): void {
+    setIsTimelineSliding(false)
   }
 
   const createLayers = () => {
@@ -460,6 +556,10 @@ export const TravelMap = () => {
           resolution: 3,
         }),
       })
+
+      syncSelectionFromFragment()
+      addEventListener("hashchange", syncSelectionFromFragment)
+      onCleanup(() => removeEventListener("hashchange", syncSelectionFromFragment))
     } catch (error) {
       setMapError(error instanceof Error ? error.message : "Unable to load the globe")
       setIsLoading(false)
@@ -469,14 +569,64 @@ export const TravelMap = () => {
   onCleanup(() => deck?.finalize())
 
   return (
-    <section data-travel-shell aria-labelledby="travel-title">
+    <section data-travel-shell aria-label="Travel map">
       <section data-travel-focus aria-live="polite">
-        <h1 id="travel-title">Travels</h1>
+        <Slider
+          data-travel-timeline
+          getValueLabel={() => `${timelineExactDate()} — ${timelineValueText()}`}
+          maxValue={lastTravelDay}
+          minValue={firstTravelDay}
+          step={1}
+          value={[selectedDay()]}
+          onChange={handleTimelineChange}
+          onChangeEnd={handleTimelinePointerEnd}
+        >
+          <div
+            data-travel-years
+            aria-hidden="true"
+            style={{ "--travel-year-count": String(travelYears.length) }}
+          >
+            <For each={travelYears}>
+              {year => (
+                <span
+                  data-active={
+                    selectedEventId() !== undefined && selectedYear() === year
+                  }
+                >
+                  {year}
+                </span>
+              )}
+            </For>
+          </div>
+          <Slider.Track
+            data-travel-track
+            onPointerCancel={handleTimelinePointerEnd}
+            onPointerDown={handleTimelinePointerDown}
+          >
+            <Slider.Fill data-travel-fill />
+            <Slider.Thumb
+              data-travel-thumb
+              aria-label="Travel timeline"
+              onPointerCancel={handleTimelinePointerEnd}
+              onPointerDown={handleTimelinePointerDown}
+            >
+              <span
+                data-travel-date-preview
+                data-alignment={timelineDateAlignment()}
+                data-visible={isTimelineSliding()}
+                aria-hidden="true"
+              >
+                {timelineExactDate()}
+              </span>
+              <Slider.Input />
+            </Slider.Thumb>
+          </Slider.Track>
+        </Slider>
+
         <div data-travel-focus-place>
           <span data-travel-focus-dot aria-hidden="true" />
           <div>
             <h2>{displayPlace()}</h2>
-            <p>{displayDate()}</p>
           </div>
         </div>
 
@@ -492,7 +642,7 @@ export const TravelMap = () => {
                   data-active={selectedEventId() === event.id}
                   type="button"
                   aria-pressed={selectedEventId() === event.id}
-                  onClick={() => selectEvent(event)}
+                  onClick={() => selectVisit(event)}
                 >
                   {formatEventDate(event)}
                 </button>
@@ -500,6 +650,7 @@ export const TravelMap = () => {
             </For>
           </div>
         </Show>
+
       </section>
 
       <div
@@ -522,36 +673,6 @@ export const TravelMap = () => {
         </Show>
       </div>
 
-      <section data-travel-timeline aria-label="Travel timeline">
-        <div
-          data-travel-years
-          aria-hidden="true"
-          style={{ "--travel-year-count": String(travelYears.length) }}
-        >
-          <For each={travelYears}>
-            {year => (
-              <span
-                data-active={
-                  selectedEventId() !== undefined && selectedYear() === year
-                }
-              >
-                {year}
-              </span>
-            )}
-          </For>
-        </div>
-        <input
-          aria-label="Travel timeline"
-          aria-valuetext={timelineValueText()}
-          max={lastTravelDay}
-          min={firstTravelDay}
-          step="1"
-          style={{ "--travel-progress": `${timelineProgress()}%` }}
-          type="range"
-          value={selectedDay()}
-          onInput={handleTimelineInput}
-        />
-      </section>
     </section>
   )
 }

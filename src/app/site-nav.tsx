@@ -14,7 +14,9 @@ export const SiteNav = (props: SiteNavProps) => {
   return (
     <nav
       aria-label={copy.navLabel}
-      class="mb-6 flex flex-row flex-wrap items-center justify-between gap-3"
+      class={`mb-6 flex flex-row flex-wrap items-center gap-3 ${
+        props.currentPath === undefined ? "justify-center" : "justify-between"
+      }`}
     >
       <ul class="m-0 flex list-none flex-row flex-wrap gap-x-4 gap-y-2 p-0">
         <For each={["home", "consulting", "cv"] as const}>

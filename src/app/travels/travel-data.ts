@@ -351,7 +351,7 @@ export const findClosestEvent = (dayNumber: number): TravelEvent => {
       isoDateToDayNumber(event.start) <= dayNumber &&
       isoDateToDayNumber(event.end) >= dayNumber,
   )
-  const containingEvent = containingEvents.at(-1)
+  const containingEvent = containingEvents[0]
 
   if (containingEvent !== undefined) {
     return containingEvent

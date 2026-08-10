@@ -1,7 +1,6 @@
 import type { JSX } from "solid-js"
 import { ssr } from "solid-js/web"
 import travelIsland from "../app/travels/travel-island.tsx?island"
-import { formatDateRange, travelData } from "../app/travels/travel-data.ts"
 import { SiteShell } from "../layouts/site-shell.tsx"
 
 const isSolidSsrNode = (value: unknown): value is JSX.Element =>
@@ -38,17 +37,7 @@ const TravelsPage = (): JSX.Element => (
     title="Travels — Adel"
   >
     <div id="travel-island">
-      <section data-travel-shell aria-labelledby="travel-title">
-        <section data-travel-focus>
-          <h1 id="travel-title">Travels</h1>
-          <div data-travel-focus-place>
-            <span data-travel-focus-dot aria-hidden="true" />
-            <div>
-              <h2>All journeys</h2>
-              <p>{formatDateRange(travelData.coverage.start, travelData.coverage.end)}</p>
-            </div>
-          </div>
-        </section>
+      <section data-travel-shell aria-label="Travel map">
         <p data-travel-globe-status>Loading interactive globe…</p>
       </section>
     </div>
