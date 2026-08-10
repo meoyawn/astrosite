@@ -1,15 +1,9 @@
-import {
-  Deck,
-  LinearInterpolator,
-  _GlobeView as GlobeView,
-  _GlobeViewport as GlobeViewport,
-  type GlobeViewState,
-} from "@deck.gl/core"
-import { ArcLayer, GeoJsonLayer, ScatterplotLayer } from "@deck.gl/layers"
+import { ArcLayer, ScatterplotLayer } from "@deck.gl/layers"
+import { MapboxOverlay } from "@deck.gl/mapbox"
 import { Slider } from "@kobalte/core/slider"
 import { createEffect, createMemo, createSignal, For, onCleanup, onMount, Show } from "solid-js"
-import { feature } from "topojson-client"
-import countriesTopology from "world-atlas/countries-110m.json"
+import maplibregl from "maplibre-gl"
+import "maplibre-gl/dist/maplibre-gl.css"
 import { travelRoute } from "../../routes.ts"
 import {
   findEventOnDay,
@@ -36,7 +30,8 @@ import {
   waypointsById,
 } from "./travel-data.ts"
 
-const countryFeatures = feature(countriesTopology, "countries")
+const mapStyleUrl = "https://basemaps.cartocdn.com/gl/positron-gl-style/style.json"
+
 const travelRoutesById = new Map(travelRoutes.map(route => [route.id, route]))
 const homeBase = getPlace("kazan")
 
@@ -84,96 +79,17 @@ const routeTooltipHtml = (route: TravelRoute): string => {
   ].join("")
 }
 
-const createInitialViewState = (): GlobeViewState => ({
-  latitude: 24,
-  longitude: 68,
-  maxZoom: 7,
-  minZoom: -0.25,
-  zoom: window.innerWidth > 820 ? 2.85 : 2.2,
-})
-
-const constrain = (value: number, minimum: number, maximum: number): number =>
-  Math.min(Math.max(value, minimum), maximum)
-
-const cursorAnchoredViewState = (
-  viewport: GlobeViewport,
-  viewState: GlobeViewState,
-  position: [number, number],
-  zoom: number,
-): GlobeViewState => {
-  const unprojectedAnchor = viewport.unproject(position)
-  const anchorLongitude = unprojectedAnchor[0]
-  const anchorLatitude = unprojectedAnchor[1]
-
-  if (
-    anchorLongitude === undefined ||
-    anchorLatitude === undefined ||
-    !Number.isFinite(anchorLongitude) ||
-    !Number.isFinite(anchorLatitude)
-  ) {
-    return { ...viewState, zoom }
-  }
-
-  const anchor: [number, number] = [anchorLongitude, anchorLatitude]
-  const projectedAnchor = viewport.project(anchor)
-  const projectedAnchorX = projectedAnchor[0]
-  const projectedAnchorY = projectedAnchor[1]
-
-  if (
-    projectedAnchorX === undefined ||
-    projectedAnchorY === undefined ||
-    Math.hypot(
-      projectedAnchorX - position[0],
-      projectedAnchorY - position[1],
-    ) > 2
-  ) {
-    return { ...viewState, zoom }
-  }
-
-  let longitude = viewState.longitude
-  let latitude = viewState.latitude
-  let anchoredZoom = zoom
-
-  for (let index = 0; index < 3; index += 1) {
-    const zoomedViewport = new GlobeViewport({
-      fovy: viewport.fovy,
-      height: viewport.height,
-      latitude,
-      longitude,
-      width: viewport.width,
-      zoom: anchoredZoom,
-    })
-    const anchorPosition = zoomedViewport.project(anchor)
-    const anchorX = anchorPosition[0]
-    const anchorY = anchorPosition[1]
-
-    if (anchorX === undefined || anchorY === undefined) {
-      return { ...viewState, zoom }
-    }
-
-    const anchoredState = zoomedViewport.panByPosition(
-      [longitude, latitude, anchoredZoom],
-      position,
-      [anchorX, anchorY],
-    )
-
-    longitude = anchoredState.longitude ?? longitude
-    latitude = anchoredState.latitude ?? latitude
-    anchoredZoom = anchoredState.zoom ?? anchoredZoom
-  }
-
-  return {
-    ...viewState,
-    latitude,
-    longitude,
-    zoom: anchoredZoom,
-  }
-}
+const initialCenter: [number, number] = [68, 24]
+const initialZoom = window.innerWidth > 820 ? 3 : 2.1
 
 const positionMatches = (
   first: [number, number],
   second: [number, number],
 ): boolean => first[0] === second[0] && first[1] === second[1]
+
+const elevatedMarkerPosition = (
+  position: [number, number],
+): [number, number, number] => [position[0], position[1], 5_000]
 
 const labelForEvent = (event: TravelEvent): string => {
   if (event.placeIds.length === 1) {
@@ -196,19 +112,16 @@ const dateRangeForPlace = (placeId: string): string => {
 }
 
 export const TravelMap = () => {
-  let deck: Deck<GlobeView> | undefined
-  const initialViewState = createInitialViewState()
-  let currentViewState = initialViewState
+  let map: maplibregl.Map | undefined
+  let overlay: MapboxOverlay | undefined
+  let globeElement: HTMLDivElement | undefined
+  let mapElement: HTMLDivElement | undefined
 
-  const [canvasElement, setCanvasElement] = createSignal<HTMLCanvasElement>()
   const [mapStatus, setMapStatus] = createSignal<string | undefined>("Loading...")
   const [selectedDay, setSelectedDay] = createSignal(firstTravelDay)
   const [selectedEventId, setSelectedEventId] = createSignal<string>()
   const [selectedPlaceId, setSelectedPlaceId] = createSignal<string>()
   const [isTimelineSliding, setIsTimelineSliding] = createSignal(false)
-  const [viewLongitude, setViewLongitude] = createSignal(
-    initialViewState.longitude,
-  )
 
   const selectedEvent = createMemo(() => {
     const eventId = selectedEventId()
@@ -315,17 +228,10 @@ export const TravelMap = () => {
       "(prefers-reduced-motion: reduce)",
     ).matches
 
-    deck?.setProps({
-      initialViewState: {
-        ...currentViewState,
-        latitude: position[1],
-        longitude: position[0],
-        transitionDuration: prefersReducedMotion ? 0 : 850,
-        transitionInterpolator: new LinearInterpolator([
-          "longitude",
-          "latitude",
-        ]),
-      },
+    map?.easeTo({
+      center: position,
+      duration: prefersReducedMotion ? 0 : 850,
+      essential: true,
     })
   }
 
@@ -376,16 +282,11 @@ export const TravelMap = () => {
       "(prefers-reduced-motion: reduce)",
     ).matches
 
-    deck?.setProps({
-      initialViewState: {
-        ...initialViewState,
-        transitionDuration: prefersReducedMotion ? 0 : 850,
-        transitionInterpolator: new LinearInterpolator([
-          "longitude",
-          "latitude",
-          "zoom",
-        ]),
-      },
+    map?.easeTo({
+      center: initialCenter,
+      duration: prefersReducedMotion ? 0 : 850,
+      essential: true,
+      zoom: initialZoom,
     })
   }
 
@@ -455,6 +356,10 @@ export const TravelMap = () => {
     setIsTimelineSliding(false)
   }
 
+  function exposeViewLongitude(longitude: number): void {
+    globeElement?.setAttribute("data-view-longitude", String(longitude))
+  }
+
   function selectRoute(route: TravelRoute): void {
     const day = isoDateToDayNumber(route.dateStart)
     const destinationEvent = travelData.timeline.find(
@@ -473,52 +378,6 @@ export const TravelMap = () => {
     flyTo(route.targetPosition)
   }
 
-  function handleGlobeWheel(event: WheelEvent): void {
-    const viewport = deck?.getViewports()[0]
-
-    if (!(viewport instanceof GlobeViewport)) {
-      return
-    }
-
-    event.preventDefault()
-
-    const deltaMultiplier =
-      event.deltaMode === WheelEvent.DOM_DELTA_LINE
-        ? 16
-        : event.deltaMode === WheelEvent.DOM_DELTA_PAGE
-          ? viewport.height
-          : 1
-    const delta = event.deltaY * deltaMultiplier
-    let scale = 2 / (1 + Math.exp(-Math.abs(delta * 0.01)))
-
-    if (delta > 0) {
-      scale = 1 / scale
-    }
-
-    const minimumZoom = currentViewState.minZoom ?? -Infinity
-    const maximumZoom = currentViewState.maxZoom ?? Infinity
-    const zoom = constrain(
-      currentViewState.zoom + Math.log2(scale),
-      minimumZoom,
-      maximumZoom,
-    )
-
-    if (zoom === currentViewState.zoom) {
-      return
-    }
-
-    const nextViewState = cursorAnchoredViewState(
-      viewport,
-      currentViewState,
-      [event.offsetX, event.offsetY],
-      zoom,
-    )
-
-    currentViewState = nextViewState
-    setViewLongitude(nextViewState.longitude)
-    deck?.setProps({ initialViewState: nextViewState })
-  }
-
   const createLayers = () => {
     const selectedIds = new Set(activePlaceIds())
     const center = activeCenter()
@@ -531,26 +390,14 @@ export const TravelMap = () => {
         )
 
     return [
-      new GeoJsonLayer({
-        data: countryFeatures,
-        filled: true,
-        getFillColor: [244, 247, 250, 252],
-        getLineColor: [199, 207, 216, 210],
-        getLineWidth: 1,
-        id: "countries",
-        lineWidthMinPixels: 0.55,
-        lineWidthUnits: "pixels",
-        pickable: false,
-        stroked: true,
-      }),
       new ArcLayer<TravelRoute>({
         autoHighlight: true,
         data: travelRoutes,
         getHeight: 0.008,
         getSourceColor: [2, 132, 199, 138],
-        getSourcePosition: route => route.sourcePosition,
+        getSourcePosition: route => elevatedMarkerPosition(route.sourcePosition),
         getTargetColor: [14, 165, 233, 156],
-        getTargetPosition: route => route.targetPosition,
+        getTargetPosition: route => elevatedMarkerPosition(route.targetPosition),
         getWidth: 1.35,
         greatCircle: true,
         highlightColor: [2, 132, 199, 225],
@@ -573,9 +420,9 @@ export const TravelMap = () => {
         data: activeRoutes,
         getHeight: 0.014,
         getSourceColor: [2, 132, 199, 210],
-        getSourcePosition: route => route.sourcePosition,
+        getSourcePosition: route => elevatedMarkerPosition(route.sourcePosition),
         getTargetColor: [2, 132, 199, 210],
-        getTargetPosition: route => route.targetPosition,
+        getTargetPosition: route => elevatedMarkerPosition(route.targetPosition),
         getWidth: 2,
         greatCircle: true,
         highlightColor: [3, 105, 161, 255],
@@ -598,7 +445,7 @@ export const TravelMap = () => {
         getFillColor: [2, 132, 199, 145],
         getLineColor: [255, 255, 255, 220],
         getLineWidth: 1,
-        getPosition: waypointPosition,
+        getPosition: waypoint => elevatedMarkerPosition(waypointPosition(waypoint)),
         getRadius: 2.5,
         id: "waypoints",
         lineWidthUnits: "pixels",
@@ -617,7 +464,7 @@ export const TravelMap = () => {
             : [92, 103, 116, 205],
         getLineColor: [255, 255, 255, 235],
         getLineWidth: 1.5,
-        getPosition: placePosition,
+        getPosition: place => elevatedMarkerPosition(placePosition(place)),
         getRadius: place => 4 + Math.min(getEventsForPlace(place.id).length, 4) * 0.45,
         highlightColor: [2, 132, 199, 95],
         id: "places",
@@ -640,7 +487,7 @@ export const TravelMap = () => {
         filled: false,
         getLineColor: [2, 132, 199, 230],
         getLineWidth: 3,
-        getPosition: placePosition,
+        getPosition: place => elevatedMarkerPosition(placePosition(place)),
         getRadius: 13,
         id: "selected-place-halo",
         lineWidthUnits: "pixels",
@@ -654,26 +501,28 @@ export const TravelMap = () => {
   createEffect(() => {
     activeCenter()
     activePlaceIds()
-    deck?.setProps({ layers: createLayers() })
+    overlay?.setProps({ layers: createLayers() })
   })
 
   onMount(() => {
     try {
-      const canvas = canvasElement()
-
-      if (canvas === undefined) {
-        throw new TypeError("Travel globe canvas is missing")
+      if (mapElement === undefined) {
+        throw new TypeError("Travel globe container is missing")
       }
 
-      deck = new Deck({
-        canvas,
-        getCursor: ({ isDragging, isHovering }) => {
-          if (isDragging) {
-            return "grabbing"
-          }
+      map = new maplibregl.Map({
+        attributionControl: false,
+        canvasContextAttributes: { antialias: true },
+        center: initialCenter,
+        container: mapElement,
+        maxZoom: 7,
+        minZoom: 0,
+        renderWorldCopies: false,
+        style: mapStyleUrl,
+        zoom: initialZoom,
+      })
 
-          return isHovering ? "pointer" : "grab"
-        },
+      overlay = new MapboxOverlay({
         getTooltip: info => {
           const objectId = travelObjectId(info.object)
 
@@ -715,38 +564,24 @@ export const TravelMap = () => {
             text: getPlaceLabel(place),
           }
         },
-        initialViewState,
+        interleaved: true,
         layers: createLayers(),
-        onError: error => {
-          setMapStatus(`Map unavailable: ${error.message}`)
-        },
-        onLoad: () => setMapStatus(undefined),
-        onViewStateChange: parameters => {
-          currentViewState = parameters.viewState
-          setViewLongitude(parameters.viewState.longitude)
-        },
         pickingRadius: 8,
-        useDevicePixels: Math.min(window.devicePixelRatio, 2),
-        views: new GlobeView({
-          controller: {
-            doubleClickZoom: true,
-            dragPan: true,
-            keyboard: true,
-            scrollZoom: false,
-            touchZoom: true,
-          },
-          farZMultiplier: 2,
-          id: "travel-globe",
-          resolution: 3,
-        }),
       })
 
-      canvas.addEventListener("wheel", handleGlobeWheel, { passive: false })
+      map.addControl(overlay)
+      map.on("style.load", () => map?.setProjection({ type: "globe" }))
+      map.on("load", () => setMapStatus(undefined))
+      map.on("error", event => {
+        setMapStatus(`Map unavailable: ${event.error.message}`)
+      })
+      map.on("moveend", () => {
+        exposeViewLongitude(map?.getCenter().lng ?? initialCenter[0])
+      })
 
       syncSelectionFromFragment()
       addEventListener("hashchange", syncSelectionFromFragment)
       onCleanup(() => {
-        canvas.removeEventListener("wheel", handleGlobeWheel)
         removeEventListener("hashchange", syncSelectionFromFragment)
       })
     } catch (error) {
@@ -755,7 +590,7 @@ export const TravelMap = () => {
     }
   })
 
-  onCleanup(() => deck?.finalize())
+  onCleanup(() => map?.remove())
 
   return (
     <section data-travel-shell aria-label="Travel map">
@@ -812,49 +647,54 @@ export const TravelMap = () => {
           </Slider.Track>
         </Slider>
 
-        <div data-travel-focus-place>
-          <span data-travel-focus-dot aria-hidden="true" />
-          <div>
-            <h2>{displayPlace()}</h2>
+        <div data-travel-details>
+          <div data-travel-focus-place>
+            <span data-travel-focus-dot aria-hidden="true" />
+            <div>
+              <h2>{displayPlace()}</h2>
+            </div>
           </div>
-        </div>
 
-        <Show when={relatedEvents().length > 0}>
-          <div
-            data-travel-visits
-            aria-label={`Every stay in ${selectedPlace()?.name ?? "this place"}`}
-          >
-            <For each={relatedEvents()}>
-              {event => (
-                <button
-                  data-travel-visit
-                  data-active={selectedEventId() === event.id}
-                  type="button"
-                  aria-pressed={selectedEventId() === event.id}
-                  onClick={() => selectVisit(event)}
-                >
-                  {formatEventDate(event)}
-                </button>
-              )}
-            </For>
-          </div>
-        </Show>
+          <Show when={relatedEvents().length > 0}>
+            <div
+              data-travel-visits
+              aria-label={`Every stay in ${selectedPlace()?.name ?? "this place"}`}
+            >
+              <For each={relatedEvents()}>
+                {event => (
+                  <button
+                    data-travel-visit
+                    data-active={selectedEventId() === event.id}
+                    type="button"
+                    aria-pressed={selectedEventId() === event.id}
+                    onClick={() => selectVisit(event)}
+                  >
+                    {formatEventDate(event)}
+                  </button>
+                )}
+              </For>
+            </div>
+          </Show>
+        </div>
 
       </section>
 
       <div
+        ref={element => {
+          globeElement = element
+        }}
         data-travel-globe
         data-active-event={selectedEventId()}
-        data-view-longitude={viewLongitude()}
+        data-view-longitude={initialCenter[0]}
         aria-label="Interactive globe. Drag to rotate and scroll to zoom."
+        role="application"
+        tabindex="0"
       >
-        <canvas
+        <div
           ref={element => {
-            setCanvasElement(element)
+            mapElement = element
           }}
-          aria-label="Interactive map of every travel destination"
-          role="img"
-          tabindex="0"
+          data-travel-map
         />
         <Show when={mapStatus()}>
           {status => <p data-travel-globe-status>{status()}</p>}
