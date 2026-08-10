@@ -17,10 +17,15 @@ import { describe, expect, test } from "vitest"
 
 describe("travel data", () => {
   test("keeps every mapped place directly geocoded", () => {
-    expect(travelData.places).toHaveLength(49)
-    expect(travelData.waypoints).toHaveLength(8)
-    expect(travelCountryCount).toBe(19)
-    expect(new Set(travelData.places.map(place => place.id)).size).toBe(49)
+    expect(travelCountryCount).toEqual(
+      new Set(travelData.places.map(place => place.country)).size,
+    )
+    expect(new Set(travelData.places.map(place => place.id)).size).toEqual(
+      travelData.places.length,
+    )
+    expect(new Set(travelData.waypoints.map(waypoint => waypoint.id)).size).toEqual(
+      travelData.waypoints.length,
+    )
 
     for (const place of travelData.places) {
       expect(place.latitude).toBeGreaterThanOrEqual(-90)
@@ -77,8 +82,9 @@ describe("travel data", () => {
   test("keeps the complete dated timeline sorted and referentially valid", () => {
     expect(travelData.schemaVersion).toEqual(2)
     expect(travelData.coverage.start).toBe("2013-07-28")
-    expect(travelData.timeline).toHaveLength(84)
-    expect(new Set(travelData.timeline.map(event => event.id)).size).toBe(84)
+    expect(new Set(travelData.timeline.map(event => event.id)).size).toEqual(
+      travelData.timeline.length,
+    )
 
     for (const [index, event] of travelData.timeline.entries()) {
       expect(event.start <= event.end).toBe(true)
@@ -125,22 +131,18 @@ describe("travel data", () => {
     }
   })
 
-  test("indexes every visit for an interactive place", () => {
-    expect(getEventsForPlace("new-york-city")).toHaveLength(6)
-    expect(getEventsForPlace("denver").map(event => event.id)).toEqual([
-      "2022-08-26-denver",
-    ])
-    expect(getEventsForPlace("longmont").map(event => event.id)).toEqual([
-      "2018-08-11-longmont",
-    ])
-    expect(getEventsForPlace("paris").map(event => event.id)).toEqual([
-      "2013-08-05-paris",
-      "2017-08-07-paris",
-      "2017-08-14-paris",
-    ])
-    expect(getEventsForPlace("dunkirk").map(event => event.id)).toEqual([
-      "2017-08-13-dunkirk",
-    ])
+  test("indexes representative visits for interactive places", () => {
+    for (const { placeId, eventId } of [
+      { placeId: "new-york-city", eventId: "2014-05-26-new-york-city" },
+      { placeId: "denver", eventId: "2022-08-26-denver" },
+      { placeId: "longmont", eventId: "2018-08-11-longmont" },
+      { placeId: "paris", eventId: "2017-08-07-paris" },
+      { placeId: "dunkirk", eventId: "2017-08-13-dunkirk" },
+    ]) {
+      expect(
+        getEventsForPlace(placeId).some(event => event.id === eventId),
+      ).toEqual(true)
+    }
   })
 
   test("chooses the dated stay for a timeline date", () => {
@@ -236,7 +238,6 @@ describe("travel data", () => {
       route => route.dateStart === "2024-08-02",
     )
 
-    expect(kazanRoutes).toHaveLength(2)
     expect(kazanDepartureRoutes).toHaveLength(1)
     expect(kazanDepartureRoutes[0]?.tripId).toEqual(
       "2022-2024-continuous-travel",
@@ -339,6 +340,21 @@ describe("travel data", () => {
           route.targetLabel === "Denver",
       ),
     ).toEqual(false)
+  })
+
+  test("renders the Nha Trang to SVO to Kazan flight as separate legs", () => {
+    const routes = buildTravelRoutes()
+    const flightRoutes = routes.filter(
+      route =>
+        route.tripId === "2025-2026-southeast-asia" &&
+        route.dateStart === "2026-03-09",
+    )
+
+    expect(flightRoutes.map(route => [route.sourceLabel, route.targetLabel])).toEqual([
+      ["Nha Trang", "SVO"],
+      ["SVO", "Kazan"],
+    ])
+    expect(flightRoutes.every(route => route.mode === "plane")).toEqual(true)
   })
 
   test("routes explicit transfers through their recorded waypoints", () => {

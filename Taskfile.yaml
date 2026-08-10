@@ -143,8 +143,9 @@ tasks:
     run: once
     deps:
       - test:unit
-      - test:e2e:dist-vite
-      - test:e2e:dev
+    cmds:
+      - task: test:e2e:dist-vite
+      - task: test:e2e:dev
 
   check-impl:
     run: once

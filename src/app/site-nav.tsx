@@ -1,11 +1,13 @@
 import { For, Show } from "solid-js"
+import { localizedRoute, navRouteNames } from "../routes.ts"
+import type { NavRouteName } from "../routes.ts"
 import type { Locale } from "./i18n.ts"
-import { LocaleSwitcher, localeHrefFor } from "./locale-switcher.tsx"
+import { LocaleSwitcher } from "./locale-switcher.tsx"
 import { siteCopy } from "./site-copy.ts"
 
 export interface SiteNavProps {
   currentLocale: Locale
-  currentPath: "consulting" | "cv" | "home" | undefined
+  currentPath: NavRouteName | undefined
 }
 
 export const SiteNav = (props: SiteNavProps) => {
@@ -19,14 +21,14 @@ export const SiteNav = (props: SiteNavProps) => {
       }`}
     >
       <ul class="m-0 flex list-none flex-row flex-wrap gap-x-4 gap-y-2 p-0">
-        <For each={["home", "consulting", "cv"] as const}>
+        <For each={navRouteNames}>
           {path => {
             const isCurrent = path === props.currentPath
 
             return (
               <li class="m-0 p-0">
                 <a
-                  href={localeHrefFor(props.currentLocale, path)}
+                  href={localizedRoute(props.currentLocale, path)}
                   aria-current={isCurrent ? "page" : undefined}
                   class={`text-base font-medium text-zinc-950 ${
                     isCurrent

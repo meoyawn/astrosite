@@ -1,13 +1,14 @@
 import type { JSX } from "solid-js"
 import type { Locale } from "../app/i18n.ts"
 import { SiteNav } from "../app/site-nav.tsx"
+import type { NavRouteName } from "../routes.ts"
 import { HtmlRoot } from "./html-root.tsx"
 
 export interface SiteShellProps {
   bodyStart?: JSX.Element
   children: JSX.Element
   contentClass: string | undefined
-  currentPath: "consulting" | "cv" | "home" | undefined
+  currentPath: NavRouteName | undefined
   description: string
   lang: Locale
   navClass: string | undefined

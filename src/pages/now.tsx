@@ -1,4 +1,5 @@
 import { SiteShell } from "../layouts/site-shell.tsx"
+import { travelRoute } from "../routes.ts"
 
 const Now = () => (
   <SiteShell
@@ -13,7 +14,9 @@ const Now = () => (
     <p class="not-prose mt-2 mb-8 text-sm leading-6 font-medium text-zinc-500 tabular-nums">
       <time datetime="2026-08-10">10 Aug 2026</time>
     </p>
-    <p>I’m in Kazan, Tatarstan, Russia.</p>
+    <p>
+      I’m in <a href={travelRoute("2026-03-10-kazan")}>Kazan, Tatarstan, Russia</a>.
+    </p>
     <p>
       I’m building <a href="https://listenbox.app">Listenbox</a>.
     </p>

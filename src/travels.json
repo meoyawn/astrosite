@@ -3,7 +3,7 @@
   "title": "Travels",
   "coverage": {
     "start": "2013-07-28",
-    "end": "2026-03-09"
+    "end": "2026-08-10"
   },
   "dateSemantics": {
     "interval": "inclusive",
@@ -19,7 +19,7 @@
     "name": "OpenStreetMap contributors via Nominatim",
     "url": "https://nominatim.openstreetmap.org/",
     "licenseUrl": "https://www.openstreetmap.org/copyright",
-    "retrieved": "2026-08-10"
+    "retrieved": "2026-08-11"
   },
   "homeBases": [
     {
@@ -422,7 +422,8 @@
     {"id": "dxb-airport", "code": "DXB", "name": "Dubai International Airport", "country": "United Arab Emirates", "latitude": 25.2515424, "longitude": 55.3666519, "kind": "airport"},
     {"id": "svx-airport", "code": "SVX", "name": "Koltsovo International Airport", "country": "Russia", "latitude": 56.7445764, "longitude": 60.8027902, "kind": "airport"},
     {"id": "tpe-airport", "code": "TPE", "name": "Taiwan Taoyuan International Airport", "country": "Taiwan", "latitude": 25.0793174, "longitude": 121.2345977, "kind": "airport"},
-    {"id": "sfo-airport", "code": "SFO", "name": "San Francisco International Airport", "country": "United States", "latitude": 37.622452, "longitude": -122.3839894, "kind": "airport"}
+    {"id": "sfo-airport", "code": "SFO", "name": "San Francisco International Airport", "country": "United States", "latitude": 37.622452, "longitude": -122.3839894, "kind": "airport"},
+    {"id": "svo-airport", "code": "SVO", "name": "Sheremetyevo International Airport", "country": "Russia", "latitude": 55.9760876, "longitude": 37.4238008, "kind": "airport"}
   ],
   "timeline": [
     {"id": "2013-07-28-brest-departure", "start": "2013-07-28", "end": "2013-07-28", "placeIds": ["brest-belarus"], "kind": "visit", "note": "Probable early-morning departure."},
@@ -508,7 +509,8 @@
     {"id": "2025-11-14-krabi", "start": "2025-11-14", "end": "2025-11-21", "placeIds": ["krabi"], "kind": "visit"},
     {"id": "2025-11-22-bangkok", "start": "2025-11-22", "end": "2025-12-23", "placeIds": ["bangkok"], "kind": "visit"},
     {"id": "2025-12-24-da-nang", "start": "2025-12-24", "end": "2026-03-07", "placeIds": ["da-nang"], "kind": "extendedStay"},
-    {"id": "2026-03-08-nha-trang", "start": "2026-03-08", "end": "2026-03-09", "placeIds": ["nha-trang"], "kind": "visit"}
+    {"id": "2026-03-08-nha-trang", "start": "2026-03-08", "end": "2026-03-09", "placeIds": ["nha-trang"], "kind": "visit"},
+    {"id": "2026-03-10-kazan", "start": "2026-03-10", "end": "2026-08-10", "placeIds": ["kazan"], "kind": "base"}
   ],
   "transfers": [
     {
@@ -595,6 +597,17 @@
         {"from": {"placeId": "istanbul"}, "to": {"placeId": "kazan"}, "mode": "plane"}
       ],
       "note": "Istanbul to Kazan return flight."
+    },
+    {
+      "date": "2026-03-09",
+      "fromPlaceId": "nha-trang",
+      "toPlaceId": "kazan",
+      "tripId": "2025-2026-southeast-asia",
+      "legs": [
+        {"from": {"placeId": "nha-trang"}, "to": {"waypointId": "svo-airport"}, "mode": "plane"},
+        {"from": {"waypointId": "svo-airport"}, "to": {"placeId": "kazan"}, "mode": "plane"}
+      ],
+      "note": "Nha Trang/CXR to Moscow/SVO to Kazan/KZN return flight."
     }
   ],
   "knownOverlaps": [

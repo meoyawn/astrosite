@@ -2,6 +2,7 @@ import {
   Deck,
   LinearInterpolator,
   _GlobeView as GlobeView,
+  _GlobeViewport as GlobeViewport,
   type GlobeViewState,
 } from "@deck.gl/core"
 import { ArcLayer, GeoJsonLayer, ScatterplotLayer } from "@deck.gl/layers"
@@ -89,6 +90,84 @@ const createInitialViewState = (): GlobeViewState => ({
   zoom: window.innerWidth > 820 ? 2.85 : 2.2,
 })
 
+const constrain = (value: number, minimum: number, maximum: number): number =>
+  Math.min(Math.max(value, minimum), maximum)
+
+const cursorAnchoredViewState = (
+  viewport: GlobeViewport,
+  viewState: GlobeViewState,
+  position: [number, number],
+  zoom: number,
+): GlobeViewState => {
+  const unprojectedAnchor = viewport.unproject(position)
+  const anchorLongitude = unprojectedAnchor[0]
+  const anchorLatitude = unprojectedAnchor[1]
+
+  if (
+    anchorLongitude === undefined ||
+    anchorLatitude === undefined ||
+    !Number.isFinite(anchorLongitude) ||
+    !Number.isFinite(anchorLatitude)
+  ) {
+    return { ...viewState, zoom }
+  }
+
+  const anchor: [number, number] = [anchorLongitude, anchorLatitude]
+  const projectedAnchor = viewport.project(anchor)
+  const projectedAnchorX = projectedAnchor[0]
+  const projectedAnchorY = projectedAnchor[1]
+
+  if (
+    projectedAnchorX === undefined ||
+    projectedAnchorY === undefined ||
+    Math.hypot(
+      projectedAnchorX - position[0],
+      projectedAnchorY - position[1],
+    ) > 2
+  ) {
+    return { ...viewState, zoom }
+  }
+
+  let longitude = viewState.longitude
+  let latitude = viewState.latitude
+  let anchoredZoom = zoom
+
+  for (let index = 0; index < 3; index += 1) {
+    const zoomedViewport = new GlobeViewport({
+      fovy: viewport.fovy,
+      height: viewport.height,
+      latitude,
+      longitude,
+      width: viewport.width,
+      zoom: anchoredZoom,
+    })
+    const anchorPosition = zoomedViewport.project(anchor)
+    const anchorX = anchorPosition[0]
+    const anchorY = anchorPosition[1]
+
+    if (anchorX === undefined || anchorY === undefined) {
+      return { ...viewState, zoom }
+    }
+
+    const anchoredState = zoomedViewport.panByPosition(
+      [longitude, latitude, anchoredZoom],
+      position,
+      [anchorX, anchorY],
+    )
+
+    longitude = anchoredState.longitude ?? longitude
+    latitude = anchoredState.latitude ?? latitude
+    anchoredZoom = anchoredState.zoom ?? anchoredZoom
+  }
+
+  return {
+    ...viewState,
+    latitude,
+    longitude,
+    zoom: anchoredZoom,
+  }
+}
+
 const positionMatches = (
   first: [number, number],
   second: [number, number],
@@ -126,6 +205,9 @@ export const TravelMap = () => {
   const [selectedEventId, setSelectedEventId] = createSignal<string>()
   const [selectedPlaceId, setSelectedPlaceId] = createSignal<string>()
   const [isTimelineSliding, setIsTimelineSliding] = createSignal(false)
+  const [viewLongitude, setViewLongitude] = createSignal(
+    initialViewState.longitude,
+  )
 
   const selectedEvent = createMemo(() => {
     const eventId = selectedEventId()
@@ -349,6 +431,59 @@ export const TravelMap = () => {
     setIsTimelineSliding(false)
   }
 
+  function selectRoute(route: TravelRoute): void {
+    const day = isoDateToDayNumber(route.dateStart)
+
+    clearTravelFragment()
+    selectEvent(findClosestEvent(day), day)
+  }
+
+  function handleGlobeWheel(event: WheelEvent): void {
+    const viewport = deck?.getViewports()[0]
+
+    if (!(viewport instanceof GlobeViewport)) {
+      return
+    }
+
+    event.preventDefault()
+
+    const deltaMultiplier =
+      event.deltaMode === WheelEvent.DOM_DELTA_LINE
+        ? 16
+        : event.deltaMode === WheelEvent.DOM_DELTA_PAGE
+          ? viewport.height
+          : 1
+    const delta = event.deltaY * deltaMultiplier
+    let scale = 2 / (1 + Math.exp(-Math.abs(delta * 0.01)))
+
+    if (delta > 0) {
+      scale = 1 / scale
+    }
+
+    const minimumZoom = currentViewState.minZoom ?? -Infinity
+    const maximumZoom = currentViewState.maxZoom ?? Infinity
+    const zoom = constrain(
+      currentViewState.zoom + Math.log2(scale),
+      minimumZoom,
+      maximumZoom,
+    )
+
+    if (zoom === currentViewState.zoom) {
+      return
+    }
+
+    const nextViewState = cursorAnchoredViewState(
+      viewport,
+      currentViewState,
+      [event.offsetX, event.offsetY],
+      zoom,
+    )
+
+    currentViewState = nextViewState
+    setViewLongitude(nextViewState.longitude)
+    deck?.setProps({ initialViewState: nextViewState })
+  }
+
   const createLayers = () => {
     const selectedIds = new Set(activePlaceIds())
     const center = activeCenter()
@@ -386,6 +521,13 @@ export const TravelMap = () => {
         highlightColor: [2, 132, 199, 225],
         id: "journeys",
         numSegments: 80,
+        onClick: info => {
+          if (info.object !== undefined) {
+            selectRoute(info.object)
+          }
+
+          return true
+        },
         parameters: { cullMode: "none" },
         pickable: true,
         widthMinPixels: 0.8,
@@ -404,6 +546,13 @@ export const TravelMap = () => {
         highlightColor: [3, 105, 161, 255],
         id: "active-journeys",
         numSegments: 80,
+        onClick: info => {
+          if (info.object !== undefined) {
+            selectRoute(info.object)
+          }
+
+          return true
+        },
         parameters: { cullMode: "none" },
         pickable: true,
         widthMinPixels: 1.8,
@@ -540,6 +689,7 @@ export const TravelMap = () => {
         onLoad: () => setIsLoading(false),
         onViewStateChange: parameters => {
           currentViewState = parameters.viewState
+          setViewLongitude(parameters.viewState.longitude)
         },
         pickingRadius: 8,
         useDevicePixels: Math.min(window.devicePixelRatio, 2),
@@ -548,7 +698,7 @@ export const TravelMap = () => {
             doubleClickZoom: true,
             dragPan: true,
             keyboard: true,
-            scrollZoom: true,
+            scrollZoom: false,
             touchZoom: true,
           },
           farZMultiplier: 2,
@@ -557,9 +707,14 @@ export const TravelMap = () => {
         }),
       })
 
+      canvas.addEventListener("wheel", handleGlobeWheel, { passive: false })
+
       syncSelectionFromFragment()
       addEventListener("hashchange", syncSelectionFromFragment)
-      onCleanup(() => removeEventListener("hashchange", syncSelectionFromFragment))
+      onCleanup(() => {
+        canvas.removeEventListener("wheel", handleGlobeWheel)
+        removeEventListener("hashchange", syncSelectionFromFragment)
+      })
     } catch (error) {
       setMapError(error instanceof Error ? error.message : "Unable to load the globe")
       setIsLoading(false)
@@ -655,6 +810,8 @@ export const TravelMap = () => {
 
       <div
         data-travel-globe
+        data-active-event={selectedEventId()}
+        data-view-longitude={viewLongitude()}
         aria-label="Interactive globe. Drag to rotate and scroll to zoom."
       >
         <canvas

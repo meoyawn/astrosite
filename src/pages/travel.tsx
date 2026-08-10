@@ -26,7 +26,7 @@ FINISH: unreviewed and undocumented is unfinished; this build ends with the fini
   return contract
 }
 
-const TravelsPage = (): JSX.Element => (
+const TravelPage = (): JSX.Element => (
   <SiteShell
     bodyStart={<DesignContract />}
     contentClass="max-w-none p-0"
@@ -46,4 +46,4 @@ const TravelsPage = (): JSX.Element => (
   </SiteShell>
 )
 
-export default TravelsPage
+export default TravelPage

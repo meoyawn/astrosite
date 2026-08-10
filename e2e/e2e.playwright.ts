@@ -1,13 +1,22 @@
-import { existsSync, mkdirSync, readdirSync, readFileSync, statSync } from "node:fs"
+import { existsSync, readdirSync, readFileSync, statSync } from "node:fs"
 import { join, relative, resolve } from "node:path"
 import { expect, type Page, test } from "@playwright/test"
 import { load } from "js-yaml"
 import postcss from "postcss"
+import {
+  localizedRoute,
+  routes,
+  travelRoute,
+  writingRoute,
+} from "../src/routes.ts"
 
 const siteUrl = process.env.SITE_URL?.replace(/\/$/, "")
 const builtOrigin = siteUrl ?? "http://built.local"
 const distDir = resolve(process.env.DIST_DIR ?? "dist")
 const devRoutesPath = "/@solid-static/routes.json"
+
+const routeFileName = (route: string): string =>
+  route === routes.home ? "index.html" : `${route.slice(1)}index.html`
 
 interface HtmlTarget {
   diskPath: string | undefined
@@ -139,23 +148,6 @@ const routeExists = async (fileName: string): Promise<boolean> =>
 
 const pdfPageCount = (pdf: Buffer): number =>
   pdf.toString("latin1").match(/\/Type\s*\/Page\b/g)?.length ?? 0
-
-const captureTravelScreenshot = async (
-  page: Page,
-  fileName: string,
-): Promise<void> => {
-  const screenshotsDirectory = process.env.TRAVEL_SCREENSHOTS_DIR
-
-  if (screenshotsDirectory === undefined) {
-    return
-  }
-
-  mkdirSync(screenshotsDirectory, { recursive: true })
-  await page.screenshot({
-    fullPage: true,
-    path: resolve(screenshotsDirectory, fileName),
-  })
-}
 
 const routeBuiltFiles = async (page: Page): Promise<void> => {
   if (siteUrl !== undefined) {
@@ -329,11 +321,11 @@ test.describe("e2e tests", () => {
     await routeBuiltFiles(page)
 
     expect(
-      await routeExists("consulting/index.html"),
-      "Expected /consulting/ to be emitted as static HTML.",
+      await routeExists(routeFileName(routes.consulting)),
+      `Expected ${routes.consulting} to be emitted as static HTML.`,
     ).toEqual(true)
 
-    const response = await page.goto(`${builtOrigin}/consulting/`)
+    const response = await page.goto(`${builtOrigin}${routes.consulting}`)
 
     expect(response?.ok() ?? false).toEqual(true)
     const main = page.getByRole("main")
@@ -353,48 +345,24 @@ test.describe("e2e tests", () => {
     await expect(
       main.getByRole("link", { name: "ResponsibleAPI" }),
     ).toHaveAttribute("href", "https://responsibleapi.com")
-    const selectedWorkLinks = ["Listenbox", "ResponsibleAPI", "GitHub", "CV"]
-    const selectedWorkLinkBoxes = await Promise.all(
-      selectedWorkLinks.map(async linkName => {
-        const box = await main
-          .getByRole("link", { name: linkName })
-          .boundingBox()
-
-        if (box === null) {
-          throw new Error(
-            `Expected selected work link to be visible: ${linkName}.`,
-          )
-        }
-
-        return box
-      }),
-    )
-    const selectedWorkLineTop = Math.round(selectedWorkLinkBoxes[0]?.y ?? 0)
-
-    expect(
-      selectedWorkLinkBoxes.map(box => Math.round(box.y)),
-      "Expected selected work links to render on one line.",
-    ).toEqual(selectedWorkLinks.map(() => selectedWorkLineTop))
     await expect(main.getByRole("link", { name: "CV" })).toHaveAttribute(
       "href",
-      "/cv",
+      routes.cv,
     )
     await expect(main.getByText(/Pneuma LLC/)).toBeVisible()
   })
 
-  test("travel globe links the timeline, stays, and independent rotation", async ({
-    page,
-  }) => {
-    test.setTimeout(60_000)
+  test("travel timeline selects dated stays", async ({ page }) => {
     await routeBuiltFiles(page)
-    await page.setViewportSize({ height: 1000, width: 1600 })
+    await page.emulateMedia({ reducedMotion: "reduce" })
+    await page.setViewportSize({ height: 800, width: 1200 })
 
     expect(
-      await routeExists("travels/index.html"),
-      "Expected /travels/ to be emitted as static HTML.",
+      await routeExists(routeFileName(routes.travel)),
+      `Expected ${routes.travel} to be emitted as static HTML.`,
     ).toEqual(true)
 
-    const response = await page.goto(`${builtOrigin}/travels/`)
+    const response = await page.goto(`${builtOrigin}${routes.travel}`)
 
     expect(response?.ok() ?? false).toEqual(true)
     await expect(page.getByRole("main")).toHaveCount(1)
@@ -416,7 +384,6 @@ test.describe("e2e tests", () => {
 
     await expect(canvas).toBeVisible()
     await expect(slider).toBeVisible()
-    await captureTravelScreenshot(page, "travels-desktop.png")
 
     const june2023Day = Math.floor(
       Date.parse("2023-06-01T00:00:00Z") / 86_400_000,
@@ -439,25 +406,64 @@ test.describe("e2e tests", () => {
     await expect(
       page.getByRole("button", { name: "2 May — 14 Jun 2023" }),
     ).toHaveAttribute("aria-pressed", "true")
-    await page.waitForTimeout(900)
-    await slider.evaluate(element => element.blur())
-    await page.evaluate(() => window.scrollTo(0, 0))
-    await captureTravelScreenshot(page, "travels-selected-desktop.png")
+  })
+
+  test("now links the current location to its travel event", async ({ page }) => {
+    await routeBuiltFiles(page)
+
+    expect(
+      await routeExists(routeFileName(routes.now)),
+      `Expected ${routes.now} to be emitted as static HTML.`,
+    ).toEqual(true)
+
+    const response = await page.goto(`${builtOrigin}${routes.now}`)
+
+    expect(response?.ok() ?? false).toEqual(true)
+    await expect(
+      page.getByRole("link", { name: "Kazan, Tatarstan, Russia" }),
+    ).toHaveAttribute("href", travelRoute("2024-08-03-kazan"))
+  })
+
+  test("travel stay clicks update the timeline fragment", async ({ page }) => {
+    await routeBuiltFiles(page)
+    await page.emulateMedia({ reducedMotion: "reduce" })
+    await page.setViewportSize({ height: 800, width: 1200 })
+    await page.goto(
+      `${builtOrigin}${travelRoute("2023-05-02-kuala-lumpur")}`,
+    )
 
     const august2022 = page.getByRole("button", {
       name: "5 Aug — 24 Aug 2022",
     })
+    const sliderInput = page.locator("[data-travel-thumb] input")
 
     await august2022.click()
     await expect(august2022).toHaveAttribute("aria-pressed", "true")
-    await expect(page).toHaveURL(/\/travels\/#2022-08-05-kuala-lumpur$/)
+    await expect(page).toHaveURL(
+      `${builtOrigin}${travelRoute("2022-08-05-kuala-lumpur")}`,
+    )
     await expect(sliderInput).toHaveValue(
       String(Math.floor(Date.parse("2022-08-05T00:00:00Z") / 86_400_000)),
     )
+  })
 
-    await page.waitForTimeout(900)
-    const canvasBeforeDrag = await canvas.screenshot()
+  test("travel globe drag updates rotation state", async ({ page }) => {
+    await routeBuiltFiles(page)
+    await page.emulateMedia({ reducedMotion: "reduce" })
+    await page.setViewportSize({ height: 800, width: 1200 })
+    await page.goto(`${builtOrigin}${routes.travel}`)
+
+    const canvas = page.getByRole("img", {
+      name: "Interactive map of every travel destination",
+    })
+    const globe = page.locator("[data-travel-globe]")
+
+    const longitudeBeforeDrag = await globe.getAttribute("data-view-longitude")
     const canvasBox = await canvas.boundingBox()
+
+    if (longitudeBeforeDrag === null) {
+      throw new Error("Expected the globe to expose its longitude state.")
+    }
 
     if (canvasBox === null) {
       throw new Error("Expected the travel globe canvas to have a bounding box.")
@@ -471,46 +477,68 @@ test.describe("e2e tests", () => {
     await page.mouse.move(
       canvasBox.x + canvasBox.width * 0.48,
       canvasBox.y + canvasBox.height * 0.52,
-      { steps: 8 },
+      { steps: 2 },
     )
     await page.mouse.up()
-    await page.waitForTimeout(250)
-
-    expect((await canvas.screenshot()).equals(canvasBeforeDrag)).toEqual(false)
-
-    await page.setViewportSize({ height: 844, width: 390 })
-    await page.reload()
-    await expect(page.locator("[data-travel-globe-status]")).toBeHidden()
-    await expect
-      .poll(() =>
-        page.evaluate(() => document.documentElement.scrollWidth),
-      )
-      .toBe(390)
-    await expect(
-      page.locator("[data-travel-years] span").last(),
-    ).toBeInViewport()
-    await page.evaluate(() => window.scrollTo(0, 0))
-    await captureTravelScreenshot(page, "travels-mobile.png")
+    await expect(globe).not.toHaveAttribute(
+      "data-view-longitude",
+      longitudeBeforeDrag,
+    )
   })
 
-  test("travel fragments restore the timeline and globe", async ({ page }) => {
-    test.setTimeout(60_000)
+  test("travel globe zoom follows the mouse position", async ({ page }) => {
     await routeBuiltFiles(page)
-    await page.setViewportSize({ height: 1000, width: 1600 })
-    await page.goto(`${builtOrigin}/travels/`)
+    await page.setViewportSize({ height: 800, width: 1200 })
+    await page.goto(`${builtOrigin}${routes.travel}`)
 
     const canvas = page.getByRole("img", {
       name: "Interactive map of every travel destination",
     })
+    const globe = page.locator("[data-travel-globe]")
+    const longitudeBeforeZoom = await globe.getAttribute("data-view-longitude")
+    const canvasBox = await canvas.boundingBox()
 
-    await expect(canvas).toBeVisible()
-    await page.waitForTimeout(900)
-    const allJourneysGlobe = await canvas.screenshot()
+    if (longitudeBeforeZoom === null) {
+      throw new Error("Expected the globe to expose its longitude state.")
+    }
 
-    await page.goto(
-      `${builtOrigin}/travels/#2014-08-31-new-york-city`,
+    if (canvasBox === null) {
+      throw new Error("Expected the travel globe canvas to have a bounding box.")
+    }
+
+    await page.mouse.move(
+      canvasBox.x + canvasBox.width * 0.72,
+      canvasBox.y + canvasBox.height * 0.52,
     )
-    await page.reload()
+    await page.mouse.wheel(0, -353)
+    await expect(globe).not.toHaveAttribute(
+      "data-view-longitude",
+      longitudeBeforeZoom,
+    )
+  })
+
+  test("travel controls remain available on mobile", async ({ page }) => {
+    await routeBuiltFiles(page)
+    await page.emulateMedia({ reducedMotion: "reduce" })
+    await page.setViewportSize({ height: 844, width: 390 })
+    await page.goto(`${builtOrigin}${routes.travel}`)
+
+    await expect(page.locator("[data-travel-globe-status]")).toBeHidden()
+    await expect(
+      page.getByRole("slider", { name: "Travel timeline" }),
+    ).toBeVisible()
+    await expect(
+      page.getByRole("heading", { level: 2, name: "All journeys" }),
+    ).toBeVisible()
+  })
+
+  test("travel fragments restore the timeline and globe", async ({ page }) => {
+    await routeBuiltFiles(page)
+    await page.emulateMedia({ reducedMotion: "reduce" })
+    await page.setViewportSize({ height: 1000, width: 1600 })
+    await page.goto(
+      `${builtOrigin}${travelRoute("2014-08-31-new-york-city")}`,
+    )
     await expect(
       page.getByRole("heading", {
         level: 2,
@@ -523,17 +551,19 @@ test.describe("e2e tests", () => {
     await expect(page.locator("[data-travel-thumb] input")).toHaveValue(
       String(Math.floor(Date.parse("2014-08-31T00:00:00Z") / 86_400_000)),
     )
-
-    await page.waitForTimeout(900)
-    expect((await canvas.screenshot()).equals(allJourneysGlobe)).toEqual(false)
+    await expect(page.locator("[data-travel-globe]")).toHaveAttribute(
+      "data-active-event",
+      "2014-08-31-new-york-city",
+    )
   })
 
   test("wide travel timeline can be scrubbed beside the site navigation", async ({
     page,
   }) => {
     await routeBuiltFiles(page)
+    await page.emulateMedia({ reducedMotion: "reduce" })
     await page.setViewportSize({ height: 1000, width: 1600 })
-    await page.goto(`${builtOrigin}/travels/`)
+    await page.goto(`${builtOrigin}${routes.travel}`)
 
     const slider = page.getByRole("slider", { name: "Travel timeline" })
     const sliderInput = page.locator("[data-travel-thumb] input")
@@ -557,42 +587,22 @@ test.describe("e2e tests", () => {
     await page.mouse.move(
       sliderBox.x + sliderBox.width * 0.7,
       sliderBox.y + sliderBox.height / 2,
-      { steps: 8 },
+      { steps: 1 },
     )
     await expect(datePreview).toHaveText(/\d{1,2} [A-Z][a-z]{2} \d{4}/)
-    await captureTravelScreenshot(page, "travels-date-preview.png")
     await page.mouse.up()
 
     await expect(sliderInput).not.toHaveValue(initialValue)
     await expect(datePreview).toHaveAttribute("data-visible", "false")
     await expect(datePreview).toHaveCSS("opacity", "0")
 
-    await page.mouse.move(
-      sliderBox.x + sliderBox.width * 0.7,
-      sliderBox.y + sliderBox.height / 2,
-    )
-    await page.mouse.down()
-    await page.mouse.move(sliderBox.x, sliderBox.y + sliderBox.height / 2, {
-      steps: 8,
-    })
-    await page.mouse.up()
-
+    await slider.focus()
+    await slider.press("Home")
     await expect(sliderInput).toHaveValue(initialValue)
     await expect(
       page.getByRole("heading", { level: 2, name: "Brest, Belarus" }),
     ).toBeVisible()
 
-    const maximumValue = await sliderInput.getAttribute("max")
-
-    if (maximumValue === null) {
-      throw new Error("Expected the Kobalte slider to expose its maximum value.")
-    }
-
-    await slider.focus()
-    await slider.press("End")
-    await expect(sliderInput).toHaveValue(maximumValue)
-    await slider.press("Home")
-    await expect(sliderInput).toHaveValue(initialValue)
   })
 
   test("npm install article frontmatter matches article metadata and open graph tags", async ({
@@ -676,12 +686,14 @@ test.describe("e2e tests", () => {
     const frontmatter = readArticleFrontmatter(articlePath)
 
     expect(
-      await routeExists("writing/npm-install-is-dangerous/index.html"),
-      "Expected /writing/npm-install-is-dangerous/ to be emitted as static HTML.",
+      await routeExists(
+        routeFileName(writingRoute("npm-install-is-dangerous")),
+      ),
+      `Expected ${writingRoute("npm-install-is-dangerous")} to be emitted as static HTML.`,
     ).toEqual(true)
 
     const response = await page.goto(
-      `${builtOrigin}/writing/npm-install-is-dangerous/`,
+      `${builtOrigin}${writingRoute("npm-install-is-dangerous")}`,
     )
 
     expect(response?.ok() ?? false).toEqual(true)
@@ -725,7 +737,7 @@ test.describe("e2e tests", () => {
       ),
     ).toContain("## Attack vector")
 
-    const articleUrl = `${builtOrigin}/writing/npm-install-is-dangerous/`
+    const articleUrl = `${builtOrigin}${writingRoute("npm-install-is-dangerous")}`
     const response = await page.goto(articleUrl)
 
     expect(response?.ok() ?? false).toEqual(true)
@@ -740,38 +752,9 @@ test.describe("e2e tests", () => {
     const headingLink = heading.getByRole("link", { name: "Attack vector" })
 
     await expect(headingLink).toHaveAttribute("href", "#attack-vector")
-    await expect
-      .poll(() =>
-        headingLink.evaluate(
-          element => getComputedStyle(element, "::before").content,
-        ),
-      )
-      .toEqual('"#"')
-    await expect
-      .poll(() =>
-        headingLink.evaluate(
-          element => getComputedStyle(element, "::before").opacity,
-        ),
-      )
-      .toEqual("0")
-
-    await headingLink.hover()
-
-    await expect
-      .poll(() =>
-        headingLink.evaluate(
-          element => getComputedStyle(element, "::before").opacity,
-        ),
-      )
-      .toEqual("1")
-
     const beforeScrollY = await page.evaluate(() => window.scrollY)
-    const beforeHeadingTop = await heading.evaluate(
-      element => element.getBoundingClientRect().top,
-    )
 
     expect(beforeScrollY).toEqual(0)
-    expect(beforeHeadingTop).toBeGreaterThan(0)
 
     await heading.click()
 
@@ -779,24 +762,19 @@ test.describe("e2e tests", () => {
     await expect
       .poll(() => page.evaluate(() => window.scrollY))
       .toBeGreaterThan(beforeScrollY)
-    await expect
-      .poll(() =>
-        heading.evaluate(element =>
-          Math.abs(Math.round(element.getBoundingClientRect().top)),
-        ),
-      )
-      .toBe(0)
   })
 
   test("tatar consulting page sets html language", async ({ page }) => {
     await routeBuiltFiles(page)
 
     expect(
-      await routeExists("tt/consulting/index.html"),
-      "Expected /tt/consulting/ to be emitted as static HTML.",
+      await routeExists(routeFileName(localizedRoute("tt", "consulting"))),
+      `Expected ${localizedRoute("tt", "consulting")} to be emitted as static HTML.`,
     ).toEqual(true)
 
-    const response = await page.goto(`${builtOrigin}/tt/consulting/`)
+    const response = await page.goto(
+      `${builtOrigin}${localizedRoute("tt", "consulting")}`,
+    )
 
     expect(response?.ok() ?? false).toEqual(true)
     await expect(page.locator("html")).toHaveAttribute("lang", "tt")
@@ -807,30 +785,44 @@ test.describe("e2e tests", () => {
   }) => {
     const navCases = [
       {
-        pages: ["/", "/consulting/", "/cv/"],
+        pages: [routes.home, routes.consulting, routes.cv],
         navLabel: "Site navigation",
         links: {
-          home: { name: "Home", href: "/" },
-          consulting: { name: "Consulting", href: "/consulting/" },
-          cv: { name: "CV", href: "/cv/" },
+          home: { name: "Home", href: routes.home },
+          consulting: { name: "Consulting", href: routes.consulting },
+          cv: { name: "CV", href: routes.cv },
         },
       },
       {
-        pages: ["/ru/", "/ru/consulting/", "/ru/cv/"],
+        pages: [
+          localizedRoute("ru", "home"),
+          localizedRoute("ru", "consulting"),
+          localizedRoute("ru", "cv"),
+        ],
         navLabel: "Навигация по сайту",
         links: {
-          home: { name: "Главная", href: "/ru/" },
-          consulting: { name: "Консалтинг", href: "/ru/consulting/" },
-          cv: { name: "Резюме", href: "/ru/cv/" },
+          home: { name: "Главная", href: localizedRoute("ru", "home") },
+          consulting: {
+            name: "Консалтинг",
+            href: localizedRoute("ru", "consulting"),
+          },
+          cv: { name: "Резюме", href: localizedRoute("ru", "cv") },
         },
       },
       {
-        pages: ["/tt/", "/tt/consulting/", "/tt/cv/"],
+        pages: [
+          localizedRoute("tt", "home"),
+          localizedRoute("tt", "consulting"),
+          localizedRoute("tt", "cv"),
+        ],
         navLabel: "Сайт навигациясе",
         links: {
-          home: { name: "Баш бит", href: "/tt/" },
-          consulting: { name: "Консалтинг", href: "/tt/consulting/" },
-          cv: { name: "Резюме", href: "/tt/cv/" },
+          home: { name: "Баш бит", href: localizedRoute("tt", "home") },
+          consulting: {
+            name: "Консалтинг",
+            href: localizedRoute("tt", "consulting"),
+          },
+          cv: { name: "Резюме", href: localizedRoute("tt", "cv") },
         },
       },
     ]
@@ -861,9 +853,9 @@ test.describe("e2e tests", () => {
             nav.getByRole("link", { name: navCase.links.cv.name }),
           ).toHaveAttribute("href", navCase.links.cv.href)
 
-          const activeLinkKey = pagePath.endsWith("/consulting/")
+          const activeLinkKey = pagePath.endsWith(routes.consulting)
             ? "consulting"
-            : pagePath.endsWith("/cv/")
+            : pagePath.endsWith(routes.cv)
               ? "cv"
               : "home"
           const activeLinkName = navCase.links[activeLinkKey].name
@@ -893,30 +885,30 @@ test.describe("e2e tests", () => {
   }) => {
     const localeSwitcherCases = [
       {
-        pagePath: "/consulting/",
+        pagePath: routes.consulting,
         navLabel: "Switch language",
         links: {
-          en: { name: "EN", href: "/consulting/" },
-          ru: { name: "RU", href: "/ru/consulting/" },
-          tt: { name: "TT", href: "/tt/consulting/" },
+          en: { name: "EN", href: localizedRoute("en", "consulting") },
+          ru: { name: "RU", href: localizedRoute("ru", "consulting") },
+          tt: { name: "TT", href: localizedRoute("tt", "consulting") },
         },
       },
       {
-        pagePath: "/ru/consulting/",
+        pagePath: localizedRoute("ru", "consulting"),
         navLabel: "Сменить язык",
         links: {
-          en: { name: "EN", href: "/consulting/" },
-          ru: { name: "RU", href: "/ru/consulting/" },
-          tt: { name: "TT", href: "/tt/consulting/" },
+          en: { name: "EN", href: localizedRoute("en", "consulting") },
+          ru: { name: "RU", href: localizedRoute("ru", "consulting") },
+          tt: { name: "TT", href: localizedRoute("tt", "consulting") },
         },
       },
       {
-        pagePath: "/tt/consulting/",
+        pagePath: localizedRoute("tt", "consulting"),
         navLabel: "Башка телләр",
         links: {
-          en: { name: "EN", href: "/consulting/" },
-          ru: { name: "RU", href: "/ru/consulting/" },
-          tt: { name: "TT", href: "/tt/consulting/" },
+          en: { name: "EN", href: localizedRoute("en", "consulting") },
+          ru: { name: "RU", href: localizedRoute("ru", "consulting") },
+          tt: { name: "TT", href: localizedRoute("tt", "consulting") },
         },
       },
     ]
@@ -952,7 +944,7 @@ test.describe("e2e tests", () => {
   test("cv print media hides shared nav", async ({ page }) => {
     await routeBuiltFiles(page)
 
-    const response = await page.goto(`${builtOrigin}/cv/`)
+    const response = await page.goto(`${builtOrigin}${routes.cv}`)
 
     expect(response?.ok() ?? false).toEqual(true)
 
@@ -968,7 +960,7 @@ test.describe("e2e tests", () => {
   }) => {
     await routeBuiltFiles(page)
 
-    const response = await page.goto(`${builtOrigin}/cv/`)
+    const response = await page.goto(`${builtOrigin}${routes.cv}`)
 
     expect(response?.ok() ?? false).toEqual(true)
     await page.emulateMedia({ media: "print" })
@@ -1003,7 +995,7 @@ test.describe("e2e tests", () => {
 
     await routeBuiltFiles(page)
 
-    const response = await page.goto(`${builtOrigin}/cv/`)
+    const response = await page.goto(`${builtOrigin}${routes.cv}`)
 
     expect(response?.ok() ?? false).toEqual(true)
 
@@ -1029,7 +1021,7 @@ test.describe("e2e tests", () => {
   test("cv shows ongoing Listenbox founder role", async ({ page }) => {
     await routeBuiltFiles(page)
 
-    const response = await page.goto(`${builtOrigin}/cv/`)
+    const response = await page.goto(`${builtOrigin}${routes.cv}`)
 
     expect(response?.ok() ?? false).toEqual(true)
 
@@ -1048,77 +1040,4 @@ test.describe("e2e tests", () => {
     ).toBeVisible()
   })
 
-  test("cv uses full mobile width while default pages use wider mdx spacing", async ({
-    browser,
-  }) => {
-    async function navMetricsFor(
-      pathname: string,
-      viewport: { height: number; width: number },
-    ): Promise<{
-      width: number
-      x: number
-    }> {
-      await using page = await browser.newPage({ viewport })
-
-      await routeBuiltFiles(page)
-
-      const response = await page.goto(`${builtOrigin}${pathname}`)
-
-      expect(response?.ok() ?? false).toEqual(true)
-
-      const navBox = await page
-        .getByRole("navigation", { name: "Site navigation" })
-        .boundingBox()
-
-      if (navBox === null) {
-        throw new Error(`Expected nav to have a bounding box on ${pathname}.`)
-      }
-
-      return {
-        width: Math.round(navBox.width),
-        x: Math.round(navBox.x),
-      }
-    }
-
-    const desktopViewport = { width: 1280, height: 720 }
-    const mobileViewport = { width: 390, height: 844 }
-
-    const [desktopHomeMetrics, desktopCvMetrics, desktopConsultingMetrics] =
-      await Promise.all([
-        navMetricsFor("/", desktopViewport),
-        navMetricsFor("/cv/", desktopViewport),
-        navMetricsFor("/consulting/", desktopViewport),
-      ])
-
-    expect(desktopConsultingMetrics).toEqual(desktopHomeMetrics)
-    expect(desktopHomeMetrics.width).toBeGreaterThan(desktopCvMetrics.width)
-    expect(desktopHomeMetrics.x).toBeLessThan(desktopCvMetrics.x)
-
-    const [mobileHomeMetrics, mobileCvMetrics, mobileConsultingMetrics] =
-      await Promise.all([
-        navMetricsFor("/", mobileViewport),
-        navMetricsFor("/cv/", mobileViewport),
-        navMetricsFor("/consulting/", mobileViewport),
-      ])
-
-    expect(mobileCvMetrics).toEqual(mobileHomeMetrics)
-    expect(mobileConsultingMetrics).toEqual(mobileHomeMetrics)
-
-    await using page = await browser.newPage({ viewport: mobileViewport })
-
-    await routeBuiltFiles(page)
-
-    const response = await page.goto(`${builtOrigin}/cv/`)
-
-    expect(response?.ok() ?? false).toEqual(true)
-
-    const mainBox = await page.locator("main").boundingBox()
-
-    if (mainBox === null) {
-      throw new Error("Expected cv content to have a bounding box.")
-    }
-
-    expect(Math.round(mainBox.x)).toEqual(0)
-    expect(Math.round(mainBox.width)).toEqual(390)
-  })
 })

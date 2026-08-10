@@ -1,6 +1,0 @@
-{
-  "files": ["src/layouts/html-root.tsx"],
-  "insertBefore": "</body>",
-  "commentSyntax": "jsx",
-  "cspChecked": true
-}

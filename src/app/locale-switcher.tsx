@@ -1,16 +1,12 @@
 import { For } from "solid-js"
+import { localizedRoute } from "../routes.ts"
+import type { NavRouteName } from "../routes.ts"
 import type { Locale } from "./i18n.ts"
 import { siteCopy } from "./site-copy.ts"
 
 export interface LocaleSwitcherProps {
   currentLocale: Locale
-  currentPath: "consulting" | "cv" | "home"
-}
-
-const hrefFor = (locale: Locale, path: LocaleSwitcherProps["currentPath"]): string => {
-  const localePrefix = locale === "en" ? "" : `/${locale}`
-
-  return path === "home" ? `${localePrefix}/` : `${localePrefix}/${path}/`
+  currentPath: NavRouteName
 }
 
 export const LocaleSwitcher = (props: LocaleSwitcherProps) => (
@@ -23,7 +19,7 @@ export const LocaleSwitcher = (props: LocaleSwitcherProps) => (
           return (
             <li>
               <a
-                href={hrefFor(locale, props.currentPath)}
+                href={localizedRoute(locale, props.currentPath)}
                 aria-current={isCurrent ? "page" : undefined}
                 class={`rounded border px-3 py-1 no-underline transition-colors ${
                   isCurrent
@@ -40,5 +36,3 @@ export const LocaleSwitcher = (props: LocaleSwitcherProps) => (
     </ul>
   </nav>
 )
-
-export { hrefFor as localeHrefFor }

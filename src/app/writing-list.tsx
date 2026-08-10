@@ -1,11 +1,12 @@
 import { For, Show } from "solid-js"
+import { getCollection } from "solid-static/runtime"
+import { writingRoute } from "../routes.ts"
 import type { Locale } from "./i18n.ts"
 import { siteCopy } from "./site-copy.ts"
 import {
   parseWritingEntry,
   type WritingEntry,
 } from "./static-site-types.ts"
-import { getCollection } from "solid-static/runtime"
 
 export interface WritingListProps {
   title?: string | undefined
@@ -68,7 +69,7 @@ export const WritingList = (props: WritingListProps) => {
                 </time>
                 <article class="min-w-0">
                   <a
-                    href={`/writing/${entry.id}/`}
+                    href={writingRoute(entry.id)}
                     class="text-lg leading-6 font-semibold text-slate-900 hover-underline"
                   >
                     {entry.data.title}
