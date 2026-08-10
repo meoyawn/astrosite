@@ -10,8 +10,9 @@ import { Slider } from "@kobalte/core/slider"
 import { createEffect, createMemo, createSignal, For, onCleanup, onMount, Show } from "solid-js"
 import { feature } from "topojson-client"
 import countriesTopology from "world-atlas/countries-110m.json"
+import { travelRoute } from "../../routes.ts"
 import {
-  findClosestEvent,
+  findEventOnDay,
   firstTravelDay,
   formatDateRange,
   formatEventDate,
@@ -37,6 +38,7 @@ import {
 
 const countryFeatures = feature(countriesTopology, "countries")
 const travelRoutesById = new Map(travelRoutes.map(route => [route.id, route]))
+const homeBase = getPlace("kazan")
 
 const travelObjectId = (value: unknown): string | undefined => {
   if (typeof value !== "object" || value === null || !("id" in value)) {
@@ -199,8 +201,7 @@ export const TravelMap = () => {
   let currentViewState = initialViewState
 
   const [canvasElement, setCanvasElement] = createSignal<HTMLCanvasElement>()
-  const [isLoading, setIsLoading] = createSignal(true)
-  const [mapError, setMapError] = createSignal<string>()
+  const [mapStatus, setMapStatus] = createSignal<string | undefined>("Loading...")
   const [selectedDay, setSelectedDay] = createSignal(firstTravelDay)
   const [selectedEventId, setSelectedEventId] = createSignal<string>()
   const [selectedPlaceId, setSelectedPlaceId] = createSignal<string>()
@@ -245,7 +246,9 @@ export const TravelMap = () => {
 
   const relatedEvents = createMemo(() => {
     const placeId = selectedPlaceId()
-    return placeId === undefined ? [] : getEventsForPlace(placeId)
+    return placeId === undefined
+      ? []
+      : getEventsForPlace(placeId).filter(event => event.kind !== "base")
   })
 
   const displayPlace = createMemo(() => {
@@ -269,6 +272,10 @@ export const TravelMap = () => {
     const placeId = selectedPlaceId()
 
     if (placeId !== undefined) {
+      if (placeId === homeBase.id) {
+        return "No trip"
+      }
+
       return dateRangeForPlace(placeId)
     }
 
@@ -307,9 +314,6 @@ export const TravelMap = () => {
     const prefersReducedMotion = window.matchMedia(
       "(prefers-reduced-motion: reduce)",
     ).matches
-    const minimumZoom = window.innerWidth > 820 ? 2.65 : 1.9
-    const maximumZoom = window.innerWidth > 820 ? 3.1 : 2.45
-    const zoom = Math.min(Math.max(currentViewState.zoom, minimumZoom), maximumZoom)
 
     deck?.setProps({
       initialViewState: {
@@ -320,9 +324,7 @@ export const TravelMap = () => {
         transitionInterpolator: new LinearInterpolator([
           "longitude",
           "latitude",
-          "zoom",
         ]),
-        zoom,
       },
     })
   }
@@ -334,11 +336,15 @@ export const TravelMap = () => {
     flyTo(placePosition(place))
   }
 
-  const selectEvent = (event: TravelEvent, day = isoDateToDayNumber(event.start)): void => {
+  const selectEvent = (
+    event: TravelEvent,
+    day = isoDateToDayNumber(event.start),
+    position = getEventCenter(event),
+  ): void => {
     setSelectedDay(day)
     setSelectedEventId(event.id)
     setSelectedPlaceId(event.placeIds[0])
-    flyTo(getEventCenter(event))
+    flyTo(position)
   }
 
   function clearTravelFragment(): void {
@@ -347,13 +353,17 @@ export const TravelMap = () => {
     }
   }
 
-  function selectVisit(event: TravelEvent): void {
-    selectEvent(event)
+  function selectVisit(
+    event: TravelEvent,
+    day = isoDateToDayNumber(event.start),
+    position = getEventCenter(event),
+  ): void {
+    selectEvent(event, day, position)
 
-    const fragment = `#${encodeURIComponent(event.id)}`
+    const route = travelRoute(encodeURIComponent(event.id))
 
-    if (location.hash !== fragment) {
-      history.pushState(null, "", fragment)
+    if (`${location.pathname}${location.hash}` !== route) {
+      history.pushState(null, "", route)
     }
   }
 
@@ -413,10 +423,24 @@ export const TravelMap = () => {
       return
     }
 
-    const event = findClosestEvent(day)
+    const event = findEventOnDay(day)
 
     clearTravelFragment()
     setSelectedDay(day)
+
+    if (event === undefined) {
+      const homeBaseWasSelected =
+        selectedEventId() === undefined && selectedPlaceId() === homeBase.id
+
+      setSelectedEventId(undefined)
+      setSelectedPlaceId(homeBase.id)
+
+      if (!homeBaseWasSelected) {
+        flyTo(placePosition(homeBase))
+      }
+
+      return
+    }
 
     if (event.id !== selectedEventId()) {
       selectEvent(event, day)
@@ -433,9 +457,20 @@ export const TravelMap = () => {
 
   function selectRoute(route: TravelRoute): void {
     const day = isoDateToDayNumber(route.dateStart)
+    const destinationEvent = travelData.timeline.find(
+      event => event.id === route.destinationEventId,
+    )
+
+    if (destinationEvent !== undefined) {
+      selectVisit(destinationEvent, day, route.targetPosition)
+      return
+    }
 
     clearTravelFragment()
-    selectEvent(findClosestEvent(day), day)
+    setSelectedDay(day)
+    setSelectedEventId(undefined)
+    setSelectedPlaceId(route.targetPlaceId)
+    flyTo(route.targetPosition)
   }
 
   function handleGlobeWheel(event: WheelEvent): void {
@@ -683,10 +718,9 @@ export const TravelMap = () => {
         initialViewState,
         layers: createLayers(),
         onError: error => {
-          setMapError(error.message)
-          setIsLoading(false)
+          setMapStatus(`Map unavailable: ${error.message}`)
         },
-        onLoad: () => setIsLoading(false),
+        onLoad: () => setMapStatus(undefined),
         onViewStateChange: parameters => {
           currentViewState = parameters.viewState
           setViewLongitude(parameters.viewState.longitude)
@@ -716,8 +750,8 @@ export const TravelMap = () => {
         removeEventListener("hashchange", syncSelectionFromFragment)
       })
     } catch (error) {
-      setMapError(error instanceof Error ? error.message : "Unable to load the globe")
-      setIsLoading(false)
+      const message = error instanceof Error ? error.message : "Unable to load the globe"
+      setMapStatus(`Map unavailable: ${message}`)
     }
   })
 
@@ -745,7 +779,7 @@ export const TravelMap = () => {
               {year => (
                 <span
                   data-active={
-                    selectedEventId() !== undefined && selectedYear() === year
+                    selectedPlaceId() !== undefined && selectedYear() === year
                   }
                 >
                   {year}
@@ -822,11 +856,8 @@ export const TravelMap = () => {
           role="img"
           tabindex="0"
         />
-        <Show when={isLoading()}>
-          <p data-travel-globe-status>Loading globe…</p>
-        </Show>
-        <Show when={mapError()}>
-          {message => <p data-travel-globe-status>Map unavailable: {message()}</p>}
+        <Show when={mapStatus()}>
+          {status => <p data-travel-globe-status>{status()}</p>}
         </Show>
       </div>
 

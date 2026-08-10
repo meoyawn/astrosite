@@ -50,8 +50,9 @@ tasks:
     run: once
     deps:
       - solid-static:build
-    cmd: DIST_DIR=dist nubx vite build --config vite.config.ts
+    cmd: nubx vite build --config vite.config.ts
     sources:
+      - package.json
       - nub.lock
       - vite.config.ts
       - ../solid-static/package.json
@@ -61,50 +62,18 @@ tasks:
     generates:
       - dist/**/*
 
-  build:vite:
-    run: once
-    deps:
-      - solid-static:build
-    cmd: nubx vite build --config vite.config.ts
-    sources:
-      - nub.lock
-      - vite.config.ts
-      - ../solid-static/package.json
-      - ../solid-static/src/**/*
-      - src/**/*
-      - public/**/*
-    generates:
-      - dist-vite/**/*
-
   test:e2e:
     run: once
     deps:
       - build
       - playwright:install
-    env:
-      DIST_DIR: dist
     cmd: nubx playwright test e2e/e2e.playwright.ts
     sources:
       - Taskfile.yaml
       - playwright.config.ts
       - nub.lock
-      - "dist/**/*"
-      - "e2e/**/*"
-
-  test:e2e:dist-vite:
-    run: once
-    deps:
-      - build:vite
-      - playwright:install
-    env:
-      DIST_DIR: dist-vite
-    cmd: nubx playwright test e2e/e2e.playwright.ts
-    sources:
-      - Taskfile.yaml
-      - playwright.config.ts
-      - nub.lock
-      - "dist-vite/**/*"
-      - "e2e/**/*"
+      - dist/**/*
+      - e2e/**/*
 
   test:e2e:dev:
     run: once
@@ -143,9 +112,7 @@ tasks:
     run: once
     deps:
       - test:unit
-    cmds:
-      - task: test:e2e:dist-vite
-      - task: test:e2e:dev
+      - test:e2e
 
   check-impl:
     run: once

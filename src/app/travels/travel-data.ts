@@ -101,11 +101,13 @@ export interface TravelData {
 export interface TravelRoute {
   dateEnd: string
   dateStart: string
+  destinationEventId: string | undefined
   id: string
   mode: string | undefined
   sourceLabel: string
   sourcePosition: [number, number]
   targetLabel: string
+  targetPlaceId: string | undefined
   targetPosition: [number, number]
   tripId: string
 }
@@ -212,6 +214,9 @@ const getTransferPoint = (
 
 export const buildTravelRoutes = (): TravelRoute[] => {
   const routes: TravelRoute[] = []
+  const homeBasePlaceIds = new Set(
+    travelData.homeBases.map(homeBase => homeBase.placeId),
+  )
 
   for (const trip of travelData.trips) {
     const events = getEventsForTrip(trip)
@@ -243,11 +248,13 @@ export const buildTravelRoutes = (): TravelRoute[] => {
         routes.push({
           dateEnd: targetEvent.start,
           dateStart: targetEvent.start,
+          destinationEventId: targetEvent.id,
           id: `${trip.id}-${sourceEvent.id}--${targetEvent.id}`,
           mode: trip.mode,
           sourceLabel: getEventPlaceLabel(sourceEvent),
           sourcePosition,
           targetLabel: getEventPlaceLabel(targetEvent),
+          targetPlaceId: targetEvent.placeIds.at(-1),
           targetPosition,
           tripId: trip.id,
         })
@@ -267,11 +274,13 @@ export const buildTravelRoutes = (): TravelRoute[] => {
         routes.push({
           dateEnd: event.end,
           dateStart: event.start,
+          destinationEventId: event.id,
           id: `${trip.id}-${event.id}-place-${index}`,
           mode: trip.mode,
           sourceLabel: getPlace(event.placeIds[index] ?? "").name,
           sourcePosition,
           targetLabel: getPlace(event.placeIds[index + 1] ?? "").name,
+          targetPlaceId: event.placeIds[index + 1],
           targetPosition,
           tripId: trip.id,
         })
@@ -279,6 +288,14 @@ export const buildTravelRoutes = (): TravelRoute[] => {
     }
 
     for (const transfer of transfers) {
+      const destinationEvent = homeBasePlaceIds.has(transfer.toPlaceId)
+        ? undefined
+        : events.find(
+            event =>
+              event.placeIds.includes(transfer.toPlaceId) &&
+              event.end >= transfer.date,
+          )
+
       for (const [index, leg] of transfer.legs.entries()) {
         const source = getTransferPoint(leg.from)
         const target = getTransferPoint(leg.to)
@@ -290,11 +307,14 @@ export const buildTravelRoutes = (): TravelRoute[] => {
         routes.push({
           dateEnd: transfer.date,
           dateStart: transfer.date,
+          destinationEventId: destinationEvent?.id,
           id: `${trip.id}-transfer-${transfer.date}-${index}`,
           mode: leg.mode,
           sourceLabel: source.label,
           sourcePosition: source.position,
           targetLabel: target.label,
+          targetPlaceId:
+            index === transfer.legs.length - 1 ? transfer.toPlaceId : undefined,
           targetPosition: target.position,
           tripId: trip.id,
         })
@@ -377,6 +397,14 @@ export const findClosestEvent = (dayNumber: number): TravelEvent => {
 
   return nearestEvent.event
 }
+
+export const findEventOnDay = (dayNumber: number): TravelEvent | undefined =>
+  travelData.timeline.find(
+    event =>
+      event.kind !== "base" &&
+      isoDateToDayNumber(event.start) <= dayNumber &&
+      isoDateToDayNumber(event.end) >= dayNumber,
+  )
 
 export const firstTravelDay = isoDateToDayNumber(travelData.coverage.start)
 export const lastTravelDay = isoDateToDayNumber(travelData.coverage.end)

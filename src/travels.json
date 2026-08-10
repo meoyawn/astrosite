@@ -37,6 +37,7 @@
     {"id": "2017-france", "start": "2017-08-07", "end": "2017-08-16", "basis": "userStated", "note": "Begins after time at home in Kazan; it must not connect to the Germany trip."},
     {"id": "2018-baku", "start": "2018-05-24", "end": "2018-05-27", "basis": "continuousTimeline"},
     {"id": "2018-united-states", "start": "2018-07-27", "end": "2018-09-17", "basis": "continuousTimeline"},
+    {"id": "2019-east-asia-philippines", "start": "2019-04-19", "end": "2019-05-16", "basis": "userStated", "note": "Return date and Almaty layover are approximate."},
     {"id": "2019-united-states", "start": "2019-11-13", "end": "2019-11-30", "basis": "continuousTimeline"},
     {"id": "2021-turkey-autumn", "start": "2021-09-28", "end": "2021-11-26", "basis": "continuousTimeline"},
     {"id": "2021-istanbul-winter", "start": "2021-12-10", "end": "2021-12-25", "basis": "continuousTimeline"},
@@ -79,6 +80,51 @@
       "country": "Azerbaijan",
       "latitude": 40.3755885,
       "longitude": 49.8328009
+    },
+    {
+      "id": "incheon",
+      "name": "Incheon",
+      "country": "South Korea",
+      "latitude": 37.456,
+      "longitude": 126.7052
+    },
+    {
+      "id": "hong-kong",
+      "name": "Hong Kong",
+      "country": "Hong Kong",
+      "latitude": 22.3492155,
+      "longitude": 114.1857978
+    },
+    {
+      "id": "tagbilaran",
+      "name": "Tagbilaran",
+      "region": "Bohol",
+      "country": "Philippines",
+      "latitude": 9.6402611,
+      "longitude": 123.8559809
+    },
+    {
+      "id": "cebu-city",
+      "name": "Cebu City",
+      "region": "Cebu",
+      "country": "Philippines",
+      "latitude": 10.2934946,
+      "longitude": 123.9018183
+    },
+    {
+      "id": "boracay",
+      "name": "Boracay",
+      "region": "Aklan",
+      "country": "Philippines",
+      "latitude": 11.9693692,
+      "longitude": 121.9227339
+    },
+    {
+      "id": "seoul",
+      "name": "Seoul",
+      "country": "South Korea",
+      "latitude": 37.5666791,
+      "longitude": 126.9782914
     },
     {
       "id": "abu-dhabi",
@@ -415,6 +461,8 @@
     }
   ],
   "waypoints": [
+    {"id": "nqz-airport", "code": "NQZ", "name": "Nursultan Nazarbayev International Airport", "country": "Kazakhstan", "latitude": 51.0258535, "longitude": 71.4641981, "kind": "airport"},
+    {"id": "ala-airport", "code": "ALA", "name": "Almaty International Airport", "country": "Kazakhstan", "latitude": 43.3556863, "longitude": 77.0425838, "kind": "airport"},
     {"id": "den-airport", "code": "DEN", "name": "Denver International Airport", "country": "United States", "latitude": 39.8606676, "longitude": -104.6853673, "kind": "airport"},
     {"id": "abq-airport", "code": "ABQ", "name": "Albuquerque International Sunport", "country": "United States", "latitude": 35.0376694, "longitude": -106.6109675, "kind": "airport"},
     {"id": "dfw-airport", "code": "DFW", "name": "Dallas/Fort Worth International Airport", "country": "United States", "latitude": 32.8962506, "longitude": -97.0453389, "kind": "airport"},
@@ -461,6 +509,12 @@
     {"id": "2018-09-02-new-orleans", "start": "2018-09-02", "end": "2018-09-06", "placeIds": ["new-orleans"], "kind": "visit"},
     {"id": "2018-09-07-washington-dc", "start": "2018-09-07", "end": "2018-09-12", "placeIds": ["washington-dc"], "kind": "regionalStay", "note": "Around Washington, DC."},
     {"id": "2018-09-13-new-york-city", "start": "2018-09-13", "end": "2018-09-17", "placeIds": ["new-york-city"], "kind": "visit"},
+    {"id": "2019-04-20-incheon", "start": "2019-04-20", "end": "2019-04-23", "placeIds": ["incheon"], "kind": "visit"},
+    {"id": "2019-04-24-hong-kong", "start": "2019-04-24", "end": "2019-05-01", "placeIds": ["hong-kong"], "kind": "visit"},
+    {"id": "2019-05-02-tagbilaran", "start": "2019-05-02", "end": "2019-05-04", "placeIds": ["tagbilaran"], "kind": "visit"},
+    {"id": "2019-05-05-cebu-city", "start": "2019-05-05", "end": "2019-05-05", "placeIds": ["cebu-city"], "kind": "visit"},
+    {"id": "2019-05-06-boracay", "start": "2019-05-06", "end": "2019-05-08", "placeIds": ["boracay"], "kind": "visit"},
+    {"id": "2019-05-09-seoul", "start": "2019-05-09", "end": "2019-05-15", "placeIds": ["seoul"], "kind": "visit"},
     {"id": "2019-11-13-new-york-city", "start": "2019-11-13", "end": "2019-11-13", "placeIds": ["new-york-city"], "kind": "visit"},
     {"id": "2019-11-14-new-orleans", "start": "2019-11-14", "end": "2019-11-16", "placeIds": ["new-orleans"], "kind": "visit"},
     {"id": "2019-11-17-los-alamos", "start": "2019-11-17", "end": "2019-11-27", "placeIds": ["los-alamos"], "kind": "visit"},
@@ -513,6 +567,73 @@
     {"id": "2026-03-10-kazan", "start": "2026-03-10", "end": "2026-08-10", "placeIds": ["kazan"], "kind": "base"}
   ],
   "transfers": [
+    {
+      "date": "2019-04-19",
+      "fromPlaceId": "kazan",
+      "toPlaceId": "incheon",
+      "tripId": "2019-east-asia-philippines",
+      "legs": [
+        {"from": {"placeId": "kazan"}, "to": {"waypointId": "nqz-airport"}, "mode": "plane"},
+        {"from": {"waypointId": "nqz-airport"}, "to": {"placeId": "incheon"}, "mode": "plane"}
+      ],
+      "note": "Kazan/KZN to Astana/NQZ to Incheon flight; landed in Incheon on 20 Apr."
+    },
+    {
+      "date": "2019-04-24",
+      "fromPlaceId": "incheon",
+      "toPlaceId": "hong-kong",
+      "tripId": "2019-east-asia-philippines",
+      "legs": [
+        {"from": {"placeId": "incheon"}, "to": {"placeId": "hong-kong"}, "mode": "plane"}
+      ]
+    },
+    {
+      "date": "2019-05-02",
+      "fromPlaceId": "hong-kong",
+      "toPlaceId": "tagbilaran",
+      "tripId": "2019-east-asia-philippines",
+      "legs": [
+        {"from": {"placeId": "hong-kong"}, "to": {"placeId": "tagbilaran"}, "mode": "plane"}
+      ]
+    },
+    {
+      "date": "2019-05-05",
+      "fromPlaceId": "tagbilaran",
+      "toPlaceId": "cebu-city",
+      "tripId": "2019-east-asia-philippines",
+      "legs": [
+        {"from": {"placeId": "tagbilaran"}, "to": {"placeId": "cebu-city"}, "mode": "plane"}
+      ]
+    },
+    {
+      "date": "2019-05-06",
+      "fromPlaceId": "cebu-city",
+      "toPlaceId": "boracay",
+      "tripId": "2019-east-asia-philippines",
+      "legs": [
+        {"from": {"placeId": "cebu-city"}, "to": {"placeId": "boracay"}, "mode": "plane"}
+      ]
+    },
+    {
+      "date": "2019-05-09",
+      "fromPlaceId": "boracay",
+      "toPlaceId": "seoul",
+      "tripId": "2019-east-asia-philippines",
+      "legs": [
+        {"from": {"placeId": "boracay"}, "to": {"placeId": "seoul"}, "mode": "plane"}
+      ]
+    },
+    {
+      "date": "2019-05-16",
+      "fromPlaceId": "seoul",
+      "toPlaceId": "kazan",
+      "tripId": "2019-east-asia-philippines",
+      "legs": [
+        {"from": {"placeId": "seoul"}, "to": {"waypointId": "ala-airport"}, "mode": "plane"},
+        {"from": {"waypointId": "ala-airport"}, "to": {"placeId": "kazan"}, "mode": "plane"}
+      ],
+      "note": "Approximate 16 May return to Kazan; Almaty/ALA layover is recalled but uncertain."
+    },
     {
       "date": "2019-11-17",
       "fromPlaceId": "new-orleans",

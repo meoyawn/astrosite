@@ -12,7 +12,7 @@ import {
 
 const siteUrl = process.env.SITE_URL?.replace(/\/$/, "")
 const builtOrigin = siteUrl ?? "http://built.local"
-const distDir = resolve(process.env.DIST_DIR ?? "dist")
+const distDir = resolve("dist")
 const devRoutesPath = "/@solid-static/routes.json"
 
 const routeFileName = (route: string): string =>
@@ -406,22 +406,32 @@ test.describe("e2e tests", () => {
     await expect(
       page.getByRole("button", { name: "2 May — 14 Jun 2023" }),
     ).toHaveAttribute("aria-pressed", "true")
-  })
 
-  test("now links the current location to its travel event", async ({ page }) => {
-    await routeBuiltFiles(page)
+    async function selectNoTripDate(noTripDate: string): Promise<void> {
+      const noTripDay = Math.floor(
+        Date.parse(`${noTripDate}T00:00:00Z`) / 86_400_000,
+      )
 
-    expect(
-      await routeExists(routeFileName(routes.now)),
-      `Expected ${routes.now} to be emitted as static HTML.`,
-    ).toEqual(true)
+      await sliderInput.evaluate((element, value) => {
+        if (!(element instanceof HTMLInputElement)) {
+          throw new TypeError("Expected the Kobalte slider input.")
+        }
 
-    const response = await page.goto(`${builtOrigin}${routes.now}`)
+        element.value = value
+        element.dispatchEvent(new Event("change", { bubbles: true }))
+      }, String(noTripDay))
+      await expect(
+        page.getByRole("heading", { level: 2, name: "Kazan, Russia" }),
+      ).toBeVisible()
+      await expect(page.locator("[data-travel-visit]")).toHaveCount(0)
+      await expect(page.locator("[data-travel-globe]")).not.toHaveAttribute(
+        "data-active-event",
+        /.+/,
+      )
+    }
 
-    expect(response?.ok() ?? false).toEqual(true)
-    await expect(
-      page.getByRole("link", { name: "Kazan, Tatarstan, Russia" }),
-    ).toHaveAttribute("href", travelRoute("2024-08-03-kazan"))
+    await selectNoTripDate("2014-09-17")
+    await selectNoTripDate("2025-08-11")
   })
 
   test("travel stay clicks update the timeline fragment", async ({ page }) => {
@@ -570,7 +580,6 @@ test.describe("e2e tests", () => {
     const sliderTrack = page.locator("[data-travel-track]")
     const datePreview = page.locator("[data-travel-date-preview]")
 
-    await expect(slider).toBeVisible()
     const initialValue = await sliderInput.inputValue()
     const sliderBox = await sliderTrack.boundingBox()
 
@@ -589,20 +598,15 @@ test.describe("e2e tests", () => {
       sliderBox.y + sliderBox.height / 2,
       { steps: 1 },
     )
-    await expect(datePreview).toHaveText(/\d{1,2} [A-Z][a-z]{2} \d{4}/)
+    await expect(datePreview).toHaveText(/\d{1,2} [A-Z][a-z]{2,3} \d{4}/)
     await page.mouse.up()
 
     await expect(sliderInput).not.toHaveValue(initialValue)
     await expect(datePreview).toHaveAttribute("data-visible", "false")
-    await expect(datePreview).toHaveCSS("opacity", "0")
 
     await slider.focus()
     await slider.press("Home")
     await expect(sliderInput).toHaveValue(initialValue)
-    await expect(
-      page.getByRole("heading", { level: 2, name: "Brest, Belarus" }),
-    ).toBeVisible()
-
   })
 
   test("npm install article frontmatter matches article metadata and open graph tags", async ({

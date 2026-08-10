@@ -48,7 +48,7 @@ const mdxPlugin = mdx({
 export default defineConfig({
   build: {
     emptyOutDir: true,
-    outDir: process.env.DIST_DIR ?? "dist-vite",
+    outDir: "dist",
   },
   css: {
     postcss: {

@@ -104,7 +104,7 @@ body:has(#travel-island) > main {
   align-items: flex-start;
   gap: 0.42rem;
   overflow: auto;
-  pointer-events: auto;
+  pointer-events: none;
   scrollbar-width: thin;
 }
 
@@ -118,6 +118,7 @@ body:has(#travel-island) > main {
   font-size: 0.94rem;
   line-height: 1.4;
   padding: 0.12rem 0;
+  pointer-events: auto;
   text-align: left;
 }
 

@@ -38,7 +38,7 @@ const TravelPage = (): JSX.Element => (
   >
     <div id="travel-island">
       <section data-travel-shell aria-label="Travel map">
-        <p data-travel-globe-status>Loading interactive globe…</p>
+        <p data-travel-globe-status>Loading...</p>
       </section>
     </div>
     <noscript>This map needs JavaScript for globe and timeline interaction.</noscript>

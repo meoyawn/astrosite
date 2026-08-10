@@ -1,6 +1,7 @@
 import {
   buildTravelRoutes,
   findClosestEvent,
+  findEventOnDay,
   formatDateRange,
   formatEventDate,
   getEventsForPlace,
@@ -157,6 +158,15 @@ describe("travel data", () => {
     )
   })
 
+  test("treats timeline gaps and home-base records as no-trip days", () => {
+    expect(findEventOnDay(isoDateToDayNumber("2014-09-16"))?.id).toEqual(
+      "2014-08-31-new-york-city",
+    )
+    expect(findEventOnDay(isoDateToDayNumber("2014-09-17"))).toEqual(undefined)
+    expect(findEventOnDay(isoDateToDayNumber("2025-08-11"))).toEqual(undefined)
+    expect(findEventOnDay(isoDateToDayNumber("2026-03-10"))).toEqual(undefined)
+  })
+
   test("does not infer a departure from a nested border run", () => {
     const routes = buildTravelRoutes()
     const abuDhabi = placesById.get("abu-dhabi")
@@ -255,6 +265,7 @@ describe("travel data", () => {
     expect(kazanReturnRoutes[0]?.sourceLabel).toEqual("Istanbul")
     expect(kazanReturnRoutes[0]?.targetLabel).toEqual("Kazan")
     expect(kazanReturnRoutes[0]?.mode).toEqual("plane")
+    expect(kazanReturnRoutes[0]?.destinationEventId).toEqual(undefined)
     expect(
       routes.some(
         route =>
@@ -310,6 +321,11 @@ describe("travel data", () => {
       ["DFW", "IST"],
     ])
     expect(flightRoutes.every(route => route.mode === "plane")).toEqual(true)
+    expect(
+      flightRoutes.every(
+        route => route.destinationEventId === "2022-11-05-istanbul",
+      ),
+    ).toEqual(true)
     expect(
       flightRoutes.some(
         route =>
