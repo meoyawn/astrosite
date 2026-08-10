@@ -32,11 +32,14 @@
   "trips": [
     {"id": "2013-europe-bus", "start": "2013-07-28", "end": "2013-08-09", "basis": "userStated", "mode": "bus"},
     {"id": "2014-united-states", "start": "2014-05-26", "end": "2014-09-16", "basis": "continuousTimeline"},
-    {"id": "2016-ekaterinburg", "start": "2016-01-25", "end": "2016-02-05", "basis": "continuousTimeline"},
+    {"id": "2015-2016-saint-petersburg-ekaterinburg", "start": "2015-07-10", "end": "2016-02-06", "basis": "userStated"},
+    {"id": "2016-saint-petersburg-february", "start": "2016-02-15", "end": "2016-03-07", "basis": "userStated"},
+    {"id": "2016-saint-petersburg-june", "start": "2016-06-16", "end": "2016-06-19", "basis": "userStated"},
     {"id": "2016-germany", "start": "2016-12-24", "end": "2017-01-12", "basis": "userStated", "note": "Ends before a return home to Kazan; it must not connect to the August 2017 France trip."},
     {"id": "2017-france", "start": "2017-08-07", "end": "2017-08-16", "basis": "userStated", "note": "Begins after time at home in Kazan; it must not connect to the Germany trip."},
     {"id": "2018-baku", "start": "2018-05-24", "end": "2018-05-27", "basis": "continuousTimeline"},
-    {"id": "2018-united-states", "start": "2018-07-27", "end": "2018-09-17", "basis": "continuousTimeline"},
+    {"id": "2018-united-states", "start": "2018-07-23", "end": "2018-09-23", "basis": "continuousTimeline"},
+    {"id": "2018-saint-petersburg-october", "start": "2018-10-20", "end": "2018-10-28", "basis": "userStated"},
     {"id": "2019-east-asia-philippines", "start": "2019-04-19", "end": "2019-05-16", "basis": "userStated", "note": "The final night in Incheon, return date, and Almaty layover are approximate."},
     {"id": "2019-united-states", "start": "2019-11-13", "end": "2019-11-30", "basis": "continuousTimeline"},
     {"id": "2021-turkey-autumn", "start": "2021-09-28", "end": "2021-11-26", "basis": "continuousTimeline"},
@@ -59,6 +62,20 @@
       "country": "Russia",
       "latitude": 56.8382071,
       "longitude": 60.6007886
+    },
+    {
+      "id": "saint-petersburg",
+      "name": "Saint Petersburg",
+      "country": "Russia",
+      "latitude": 59.938732,
+      "longitude": 30.316229
+    },
+    {
+      "id": "moscow",
+      "name": "Moscow",
+      "country": "Russia",
+      "latitude": 55.7505412,
+      "longitude": 37.6174782
     },
     {
       "id": "dubai",
@@ -497,19 +514,25 @@
     {"id": "2014-08-20-los-angeles", "start": "2014-08-20", "end": "2014-08-25", "placeIds": ["los-angeles"], "kind": "visit"},
     {"id": "2014-08-26-las-vegas", "start": "2014-08-26", "end": "2014-08-30", "placeIds": ["las-vegas"], "kind": "visit"},
     {"id": "2014-08-31-new-york-city", "start": "2014-08-31", "end": "2014-09-16", "placeIds": ["new-york-city"], "kind": "visit"},
-    {"id": "2016-01-25-ekaterinburg", "start": "2016-01-25", "end": "2016-02-05", "placeIds": ["ekaterinburg"], "kind": "visit"},
+    {"id": "2015-07-10-saint-petersburg", "start": "2015-07-10", "end": "2016-01-23", "placeIds": ["saint-petersburg"], "kind": "extendedStay"},
+    {"id": "2016-01-24-ekaterinburg", "start": "2016-01-24", "end": "2016-02-05", "placeIds": ["ekaterinburg"], "kind": "visit"},
+    {"id": "2016-02-15-saint-petersburg", "start": "2016-02-15", "end": "2016-03-06", "placeIds": ["saint-petersburg"], "kind": "visit"},
+    {"id": "2016-06-16-saint-petersburg", "start": "2016-06-16", "end": "2016-06-18", "placeIds": ["saint-petersburg"], "kind": "visit"},
     {"id": "2016-12-24-hamburg", "start": "2016-12-24", "end": "2016-12-29", "placeIds": ["hamburg"], "kind": "visit"},
     {"id": "2016-12-30-berlin", "start": "2016-12-30", "end": "2017-01-12", "placeIds": ["berlin"], "kind": "visit"},
     {"id": "2017-08-07-paris", "start": "2017-08-07", "end": "2017-08-12", "placeIds": ["paris"], "kind": "visit"},
     {"id": "2017-08-13-dunkirk", "start": "2017-08-13", "end": "2017-08-13", "placeIds": ["dunkirk"], "kind": "visit"},
     {"id": "2017-08-14-paris", "start": "2017-08-14", "end": "2017-08-16", "placeIds": ["paris"], "kind": "visit"},
     {"id": "2018-05-24-baku", "start": "2018-05-24", "end": "2018-05-27", "placeIds": ["baku"], "kind": "visit"},
+    {"id": "2018-07-23-moscow", "start": "2018-07-23", "end": "2018-07-26", "placeIds": ["moscow"], "kind": "visit"},
     {"id": "2018-07-27-new-york-city", "start": "2018-07-27", "end": "2018-07-30", "placeIds": ["new-york-city"], "kind": "visit"},
     {"id": "2018-07-31-los-alamos", "start": "2018-07-31", "end": "2018-08-10", "placeIds": ["los-alamos"], "kind": "visit"},
     {"id": "2018-08-11-longmont", "start": "2018-08-11", "end": "2018-09-01", "placeIds": ["longmont"], "kind": "extendedStay"},
     {"id": "2018-09-02-new-orleans", "start": "2018-09-02", "end": "2018-09-06", "placeIds": ["new-orleans"], "kind": "visit"},
     {"id": "2018-09-07-washington-dc", "start": "2018-09-07", "end": "2018-09-12", "placeIds": ["washington-dc"], "kind": "regionalStay", "note": "Around Washington, DC."},
-    {"id": "2018-09-13-new-york-city", "start": "2018-09-13", "end": "2018-09-17", "placeIds": ["new-york-city"], "kind": "visit"},
+    {"id": "2018-09-13-new-york-city", "start": "2018-09-13", "end": "2018-09-16", "placeIds": ["new-york-city"], "kind": "visit"},
+    {"id": "2018-09-17-moscow", "start": "2018-09-17", "end": "2018-09-22", "placeIds": ["moscow"], "kind": "visit"},
+    {"id": "2018-10-20-saint-petersburg", "start": "2018-10-20", "end": "2018-10-27", "placeIds": ["saint-petersburg"], "kind": "visit"},
     {"id": "2019-04-20-incheon", "start": "2019-04-20", "end": "2019-04-23", "placeIds": ["incheon"], "kind": "visit"},
     {"id": "2019-04-24-hong-kong", "start": "2019-04-24", "end": "2019-05-01", "placeIds": ["hong-kong"], "kind": "visit"},
     {"id": "2019-05-02-tagbilaran", "start": "2019-05-02", "end": "2019-05-04", "placeIds": ["tagbilaran"], "kind": "visit"},
@@ -569,6 +592,123 @@
     {"id": "2026-03-10-kazan", "start": "2026-03-10", "end": "2026-08-10", "placeIds": ["kazan"], "kind": "base"}
   ],
   "transfers": [
+    {
+      "date": "2015-07-10",
+      "fromPlaceId": "kazan",
+      "toPlaceId": "saint-petersburg",
+      "tripId": "2015-2016-saint-petersburg-ekaterinburg",
+      "legs": [
+        {"from": {"placeId": "kazan"}, "to": {"placeId": "saint-petersburg"}, "mode": "plane"}
+      ]
+    },
+    {
+      "date": "2016-01-24",
+      "fromPlaceId": "saint-petersburg",
+      "toPlaceId": "ekaterinburg",
+      "tripId": "2015-2016-saint-petersburg-ekaterinburg",
+      "legs": [
+        {"from": {"placeId": "saint-petersburg"}, "to": {"placeId": "ekaterinburg"}, "mode": "plane"}
+      ]
+    },
+    {
+      "date": "2016-02-06",
+      "fromPlaceId": "ekaterinburg",
+      "toPlaceId": "kazan",
+      "tripId": "2015-2016-saint-petersburg-ekaterinburg",
+      "legs": [
+        {"from": {"placeId": "ekaterinburg"}, "to": {"placeId": "kazan"}, "mode": "plane"}
+      ]
+    },
+    {
+      "date": "2016-02-15",
+      "fromPlaceId": "kazan",
+      "toPlaceId": "saint-petersburg",
+      "tripId": "2016-saint-petersburg-february",
+      "legs": [
+        {"from": {"placeId": "kazan"}, "to": {"placeId": "saint-petersburg"}, "mode": "plane"}
+      ]
+    },
+    {
+      "date": "2016-03-07",
+      "fromPlaceId": "saint-petersburg",
+      "toPlaceId": "kazan",
+      "tripId": "2016-saint-petersburg-february",
+      "legs": [
+        {"from": {"placeId": "saint-petersburg"}, "to": {"placeId": "kazan"}, "mode": "plane"}
+      ]
+    },
+    {
+      "date": "2016-06-16",
+      "fromPlaceId": "kazan",
+      "toPlaceId": "saint-petersburg",
+      "tripId": "2016-saint-petersburg-june",
+      "legs": [
+        {"from": {"placeId": "kazan"}, "to": {"placeId": "saint-petersburg"}, "mode": "plane"}
+      ]
+    },
+    {
+      "date": "2016-06-19",
+      "fromPlaceId": "saint-petersburg",
+      "toPlaceId": "kazan",
+      "tripId": "2016-saint-petersburg-june",
+      "legs": [
+        {"from": {"placeId": "saint-petersburg"}, "to": {"placeId": "kazan"}, "mode": "plane"}
+      ]
+    },
+    {
+      "date": "2018-07-23",
+      "fromPlaceId": "kazan",
+      "toPlaceId": "moscow",
+      "tripId": "2018-united-states",
+      "legs": [
+        {"from": {"placeId": "kazan"}, "to": {"placeId": "moscow"}, "mode": "plane"}
+      ]
+    },
+    {
+      "date": "2018-07-27",
+      "fromPlaceId": "moscow",
+      "toPlaceId": "new-york-city",
+      "tripId": "2018-united-states",
+      "legs": [
+        {"from": {"placeId": "moscow"}, "to": {"placeId": "new-york-city"}, "mode": "plane"}
+      ]
+    },
+    {
+      "date": "2018-09-17",
+      "fromPlaceId": "new-york-city",
+      "toPlaceId": "moscow",
+      "tripId": "2018-united-states",
+      "legs": [
+        {"from": {"placeId": "new-york-city"}, "to": {"placeId": "moscow"}, "mode": "plane"}
+      ]
+    },
+    {
+      "date": "2018-09-23",
+      "fromPlaceId": "moscow",
+      "toPlaceId": "kazan",
+      "tripId": "2018-united-states",
+      "legs": [
+        {"from": {"placeId": "moscow"}, "to": {"placeId": "kazan"}, "mode": "plane"}
+      ]
+    },
+    {
+      "date": "2018-10-20",
+      "fromPlaceId": "kazan",
+      "toPlaceId": "saint-petersburg",
+      "tripId": "2018-saint-petersburg-october",
+      "legs": [
+        {"from": {"placeId": "kazan"}, "to": {"placeId": "saint-petersburg"}, "mode": "plane"}
+      ]
+    },
+    {
+      "date": "2018-10-28",
+      "fromPlaceId": "saint-petersburg",
+      "toPlaceId": "kazan",
+      "tripId": "2018-saint-petersburg-october",
+      "legs": [
+        {"from": {"placeId": "saint-petersburg"}, "to": {"placeId": "kazan"}, "mode": "plane"}
+      ]
+    },
     {
       "date": "2019-04-19",
       "fromPlaceId": "kazan",
