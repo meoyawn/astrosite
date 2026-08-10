@@ -89,7 +89,7 @@ const positionMatches = (
 
 const elevatedMarkerPosition = (
   position: [number, number],
-): [number, number, number] => [position[0], position[1], 5_000]
+): [number, number, number] => [position[0], position[1], 25_000]
 
 const labelForEvent = (event: TravelEvent): string => {
   if (event.placeIds.length === 1) {
@@ -236,6 +236,19 @@ export const TravelMap = () => {
   }
 
   const selectPlace = (place: TravelPlace): void => {
+    const latestVisit = getEventsForPlace(place.id)
+      .filter(event => event.kind !== "base")
+      .at(-1)
+
+    if (latestVisit !== undefined) {
+      selectVisit(
+        latestVisit,
+        isoDateToDayNumber(latestVisit.start),
+        placePosition(place),
+      )
+      return
+    }
+
     clearTravelFragment()
     setSelectedEventId(undefined)
     setSelectedPlaceId(place.id)
