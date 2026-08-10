@@ -87,7 +87,7 @@ const routeTooltipHtml = (route: TravelRoute): string => {
 const createInitialViewState = (): GlobeViewState => ({
   latitude: 24,
   longitude: 68,
-  maxZoom: 4,
+  maxZoom: 7,
   minZoom: -0.25,
   zoom: window.innerWidth > 820 ? 2.85 : 2.2,
 })
