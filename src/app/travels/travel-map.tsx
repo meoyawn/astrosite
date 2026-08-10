@@ -2,7 +2,7 @@ import { ArcLayer, ScatterplotLayer } from "@deck.gl/layers"
 import { MapboxOverlay } from "@deck.gl/mapbox"
 import { Slider } from "@kobalte/core/slider"
 import { createEffect, createMemo, createSignal, For, onCleanup, onMount, Show } from "solid-js"
-import maplibregl from "maplibre-gl"
+import maplibregl, { type StyleSpecification } from "maplibre-gl"
 import "maplibre-gl/dist/maplibre-gl.css"
 import { travelRoute } from "../../routes.ts"
 import {
@@ -31,6 +31,17 @@ import {
 } from "./travel-data.ts"
 
 const mapStyleUrl = "https://basemaps.cartocdn.com/gl/positron-gl-style/style.json"
+const fallbackMapStyle: StyleSpecification = {
+  layers: [
+    {
+      id: "background",
+      paint: { "background-color": "#eff6fc" },
+      type: "background",
+    },
+  ],
+  sources: {},
+  version: 8,
+}
 
 const travelRoutesById = new Map(travelRoutes.map(route => [route.id, route]))
 const homeBase = getPlace("kazan")
@@ -111,16 +122,43 @@ const dateRangeForPlace = (placeId: string): string => {
   return formatDateRange(firstEvent.start, lastEvent.end)
 }
 
+const eventForTravelHash = (hash: string): TravelEvent | undefined => {
+  const encodedEventId = hash.startsWith("#") ? hash.slice(1) : hash
+
+  if (encodedEventId === "") {
+    return undefined
+  }
+
+  try {
+    const eventId = decodeURIComponent(encodedEventId)
+    return travelData.timeline.find(event => event.id === eventId)
+  } catch {
+    return undefined
+  }
+}
+
 export const TravelMap = () => {
   let map: maplibregl.Map | undefined
   let overlay: MapboxOverlay | undefined
   let globeElement: HTMLDivElement | undefined
   let mapElement: HTMLDivElement | undefined
+  const initialEvent = eventForTravelHash(
+    typeof location === "undefined" ? "" : location.hash,
+  )
+  const initialMapCenter = initialEvent === undefined
+    ? initialCenter
+    : getEventCenter(initialEvent)
 
   const [mapStatus, setMapStatus] = createSignal<string | undefined>("Loading...")
-  const [selectedDay, setSelectedDay] = createSignal(firstTravelDay)
-  const [selectedEventId, setSelectedEventId] = createSignal<string>()
-  const [selectedPlaceId, setSelectedPlaceId] = createSignal<string>()
+  const [selectedDay, setSelectedDay] = createSignal(
+    initialEvent === undefined
+      ? firstTravelDay
+      : isoDateToDayNumber(initialEvent.start),
+  )
+  const [selectedEventId, setSelectedEventId] = createSignal(initialEvent?.id)
+  const [selectedPlaceId, setSelectedPlaceId] = createSignal(
+    initialEvent?.placeIds[0],
+  )
   const [isTimelineSliding, setIsTimelineSliding] = createSignal(false)
 
   const selectedEvent = createMemo(() => {
@@ -304,23 +342,7 @@ export const TravelMap = () => {
   }
 
   function syncSelectionFromFragment(): void {
-    const encodedEventId = location.hash.slice(1)
-
-    if (encodedEventId === "") {
-      resetTravelSelection()
-      return
-    }
-
-    let eventId: string
-
-    try {
-      eventId = decodeURIComponent(encodedEventId)
-    } catch {
-      resetTravelSelection()
-      return
-    }
-
-    const event = travelData.timeline.find(item => item.id === eventId)
+    const event = eventForTravelHash(location.hash)
 
     if (event === undefined) {
       resetTravelSelection()
@@ -526,7 +548,7 @@ export const TravelMap = () => {
       map = new maplibregl.Map({
         attributionControl: false,
         canvasContextAttributes: { antialias: true },
-        center: initialCenter,
+        center: initialMapCenter,
         container: mapElement,
         maxZoom: 7,
         minZoom: 0,
@@ -534,6 +556,15 @@ export const TravelMap = () => {
         style: mapStyleUrl,
         zoom: initialZoom,
       })
+      const mapCanvas = map.getCanvas()
+      let fallbackStyleIsActive = false
+
+      mapCanvas.setAttribute(
+        "aria-label",
+        "Interactive map of every travel destination",
+      )
+      mapCanvas.setAttribute("role", "img")
+      mapCanvas.tabIndex = 0
 
       overlay = new MapboxOverlay({
         getTooltip: info => {
@@ -583,16 +614,21 @@ export const TravelMap = () => {
       })
 
       map.addControl(overlay)
-      map.on("style.load", () => map?.setProjection({ type: "globe" }))
+      map.on("style.load", () => {
+        map?.setProjection({ type: "globe" })
+        setMapStatus(undefined)
+      })
       map.on("load", () => setMapStatus(undefined))
-      map.on("error", event => {
-        setMapStatus(`Map unavailable: ${event.error.message}`)
+      map.on("error", () => {
+        if (!fallbackStyleIsActive && map?.isStyleLoaded() !== true) {
+          fallbackStyleIsActive = true
+          map?.setStyle(fallbackMapStyle)
+        }
       })
       map.on("moveend", () => {
-        exposeViewLongitude(map?.getCenter().lng ?? initialCenter[0])
+        exposeViewLongitude(map?.getCenter().lng ?? initialMapCenter[0])
       })
 
-      syncSelectionFromFragment()
       addEventListener("hashchange", syncSelectionFromFragment)
       onCleanup(() => {
         removeEventListener("hashchange", syncSelectionFromFragment)
@@ -698,7 +734,7 @@ export const TravelMap = () => {
         }}
         data-travel-globe
         data-active-event={selectedEventId()}
-        data-view-longitude={initialCenter[0]}
+        data-view-longitude={initialMapCenter[0]}
         aria-label="Interactive globe. Drag to rotate and scroll to zoom."
         role="application"
         tabindex="0"

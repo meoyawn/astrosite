@@ -549,6 +549,11 @@ test.describe("e2e tests", () => {
     await page.goto(
       `${builtOrigin}${travelRoute("2014-08-31-new-york-city")}`,
     )
+    expect(
+      await page.locator("[data-travel-globe]").getAttribute(
+        "data-view-longitude",
+      ),
+    ).toBe("-74.0060152")
     await expect(
       page.getByRole("heading", {
         level: 2,
