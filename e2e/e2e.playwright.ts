@@ -1,4 +1,4 @@
-import { existsSync, readdirSync, readFileSync, statSync } from "node:fs"
+import { existsSync, mkdirSync, readdirSync, readFileSync, statSync } from "node:fs"
 import { join, relative, resolve } from "node:path"
 import { expect, type Page, test } from "@playwright/test"
 import { load } from "js-yaml"
@@ -39,6 +39,10 @@ const contentTypeFor = (filePath: string): string => {
 
   if (filePath.endsWith(".html")) {
     return "text/html"
+  }
+
+  if (filePath.endsWith(".js")) {
+    return "text/javascript"
   }
 
   if (filePath.endsWith(".svg")) {
@@ -135,6 +139,23 @@ const routeExists = async (fileName: string): Promise<boolean> =>
 
 const pdfPageCount = (pdf: Buffer): number =>
   pdf.toString("latin1").match(/\/Type\s*\/Page\b/g)?.length ?? 0
+
+const captureTravelScreenshot = async (
+  page: Page,
+  fileName: string,
+): Promise<void> => {
+  const screenshotsDirectory = process.env.TRAVEL_SCREENSHOTS_DIR
+
+  if (screenshotsDirectory === undefined) {
+    return
+  }
+
+  mkdirSync(screenshotsDirectory, { recursive: true })
+  await page.screenshot({
+    fullPage: true,
+    path: resolve(screenshotsDirectory, fileName),
+  })
+}
 
 const routeBuiltFiles = async (page: Page): Promise<void> => {
   if (siteUrl !== undefined) {
@@ -359,6 +380,108 @@ test.describe("e2e tests", () => {
       "/cv",
     )
     await expect(main.getByText(/Pneuma LLC/)).toBeVisible()
+  })
+
+  test("travel globe links the timeline, stays, and independent rotation", async ({
+    page,
+  }) => {
+    test.setTimeout(60_000)
+    await routeBuiltFiles(page)
+    await page.setViewportSize({ height: 1000, width: 1600 })
+
+    expect(
+      await routeExists("travels/index.html"),
+      "Expected /travels/ to be emitted as static HTML.",
+    ).toEqual(true)
+
+    const response = await page.goto(`${builtOrigin}/travels/`)
+
+    expect(response?.ok() ?? false).toEqual(true)
+    await expect(page.getByRole("main")).toHaveCount(1)
+    await expect(
+      page.getByRole("navigation", { name: "Site navigation" }),
+    ).toBeVisible()
+    await expect(page.getByRole("link", { name: "Home" })).toBeVisible()
+    await expect(page.getByRole("button", { name: "All journeys" })).toHaveCount(0)
+    await expect(
+      page.getByRole("heading", { level: 2, name: "All journeys" }),
+    ).toBeVisible()
+    await expect(page.locator("[data-travel-globe-status]")).toBeHidden()
+
+    const canvas = page.getByRole("img", {
+      name: "Interactive map of every travel destination",
+    })
+    const slider = page.getByRole("slider", { name: "Travel timeline" })
+
+    await expect(canvas).toBeVisible()
+    await expect(slider).toBeVisible()
+    await captureTravelScreenshot(page, "travels-desktop.png")
+
+    const june2023Day = Math.floor(
+      Date.parse("2023-06-01T00:00:00Z") / 86_400_000,
+    )
+
+    await slider.fill(String(june2023Day))
+    await expect(
+      page.getByRole("heading", {
+        level: 2,
+        name: "Kuala Lumpur, Malaysia",
+      }),
+    ).toBeVisible()
+    await expect(
+      page.getByRole("button", { name: "2 May — 14 Jun 2023" }),
+    ).toHaveAttribute("aria-pressed", "true")
+    await page.waitForTimeout(900)
+    await slider.evaluate(element => element.blur())
+    await page.evaluate(() => window.scrollTo(0, 0))
+    await captureTravelScreenshot(page, "travels-selected-desktop.png")
+
+    const august2022 = page.getByRole("button", {
+      name: "5 Aug — 24 Aug 2022",
+    })
+
+    await august2022.click()
+    await expect(august2022).toHaveAttribute("aria-pressed", "true")
+    await expect(slider).toHaveValue(
+      String(Math.floor(Date.parse("2022-08-05T00:00:00Z") / 86_400_000)),
+    )
+
+    await page.waitForTimeout(900)
+    const canvasBeforeDrag = await canvas.screenshot()
+    const canvasBox = await canvas.boundingBox()
+
+    if (canvasBox === null) {
+      throw new Error("Expected the travel globe canvas to have a bounding box.")
+    }
+
+    await page.mouse.move(
+      canvasBox.x + canvasBox.width * 0.72,
+      canvasBox.y + canvasBox.height * 0.52,
+    )
+    await page.mouse.down()
+    await page.mouse.move(
+      canvasBox.x + canvasBox.width * 0.48,
+      canvasBox.y + canvasBox.height * 0.52,
+      { steps: 8 },
+    )
+    await page.mouse.up()
+    await page.waitForTimeout(250)
+
+    expect((await canvas.screenshot()).equals(canvasBeforeDrag)).toEqual(false)
+
+    await page.setViewportSize({ height: 844, width: 390 })
+    await page.reload()
+    await expect(page.locator("[data-travel-globe-status]")).toBeHidden()
+    await expect
+      .poll(() =>
+        page.evaluate(() => document.documentElement.scrollWidth),
+      )
+      .toBe(390)
+    await expect(
+      page.locator("[data-travel-years] span").last(),
+    ).toBeInViewport()
+    await page.evaluate(() => window.scrollTo(0, 0))
+    await captureTravelScreenshot(page, "travels-mobile.png")
   })
 
   test("npm install article frontmatter matches article metadata and open graph tags", async ({

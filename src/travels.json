@@ -1,0 +1,627 @@
+{
+  "schemaVersion": 2,
+  "title": "Travels",
+  "coverage": {
+    "start": "2013-07-28",
+    "end": "2026-03-09"
+  },
+  "dateSemantics": {
+    "interval": "inclusive",
+    "handoffRule": "When a new stay starts on the former end date, the destination owns that date and the previous stay ends one day earlier.",
+    "waypointRule": "Flight-only stops belong to transfers, not timeline stays, and do not own slider dates.",
+    "uncertaintyRule": "An event dateLabel preserves supplied date uncertainty; its start and end bound the possible slider dates rather than asserting a stay across the whole interval."
+  },
+  "routeSemantics": {
+    "tripRule": "Every arc belongs to one declared trip and connects either consecutive timeline events or the segments of an explicit transfer.",
+    "homeBaseRule": "Home bases are never connected by chronological inference; only an explicit transfer assigned to a trip may use one as a route endpoint."
+  },
+  "coordinateSource": {
+    "name": "OpenStreetMap contributors via Nominatim",
+    "url": "https://nominatim.openstreetmap.org/",
+    "licenseUrl": "https://www.openstreetmap.org/copyright",
+    "retrieved": "2026-08-10"
+  },
+  "homeBases": [
+    {
+      "placeId": "kazan",
+      "before": "2022-03-04",
+      "basis": "userStated",
+      "note": "Kazan was the base before 2022; exact start date is unknown."
+    }
+  ],
+  "trips": [
+    {"id": "2013-europe-bus", "start": "2013-07-28", "end": "2013-08-09", "basis": "userStated", "mode": "bus"},
+    {"id": "2014-united-states", "start": "2014-05-26", "end": "2014-09-16", "basis": "continuousTimeline"},
+    {"id": "2016-ekaterinburg", "start": "2016-01-25", "end": "2016-02-05", "basis": "continuousTimeline"},
+    {"id": "2016-germany", "start": "2016-12-24", "end": "2017-01-12", "basis": "userStated", "note": "Ends before a return home to Kazan; it must not connect to the August 2017 France trip."},
+    {"id": "2017-france", "start": "2017-08-07", "end": "2017-08-16", "basis": "userStated", "note": "Begins after time at home in Kazan; it must not connect to the Germany trip."},
+    {"id": "2018-baku", "start": "2018-05-24", "end": "2018-05-27", "basis": "continuousTimeline"},
+    {"id": "2018-united-states", "start": "2018-07-27", "end": "2018-09-17", "basis": "continuousTimeline"},
+    {"id": "2019-united-states", "start": "2019-11-13", "end": "2019-11-30", "basis": "continuousTimeline"},
+    {"id": "2021-turkey-autumn", "start": "2021-09-28", "end": "2021-11-26", "basis": "continuousTimeline"},
+    {"id": "2021-istanbul-winter", "start": "2021-12-10", "end": "2021-12-25", "basis": "continuousTimeline"},
+    {"id": "2022-2024-continuous-travel", "start": "2022-03-04", "end": "2024-08-02", "basis": "continuousTimeline", "note": "Starts with the explicit Kazan to Ekaterinburg/SVX to Dubai transfer and returns from Istanbul to Kazan on 2 Aug 2024; no other home-base connections are inferred."},
+    {"id": "2025-2026-southeast-asia", "start": "2025-10-28", "end": "2026-03-09", "basis": "continuousTimeline"}
+  ],
+  "places": [
+    {
+      "id": "kazan",
+      "name": "Kazan",
+      "region": "Tatarstan",
+      "country": "Russia",
+      "latitude": 55.7946485,
+      "longitude": 49.1115022
+    },
+    {
+      "id": "ekaterinburg",
+      "name": "Ekaterinburg",
+      "country": "Russia",
+      "latitude": 56.8382071,
+      "longitude": 60.6007886
+    },
+    {
+      "id": "dubai",
+      "name": "Dubai",
+      "country": "United Arab Emirates",
+      "latitude": 25.0742823,
+      "longitude": 55.1885624
+    },
+    {
+      "id": "tbilisi",
+      "name": "Tbilisi",
+      "country": "Georgia",
+      "latitude": 41.6934591,
+      "longitude": 44.8014495
+    },
+    {
+      "id": "baku",
+      "name": "Baku",
+      "country": "Azerbaijan",
+      "latitude": 40.3755885,
+      "longitude": 49.8328009
+    },
+    {
+      "id": "abu-dhabi",
+      "name": "Abu Dhabi",
+      "country": "United Arab Emirates",
+      "latitude": 24.4538352,
+      "longitude": 54.3774014
+    },
+    {
+      "id": "new-york-city",
+      "name": "New York City",
+      "country": "United States",
+      "latitude": 40.7127281,
+      "longitude": -74.0060152
+    },
+    {
+      "id": "los-alamos",
+      "name": "Los Alamos",
+      "region": "New Mexico",
+      "country": "United States",
+      "latitude": 35.88137,
+      "longitude": -106.298959
+    },
+    {
+      "id": "denver",
+      "name": "Denver",
+      "region": "Colorado",
+      "country": "United States",
+      "latitude": 39.7392364,
+      "longitude": -104.984862
+    },
+    {
+      "id": "colorado-springs",
+      "name": "Colorado Springs",
+      "region": "Colorado",
+      "country": "United States",
+      "latitude": 38.8339578,
+      "longitude": -104.825348
+    },
+    {
+      "id": "longmont",
+      "name": "Longmont",
+      "region": "Colorado",
+      "country": "United States",
+      "latitude": 40.1672117,
+      "longitude": -105.101928
+    },
+    {
+      "id": "evergreen",
+      "name": "Evergreen",
+      "region": "Colorado",
+      "country": "United States",
+      "latitude": 39.6361637,
+      "longitude": -105.321458
+    },
+    {
+      "id": "taos",
+      "name": "Taos",
+      "region": "New Mexico",
+      "country": "United States",
+      "latitude": 36.4072377,
+      "longitude": -105.573284
+    },
+    {
+      "id": "new-orleans",
+      "name": "New Orleans",
+      "country": "United States",
+      "latitude": 29.9561422,
+      "longitude": -90.0733934
+    },
+    {
+      "id": "washington-dc",
+      "name": "Washington, DC",
+      "country": "United States",
+      "latitude": 38.8950982,
+      "longitude": -77.0363849
+    },
+    {
+      "id": "white-rock",
+      "name": "White Rock",
+      "region": "New Mexico",
+      "country": "United States",
+      "latitude": 35.8278562,
+      "longitude": -106.2087891
+    },
+    {
+      "id": "albuquerque",
+      "name": "Albuquerque",
+      "region": "New Mexico",
+      "country": "United States",
+      "latitude": 35.0841034,
+      "longitude": -106.650985
+    },
+    {
+      "id": "san-francisco",
+      "name": "San Francisco",
+      "region": "California",
+      "country": "United States",
+      "latitude": 37.7879363,
+      "longitude": -122.4075201
+    },
+    {
+      "id": "los-angeles",
+      "name": "Los Angeles",
+      "region": "California",
+      "country": "United States",
+      "latitude": 34.0536909,
+      "longitude": -118.242766
+    },
+    {
+      "id": "las-vegas",
+      "name": "Las Vegas",
+      "region": "Nevada",
+      "country": "United States",
+      "latitude": 36.1674263,
+      "longitude": -115.1484131
+    },
+    {
+      "id": "antalya",
+      "name": "Antalya",
+      "country": "Turkey",
+      "latitude": 36.8865728,
+      "longitude": 30.7030242
+    },
+    {
+      "id": "alanya",
+      "name": "Alanya",
+      "country": "Turkey",
+      "latitude": 36.543668,
+      "longitude": 32.0019387
+    },
+    {
+      "id": "trabzon",
+      "name": "Trabzon",
+      "country": "Turkey",
+      "latitude": 41.0054605,
+      "longitude": 39.7301463
+    },
+    {
+      "id": "istanbul",
+      "name": "Istanbul",
+      "country": "Turkey",
+      "latitude": 41.006381,
+      "longitude": 28.9758715
+    },
+    {
+      "id": "bangkok",
+      "name": "Bangkok",
+      "country": "Thailand",
+      "latitude": 13.7524938,
+      "longitude": 100.4935089
+    },
+    {
+      "id": "phuket",
+      "name": "Phuket",
+      "country": "Thailand",
+      "latitude": 7.8847901,
+      "longitude": 98.3891503
+    },
+    {
+      "id": "krabi",
+      "name": "Krabi",
+      "country": "Thailand",
+      "latitude": 8.1111653,
+      "longitude": 99.1097298
+    },
+    {
+      "id": "kuala-lumpur",
+      "name": "Kuala Lumpur",
+      "country": "Malaysia",
+      "latitude": 3.1516964,
+      "longitude": 101.6942371
+    },
+    {
+      "id": "singapore",
+      "name": "Singapore",
+      "country": "Singapore",
+      "latitude": 1.357107,
+      "longitude": 103.8194992
+    },
+    {
+      "id": "denpasar",
+      "name": "Denpasar",
+      "region": "Bali",
+      "country": "Indonesia",
+      "latitude": -8.6653349,
+      "longitude": 115.2176191
+    },
+    {
+      "id": "da-nang",
+      "name": "Da Nang",
+      "country": "Vietnam",
+      "latitude": 16.068501,
+      "longitude": 108.2240242
+    },
+    {
+      "id": "nha-trang",
+      "name": "Nha Trang",
+      "country": "Vietnam",
+      "latitude": 12.2084991,
+      "longitude": 109.2871204
+    },
+    {
+      "id": "brest-belarus",
+      "name": "Brest",
+      "region": "Brest Region",
+      "country": "Belarus",
+      "latitude": 52.093751,
+      "longitude": 23.6851851
+    },
+    {
+      "id": "goczalkowice-zdroj",
+      "name": "Goczałkowice-Zdrój",
+      "region": "Silesian Voivodeship",
+      "country": "Poland",
+      "latitude": 49.9480962,
+      "longitude": 18.951341
+    },
+    {
+      "id": "brno",
+      "name": "Brno",
+      "region": "South Moravian Region",
+      "country": "Czechia",
+      "latitude": 49.1922443,
+      "longitude": 16.6113382
+    },
+    {
+      "id": "vienna",
+      "name": "Vienna",
+      "country": "Austria",
+      "latitude": 48.2083537,
+      "longitude": 16.3725042
+    },
+    {
+      "id": "st-margarethen-im-lungau",
+      "name": "St. Margarethen im Lungau",
+      "region": "Salzburg",
+      "country": "Austria",
+      "latitude": 47.0806102,
+      "longitude": 13.6947849
+    },
+    {
+      "id": "verona",
+      "name": "Verona",
+      "region": "Veneto",
+      "country": "Italy",
+      "latitude": 45.4429795,
+      "longitude": 10.9977169
+    },
+    {
+      "id": "nice",
+      "name": "Nice",
+      "region": "Provence-Alpes-Côte d'Azur",
+      "country": "France",
+      "latitude": 43.7009358,
+      "longitude": 7.2683912
+    },
+    {
+      "id": "sanremo",
+      "name": "Sanremo",
+      "region": "Liguria",
+      "country": "Italy",
+      "latitude": 43.8362985,
+      "longitude": 7.7772658
+    },
+    {
+      "id": "barcelona",
+      "name": "Barcelona",
+      "region": "Catalonia",
+      "country": "Spain",
+      "latitude": 41.3825802,
+      "longitude": 2.177073
+    },
+    {
+      "id": "lloret-de-mar",
+      "name": "Lloret de Mar",
+      "region": "Catalonia",
+      "country": "Spain",
+      "latitude": 41.6973503,
+      "longitude": 2.8392392
+    },
+    {
+      "id": "chateau-de-chambord",
+      "name": "Château de Chambord",
+      "region": "Centre-Val de Loire",
+      "country": "France",
+      "latitude": 47.6160697,
+      "longitude": 1.5170502
+    },
+    {
+      "id": "paris",
+      "name": "Paris",
+      "country": "France",
+      "latitude": 48.8534951,
+      "longitude": 2.3483915
+    },
+    {
+      "id": "strasbourg",
+      "name": "Strasbourg",
+      "region": "Grand Est",
+      "country": "France",
+      "latitude": 48.584614,
+      "longitude": 7.7507127
+    },
+    {
+      "id": "frankfurt-am-main",
+      "name": "Frankfurt am Main",
+      "region": "Hesse",
+      "country": "Germany",
+      "latitude": 50.1106444,
+      "longitude": 8.6820917
+    },
+    {
+      "id": "hamburg",
+      "name": "Hamburg",
+      "country": "Germany",
+      "latitude": 53.5501721,
+      "longitude": 10.0013165
+    },
+    {
+      "id": "berlin",
+      "name": "Berlin",
+      "country": "Germany",
+      "latitude": 52.5173885,
+      "longitude": 13.3951309
+    },
+    {
+      "id": "dunkirk",
+      "name": "Dunkirk",
+      "region": "Hauts-de-France",
+      "country": "France",
+      "latitude": 51.0347708,
+      "longitude": 2.3772525
+    }
+  ],
+  "waypoints": [
+    {"id": "den-airport", "code": "DEN", "name": "Denver International Airport", "country": "United States", "latitude": 39.8606676, "longitude": -104.6853673, "kind": "airport"},
+    {"id": "abq-airport", "code": "ABQ", "name": "Albuquerque International Sunport", "country": "United States", "latitude": 35.0376694, "longitude": -106.6109675, "kind": "airport"},
+    {"id": "dfw-airport", "code": "DFW", "name": "Dallas/Fort Worth International Airport", "country": "United States", "latitude": 32.8962506, "longitude": -97.0453389, "kind": "airport"},
+    {"id": "ist-airport", "code": "IST", "name": "Istanbul Airport", "country": "Turkey", "latitude": 41.2748684, "longitude": 28.7322749, "kind": "airport"},
+    {"id": "dxb-airport", "code": "DXB", "name": "Dubai International Airport", "country": "United Arab Emirates", "latitude": 25.2515424, "longitude": 55.3666519, "kind": "airport"},
+    {"id": "svx-airport", "code": "SVX", "name": "Koltsovo International Airport", "country": "Russia", "latitude": 56.7445764, "longitude": 60.8027902, "kind": "airport"},
+    {"id": "tpe-airport", "code": "TPE", "name": "Taiwan Taoyuan International Airport", "country": "Taiwan", "latitude": 25.0793174, "longitude": 121.2345977, "kind": "airport"},
+    {"id": "sfo-airport", "code": "SFO", "name": "San Francisco International Airport", "country": "United States", "latitude": 37.622452, "longitude": -122.3839894, "kind": "airport"}
+  ],
+  "timeline": [
+    {"id": "2013-07-28-brest-departure", "start": "2013-07-28", "end": "2013-07-28", "placeIds": ["brest-belarus"], "kind": "visit", "note": "Probable early-morning departure."},
+    {"id": "2013-07-28-goczalkowice-zdroj", "start": "2013-07-28", "end": "2013-07-28", "placeIds": ["goczalkowice-zdroj"], "kind": "visit", "note": "Ogrody Kapias."},
+    {"id": "2013-07-28-brno-overnight", "start": "2013-07-28", "end": "2013-07-29", "placeIds": ["brno"], "kind": "overnight"},
+    {"id": "2013-07-29-vienna", "start": "2013-07-29", "end": "2013-07-29", "placeIds": ["vienna"], "kind": "visit", "note": "Stephansdom."},
+    {"id": "2013-07-29-st-margarethen-im-lungau", "start": "2013-07-29", "end": "2013-07-30", "placeIds": ["st-margarethen-im-lungau"], "kind": "overnight", "note": "Landhotel Almstubn."},
+    {"id": "2013-07-30-verona", "start": "2013-07-30", "end": "2013-07-30", "placeIds": ["verona"], "kind": "visit", "note": "Torre dei Lamberti and central Verona."},
+    {"id": "2013-07-31-nice", "start": "2013-07-31", "end": "2013-07-31", "placeIds": ["nice"], "kind": "visit", "note": "Hôtel de Ville and Le Pouce."},
+    {"id": "2013-07-31-sanremo-overnight", "start": "2013-07-31", "end": "2013-08-01", "placeIds": ["sanremo"], "kind": "overnight"},
+    {"id": "2013-08-01-barcelona-lloret-de-mar", "start": "2013-08-01", "end": "2013-08-04", "placeIds": ["barcelona", "lloret-de-mar"], "kind": "regionalStay", "note": "Moving and staying between Barcelona and Lloret de Mar."},
+    {"id": "2013-08-05-chateau-de-chambord", "start": "2013-08-05", "end": "2013-08-05", "placeIds": ["chateau-de-chambord"], "kind": "visit"},
+    {"id": "2013-08-05-paris", "start": "2013-08-05", "end": "2013-08-07", "placeIds": ["paris"], "kind": "visit"},
+    {"id": "2013-08-07-strasbourg", "start": "2013-08-07", "end": "2013-08-07", "placeIds": ["strasbourg"], "kind": "visit"},
+    {"id": "2013-08-07-frankfurt-am-main", "start": "2013-08-07", "end": "2013-08-08", "placeIds": ["frankfurt-am-main"], "kind": "overnight"},
+    {"id": "2013-08-08-brest-return", "start": "2013-08-08", "end": "2013-08-09", "dateLabel": "8 or 9 Aug 2013", "placeIds": ["brest-belarus"], "kind": "uncertainReturn", "note": "The exact return day is unresolved; this is an uncertainty window, not a two-day stay."},
+    {"id": "2014-05-26-new-york-city", "start": "2014-05-26", "end": "2014-05-26", "placeIds": ["new-york-city"], "kind": "visit"},
+    {"id": "2014-05-27-new-orleans", "start": "2014-05-27", "end": "2014-07-31", "placeIds": ["new-orleans"], "kind": "extendedStay"},
+    {"id": "2014-08-01-white-rock", "start": "2014-08-01", "end": "2014-08-11", "placeIds": ["white-rock"], "kind": "visit"},
+    {"id": "2014-08-12-albuquerque", "start": "2014-08-12", "end": "2014-08-15", "placeIds": ["albuquerque"], "kind": "visit"},
+    {"id": "2014-08-16-san-francisco", "start": "2014-08-16", "end": "2014-08-19", "placeIds": ["san-francisco"], "kind": "visit"},
+    {"id": "2014-08-20-los-angeles", "start": "2014-08-20", "end": "2014-08-25", "placeIds": ["los-angeles"], "kind": "visit"},
+    {"id": "2014-08-26-las-vegas", "start": "2014-08-26", "end": "2014-08-30", "placeIds": ["las-vegas"], "kind": "visit"},
+    {"id": "2014-08-31-new-york-city", "start": "2014-08-31", "end": "2014-09-16", "placeIds": ["new-york-city"], "kind": "visit"},
+    {"id": "2016-01-25-ekaterinburg", "start": "2016-01-25", "end": "2016-02-05", "placeIds": ["ekaterinburg"], "kind": "visit"},
+    {"id": "2016-12-24-hamburg", "start": "2016-12-24", "end": "2016-12-29", "placeIds": ["hamburg"], "kind": "visit"},
+    {"id": "2016-12-30-berlin", "start": "2016-12-30", "end": "2017-01-12", "placeIds": ["berlin"], "kind": "visit"},
+    {"id": "2017-08-07-paris", "start": "2017-08-07", "end": "2017-08-12", "placeIds": ["paris"], "kind": "visit"},
+    {"id": "2017-08-13-dunkirk", "start": "2017-08-13", "end": "2017-08-13", "placeIds": ["dunkirk"], "kind": "visit"},
+    {"id": "2017-08-14-paris", "start": "2017-08-14", "end": "2017-08-16", "placeIds": ["paris"], "kind": "visit"},
+    {"id": "2018-05-24-baku", "start": "2018-05-24", "end": "2018-05-27", "placeIds": ["baku"], "kind": "visit"},
+    {"id": "2018-07-27-new-york-city", "start": "2018-07-27", "end": "2018-07-30", "placeIds": ["new-york-city"], "kind": "visit"},
+    {"id": "2018-07-31-los-alamos", "start": "2018-07-31", "end": "2018-08-10", "placeIds": ["los-alamos"], "kind": "visit"},
+    {"id": "2018-08-11-longmont", "start": "2018-08-11", "end": "2018-09-01", "placeIds": ["longmont"], "kind": "extendedStay"},
+    {"id": "2018-09-02-new-orleans", "start": "2018-09-02", "end": "2018-09-06", "placeIds": ["new-orleans"], "kind": "visit"},
+    {"id": "2018-09-07-washington-dc", "start": "2018-09-07", "end": "2018-09-12", "placeIds": ["washington-dc"], "kind": "regionalStay", "note": "Around Washington, DC."},
+    {"id": "2018-09-13-new-york-city", "start": "2018-09-13", "end": "2018-09-17", "placeIds": ["new-york-city"], "kind": "visit"},
+    {"id": "2019-11-13-new-york-city", "start": "2019-11-13", "end": "2019-11-13", "placeIds": ["new-york-city"], "kind": "visit"},
+    {"id": "2019-11-14-new-orleans", "start": "2019-11-14", "end": "2019-11-16", "placeIds": ["new-orleans"], "kind": "visit"},
+    {"id": "2019-11-17-los-alamos", "start": "2019-11-17", "end": "2019-11-27", "placeIds": ["los-alamos"], "kind": "visit"},
+    {"id": "2019-11-28-new-york-city", "start": "2019-11-28", "end": "2019-11-30", "placeIds": ["new-york-city"], "kind": "visit"},
+    {"id": "2021-09-28-antalya", "start": "2021-09-28", "end": "2021-10-25", "placeIds": ["antalya"], "kind": "visit"},
+    {"id": "2021-10-26-trabzon", "start": "2021-10-26", "end": "2021-10-30", "placeIds": ["trabzon"], "kind": "visit"},
+    {"id": "2021-10-31-istanbul", "start": "2021-10-31", "end": "2021-11-26", "placeIds": ["istanbul"], "kind": "visit"},
+    {"id": "2021-12-10-istanbul", "start": "2021-12-10", "end": "2021-12-25", "placeIds": ["istanbul"], "kind": "visit"},
+    {"id": "2022-03-04-dubai", "start": "2022-03-04", "end": "2022-03-04", "placeIds": ["dubai"], "kind": "visit"},
+    {"id": "2022-03-05-tbilisi", "start": "2022-03-05", "end": "2022-03-09", "placeIds": ["tbilisi"], "kind": "visit"},
+    {"id": "2022-03-10-baku", "start": "2022-03-10", "end": "2022-05-30", "placeIds": ["baku"], "kind": "extendedStay"},
+    {"id": "2022-05-31-abu-dhabi", "start": "2022-05-31", "end": "2022-06-02", "placeIds": ["abu-dhabi"], "kind": "borderRun"},
+    {"id": "2022-06-03-baku", "start": "2022-06-03", "end": "2022-08-04", "placeIds": ["baku"], "kind": "extendedStay", "note": "Resumed after the Abu Dhabi border run."},
+    {"id": "2022-08-05-kuala-lumpur", "start": "2022-08-05", "end": "2022-08-24", "placeIds": ["kuala-lumpur"], "kind": "visit", "note": "Confirmed through August 24."},
+    {"id": "2022-08-25-singapore", "start": "2022-08-25", "end": "2022-08-25", "placeIds": ["singapore"], "kind": "visit"},
+    {"id": "2022-08-26-denver", "start": "2022-08-26", "end": "2022-08-26", "placeIds": ["denver"], "kind": "visit"},
+    {"id": "2022-08-27-evergreen", "start": "2022-08-27", "end": "2022-09-01", "placeIds": ["evergreen"], "kind": "visit"},
+    {"id": "2022-09-02-taos", "start": "2022-09-02", "end": "2022-09-07", "placeIds": ["taos"], "kind": "visit"},
+    {"id": "2022-09-08-los-alamos", "start": "2022-09-08", "end": "2022-10-04", "placeIds": ["los-alamos"], "kind": "visit"},
+    {"id": "2022-10-05-white-rock", "start": "2022-10-05", "end": "2022-10-27", "placeIds": ["white-rock"], "kind": "visit"},
+    {"id": "2022-10-28-los-alamos", "start": "2022-10-28", "end": "2022-11-03", "placeIds": ["los-alamos"], "kind": "visit"},
+    {"id": "2022-11-05-istanbul", "start": "2022-11-05", "end": "2022-11-11", "placeIds": ["istanbul"], "kind": "visit"},
+    {"id": "2022-11-12-trabzon", "start": "2022-11-12", "end": "2022-12-02", "placeIds": ["trabzon"], "kind": "visit"},
+    {"id": "2022-12-03-baku", "start": "2022-12-03", "end": "2022-12-29", "placeIds": ["baku"], "kind": "visit"},
+    {"id": "2022-12-31-bangkok", "start": "2022-12-31", "end": "2023-01-02", "placeIds": ["bangkok"], "kind": "visit"},
+    {"id": "2023-01-03-phuket", "start": "2023-01-03", "end": "2023-02-11", "placeIds": ["phuket"], "kind": "visit"},
+    {"id": "2023-02-12-denpasar", "start": "2023-02-12", "end": "2023-03-11", "placeIds": ["denpasar"], "kind": "visit"},
+    {"id": "2023-03-12-bangkok", "start": "2023-03-12", "end": "2023-03-28", "placeIds": ["bangkok"], "kind": "visit"},
+    {"id": "2023-03-29-phuket", "start": "2023-03-29", "end": "2023-05-01", "placeIds": ["phuket"], "kind": "visit"},
+    {"id": "2023-05-02-kuala-lumpur", "start": "2023-05-02", "end": "2023-06-14", "placeIds": ["kuala-lumpur"], "kind": "extendedStay"},
+    {"id": "2023-06-15-bangkok", "start": "2023-06-15", "end": "2023-07-01", "placeIds": ["bangkok"], "kind": "visit"},
+    {"id": "2023-07-03-antalya", "start": "2023-07-03", "end": "2023-07-04", "placeIds": ["antalya"], "kind": "visit", "note": "Source year corrected by user."},
+    {"id": "2023-07-05-alanya", "start": "2023-07-05", "end": "2023-08-07", "placeIds": ["alanya"], "kind": "visit"},
+    {"id": "2023-08-08-kuala-lumpur", "start": "2023-08-08", "end": "2023-11-14", "placeIds": ["kuala-lumpur"], "kind": "extendedStay", "note": "Resumed after Thailand, a Dubai layover, and Turkey."},
+    {"id": "2023-11-15-bangkok", "start": "2023-11-15", "end": "2023-12-15", "placeIds": ["bangkok"], "kind": "visit"},
+    {"id": "2023-12-16-phuket", "start": "2023-12-16", "end": "2024-01-14", "placeIds": ["phuket"], "kind": "visit"},
+    {"id": "2024-01-16-bangkok", "start": "2024-01-16", "end": "2024-02-11", "placeIds": ["bangkok"], "kind": "visit"},
+    {"id": "2024-02-12-kuala-lumpur", "start": "2024-02-12", "end": "2024-02-16", "placeIds": ["kuala-lumpur"], "kind": "visit", "note": "Part of the February 15–18 split."},
+    {"id": "2024-02-17-bangkok", "start": "2024-02-17", "end": "2024-06-20", "placeIds": ["bangkok"], "kind": "extendedStay", "note": "Part of the February 15–18 split."},
+    {"id": "2024-06-21-phuket", "start": "2024-06-21", "end": "2024-07-16", "placeIds": ["phuket"], "kind": "visit"},
+    {"id": "2024-07-17-antalya", "start": "2024-07-17", "end": "2024-07-17", "placeIds": ["antalya"], "kind": "visit"},
+    {"id": "2024-07-18-alanya", "start": "2024-07-18", "end": "2024-07-31", "placeIds": ["alanya"], "kind": "visit"},
+    {"id": "2024-08-01-istanbul", "start": "2024-08-01", "end": "2024-08-02", "placeIds": ["istanbul"], "kind": "visit"},
+    {"id": "2024-08-03-kazan", "start": "2024-08-03", "end": "2025-10-27", "placeIds": ["kazan"], "kind": "base", "note": "User-confirmed; end inferred from the next supplied stay."},
+    {"id": "2025-10-28-phuket", "start": "2025-10-28", "end": "2025-11-13", "placeIds": ["phuket"], "kind": "visit"},
+    {"id": "2025-11-14-krabi", "start": "2025-11-14", "end": "2025-11-21", "placeIds": ["krabi"], "kind": "visit"},
+    {"id": "2025-11-22-bangkok", "start": "2025-11-22", "end": "2025-12-23", "placeIds": ["bangkok"], "kind": "visit"},
+    {"id": "2025-12-24-da-nang", "start": "2025-12-24", "end": "2026-03-07", "placeIds": ["da-nang"], "kind": "extendedStay"},
+    {"id": "2026-03-08-nha-trang", "start": "2026-03-08", "end": "2026-03-09", "placeIds": ["nha-trang"], "kind": "visit"}
+  ],
+  "transfers": [
+    {
+      "date": "2019-11-17",
+      "fromPlaceId": "new-orleans",
+      "toPlaceId": "los-alamos",
+      "tripId": "2019-united-states",
+      "legs": [
+        {"from": {"placeId": "new-orleans"}, "to": {"waypointId": "den-airport"}, "mode": "plane"},
+        {"from": {"waypointId": "den-airport"}, "to": {"waypointId": "abq-airport"}, "mode": "plane"},
+        {"from": {"waypointId": "abq-airport"}, "to": {"placeId": "los-alamos"}, "mode": "ground"}
+      ],
+      "note": "The route connected through DEN and ABQ; Los Alamos owns the destination timeline date."
+    },
+    {
+      "date": "2022-03-04",
+      "fromPlaceId": "kazan",
+      "toPlaceId": "dubai",
+      "tripId": "2022-2024-continuous-travel",
+      "legs": [
+        {"from": {"placeId": "kazan"}, "to": {"waypointId": "svx-airport"}, "mode": "plane"},
+        {"from": {"waypointId": "svx-airport"}, "to": {"placeId": "dubai"}, "mode": "plane"}
+      ],
+      "note": "The continuous trip began in Kazan and connected through Ekaterinburg/SVX before Dubai."
+    },
+    {
+      "date": "2022-08-26",
+      "fromPlaceId": "singapore",
+      "toPlaceId": "denver",
+      "tripId": "2022-2024-continuous-travel",
+      "legs": [
+        {"from": {"placeId": "singapore"}, "to": {"waypointId": "tpe-airport"}, "mode": "plane"},
+        {"from": {"waypointId": "tpe-airport"}, "to": {"waypointId": "sfo-airport"}, "mode": "plane"},
+        {"from": {"waypointId": "sfo-airport"}, "to": {"placeId": "denver"}, "mode": "plane"}
+      ],
+      "note": "Singapore to Taipei/TPE to San Francisco/SFO to Denver flight."
+    },
+    {
+      "date": "2022-11-04",
+      "fromPlaceId": "los-alamos",
+      "toPlaceId": "istanbul",
+      "tripId": "2022-2024-continuous-travel",
+      "legs": [
+        {"from": {"waypointId": "abq-airport"}, "to": {"waypointId": "dfw-airport"}, "mode": "plane"},
+        {"from": {"waypointId": "dfw-airport"}, "to": {"waypointId": "ist-airport"}, "mode": "plane"}
+      ],
+      "note": "ABQ to DFW to IST flight; ground travel to and from the airports is not rendered."
+    },
+    {
+      "date": "2022-12-30",
+      "fromPlaceId": "baku",
+      "toPlaceId": "bangkok",
+      "tripId": "2022-2024-continuous-travel",
+      "legs": [
+        {"from": {"placeId": "baku"}, "to": {"placeId": "bangkok"}, "mode": "plane"}
+      ]
+    },
+    {
+      "date": "2023-07-02",
+      "fromPlaceId": "bangkok",
+      "toPlaceId": "antalya",
+      "tripId": "2022-2024-continuous-travel",
+      "legs": [
+        {"from": {"placeId": "bangkok"}, "to": {"waypointId": "dxb-airport"}, "mode": "plane"},
+        {"from": {"waypointId": "dxb-airport"}, "to": {"placeId": "antalya"}, "mode": "plane"}
+      ],
+      "note": "Dubai was a flight-only layover."
+    },
+    {
+      "date": "2024-01-15",
+      "fromPlaceId": "phuket",
+      "toPlaceId": "bangkok",
+      "tripId": "2022-2024-continuous-travel",
+      "legs": [
+        {"from": {"placeId": "phuket"}, "to": {"placeId": "bangkok"}, "mode": "plane"}
+      ]
+    },
+    {
+      "date": "2024-08-02",
+      "fromPlaceId": "istanbul",
+      "toPlaceId": "kazan",
+      "tripId": "2022-2024-continuous-travel",
+      "legs": [
+        {"from": {"placeId": "istanbul"}, "to": {"placeId": "kazan"}, "mode": "plane"}
+      ],
+      "note": "Istanbul to Kazan return flight."
+    }
+  ],
+  "knownOverlaps": [
+    {
+      "eventIds": [
+        "2013-07-28-brest-departure",
+        "2013-07-28-goczalkowice-zdroj",
+        "2013-07-28-brno-overnight",
+        "2013-07-29-vienna",
+        "2013-07-29-st-margarethen-im-lungau",
+        "2013-07-30-verona",
+        "2013-07-31-nice",
+        "2013-07-31-sanremo-overnight",
+        "2013-08-01-barcelona-lloret-de-mar",
+        "2013-08-05-chateau-de-chambord",
+        "2013-08-05-paris",
+        "2013-08-07-strasbourg",
+        "2013-08-07-frankfurt-am-main"
+      ],
+      "note": "Same-day stops and overnight legs on the 2013 Europe bus trip intentionally overlap. Their array order preserves the supplied route order."
+    },
+    {
+      "eventIds": [
+        "2013-08-07-frankfurt-am-main",
+        "2013-08-08-brest-return"
+      ],
+      "note": "The Brest return was on 8 or 9 Aug, so overlap with the Frankfurt overnight on 8 Aug is possible."
+    }
+  ]
+}

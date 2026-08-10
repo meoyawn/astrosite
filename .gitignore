@@ -24,6 +24,7 @@ public/cv.json
 .wrangler/
 
 .task/
+.impeccable/
 coverage/
 
 *.png

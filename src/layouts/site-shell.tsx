@@ -4,6 +4,7 @@ import { SiteNav } from "../app/site-nav.tsx"
 import { HtmlRoot } from "./html-root.tsx"
 
 export interface SiteShellProps {
+  bodyStart?: JSX.Element
   children: JSX.Element
   contentClass: string | undefined
   currentPath: "consulting" | "cv" | "home" | undefined
@@ -24,6 +25,7 @@ export const SiteShell = (props: SiteShellProps) => {
       lang={props.lang}
       title={props.title}
     >
+      {props.bodyStart}
       <header
         class={`mx-auto mt-6 px-6 sm:mt-12 sm:px-8 md:mt-16 ${headerWidth} ${props.navClass ?? ""}`}
       >

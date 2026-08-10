@@ -12,6 +12,8 @@
     "workerd": true
   },
   "dependencies": {
+    "@deck.gl/core": "^9.3.9",
+    "@deck.gl/layers": "^9.3.9",
     "date-fns": "^4.4.0",
     "github-slugger": "^2.0.0",
     "js-yaml": "^5.2.3",
@@ -23,9 +25,11 @@
     "remark-parse": "^11.0.0",
     "remark-rehype": "^11.1.2",
     "solid-js": "^1.9.14",
-    "solid-static": "^0.1.2",
+    "solid-static": "link:/Users/meoyawn/Developer/solid-static",
+    "topojson-client": "^3.1.0",
     "unified": "11.0.5",
-    "valibot": "^1.4.2"
+    "valibot": "^1.4.2",
+    "world-atlas": "^2.0.2"
   },
   "devDependencies": {
     "@mdx-js/rollup": "^3.1.1",
@@ -36,6 +40,7 @@
     "@types/js-yaml": "^4.0.9",
     "@types/mdast": "^4.0.4",
     "@types/node": "^26.2.0",
+    "@types/topojson-client": "^3.1.5",
     "effection": "^4.1.0",
     "oxfmt": "^0.62.0",
     "oxlint": "^1.77.0",
