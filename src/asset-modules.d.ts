@@ -18,11 +18,6 @@ declare module "*?url" {
   export default href
 }
 
-declare module "*?worker&url" {
-  const href: string
-  export default href
-}
-
 declare module "*?island" {
   const href: string
   export default href

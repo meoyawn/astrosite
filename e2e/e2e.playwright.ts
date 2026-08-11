@@ -352,7 +352,9 @@ test.describe("e2e tests", () => {
     await expect(main.getByText(/Pneuma LLC/)).toBeVisible()
   })
 
-  test("travel timeline selects dated stays", async ({ page }) => {
+  test("travel globe shares depth with journey arcs and selects dated stays", async ({
+    page,
+  }) => {
     const pageErrors: string[] = []
     page.on("pageerror", error => pageErrors.push(error.message))
 
@@ -386,6 +388,10 @@ test.describe("e2e tests", () => {
     const sliderInput = page.locator("[data-travel-thumb] input")
 
     await expect(canvas).toBeVisible()
+    await expect(
+      page.locator("[data-travel-map] canvas"),
+      "Deck and MapLibre must share one WebGL canvas so the globe occludes back-side arcs.",
+    ).toHaveCount(1)
     await expect(slider).toBeVisible()
 
     const june2023Day = Math.floor(
