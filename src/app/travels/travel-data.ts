@@ -81,7 +81,6 @@ export interface TravelData {
   }
   homeBases: Array<{
     basis: string
-    before: string
     note: string
     placeId: string
   }>

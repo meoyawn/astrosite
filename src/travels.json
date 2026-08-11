@@ -24,9 +24,8 @@
   "homeBases": [
     {
       "placeId": "kazan",
-      "before": "2022-03-04",
       "basis": "userStated",
-      "note": "Kazan was the base before 2022; exact start date is unknown."
+      "note": "Kazan has always been a home base; no start or end date is asserted."
     }
   ],
   "trips": [
@@ -583,13 +582,11 @@
     {"id": "2024-07-17-antalya", "start": "2024-07-17", "end": "2024-07-17", "placeIds": ["antalya"], "kind": "visit"},
     {"id": "2024-07-18-alanya", "start": "2024-07-18", "end": "2024-07-31", "placeIds": ["alanya"], "kind": "visit"},
     {"id": "2024-08-01-istanbul", "start": "2024-08-01", "end": "2024-08-02", "placeIds": ["istanbul"], "kind": "visit"},
-    {"id": "2024-08-03-kazan", "start": "2024-08-03", "end": "2025-10-27", "placeIds": ["kazan"], "kind": "base", "note": "User-confirmed; end inferred from the next supplied stay."},
     {"id": "2025-10-28-phuket", "start": "2025-10-28", "end": "2025-11-13", "placeIds": ["phuket"], "kind": "visit"},
     {"id": "2025-11-14-krabi", "start": "2025-11-14", "end": "2025-11-21", "placeIds": ["krabi"], "kind": "visit"},
     {"id": "2025-11-22-bangkok", "start": "2025-11-22", "end": "2025-12-23", "placeIds": ["bangkok"], "kind": "visit"},
     {"id": "2025-12-24-da-nang", "start": "2025-12-24", "end": "2026-03-07", "placeIds": ["da-nang"], "kind": "extendedStay"},
-    {"id": "2026-03-08-nha-trang", "start": "2026-03-08", "end": "2026-03-09", "placeIds": ["nha-trang"], "kind": "visit"},
-    {"id": "2026-03-10-kazan", "start": "2026-03-10", "end": "2026-08-10", "placeIds": ["kazan"], "kind": "base"}
+    {"id": "2026-03-08-nha-trang", "start": "2026-03-08", "end": "2026-03-09", "placeIds": ["nha-trang"], "kind": "visit"}
   ],
   "transfers": [
     {
