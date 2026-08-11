@@ -15,11 +15,11 @@
     "@deck.gl/core": "^9.3.9",
     "@deck.gl/layers": "^9.3.9",
     "@deck.gl/mapbox": "^9.3.9",
-    "@kobalte/core": "^0.13.12",
+    "@kobalte/core": "^0.13.13",
     "date-fns": "^4.4.0",
     "github-slugger": "^2.0.0",
     "js-yaml": "^5.2.3",
-    "maplibre-gl": "5.24.0",
+    "maplibre-gl": "6.3.0",
     "mdast-util-from-markdown": "^2.0.3",
     "rehype-autolink-headings": "^7.1.0",
     "rehype-external-links": "^3.0.0",
@@ -45,9 +45,9 @@
     "@types/node": "^26.2.0",
     "@types/topojson-client": "^3.1.5",
     "effection": "^4.1.0",
-    "oxfmt": "^0.62.0",
-    "oxlint": "^1.77.0",
-    "oxlint-tailwindcss": "^1.7.1",
+    "oxfmt": "^0.63.0",
+    "oxlint": "^1.78.0",
+    "oxlint-tailwindcss": "^1.8.0",
     "oxlint-tsgolint": "^7.0.2001",
     "postcss": "^8.5.26",
     "remark-frontmatter": "^5.0.0",
@@ -59,7 +59,7 @@
     "vite": "^8.2.1",
     "vite-plugin-solid": "^2.11.14",
     "vitest": "^4.1.10",
-    "wrangler": "^4.120.0"
+    "wrangler": "^4.120.1"
   },
   "devEngines": {
     "packageManager": {

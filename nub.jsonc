@@ -1,0 +1,16 @@
+{
+  "$schema": "https://nubjs.com/schema/latest.json",
+  "install": {
+    "minimumReleaseAgeExclude": [
+      "@kobalte/core",
+      "maplibre-gl",
+      "oxfmt",
+      "@oxfmt/*",
+      "oxlint",
+      "@oxlint/*",
+      "oxlint-tailwindcss",
+      "wrangler",
+      "miniflare"
+    ]
+  }
+}
