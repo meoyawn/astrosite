@@ -609,7 +609,7 @@ export const TravelMap = () => {
             text: getPlaceLabel(place),
           }
         },
-        interleaved: false,
+        interleaved: true,
         layers: createLayers(),
         pickingRadius: 8,
       })
