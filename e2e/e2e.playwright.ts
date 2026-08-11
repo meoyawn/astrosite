@@ -353,6 +353,9 @@ test.describe("e2e tests", () => {
   })
 
   test("travel timeline selects dated stays", async ({ page }) => {
+    const pageErrors: string[] = []
+    page.on("pageerror", error => pageErrors.push(error.message))
+
     await routeBuiltFiles(page)
     await page.emulateMedia({ reducedMotion: "reduce" })
     await page.setViewportSize({ height: 800, width: 1200 })
@@ -432,6 +435,7 @@ test.describe("e2e tests", () => {
 
     await selectNoTripDate("2014-09-17")
     await selectNoTripDate("2025-08-11")
+    expect(pageErrors).toEqual([])
   })
 
   test("travel stay clicks update the timeline fragment", async ({ page }) => {

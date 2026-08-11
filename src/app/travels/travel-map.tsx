@@ -3,6 +3,7 @@ import { MapboxOverlay } from "@deck.gl/mapbox"
 import { Slider } from "@kobalte/core/slider"
 import { createEffect, createMemo, createSignal, For, onCleanup, onMount, Show } from "solid-js"
 import * as maplibregl from "maplibre-gl"
+import maplibreWorkerUrl from "maplibre-gl/dist/maplibre-gl-worker.mjs?worker&url"
 import type { StyleSpecification } from "maplibre-gl"
 import "maplibre-gl/dist/maplibre-gl.css"
 import { travelRoute } from "../../routes.ts"
@@ -30,6 +31,8 @@ import {
   waypointPosition,
   waypointsById,
 } from "./travel-data.ts"
+
+maplibregl.setWorkerUrl(maplibreWorkerUrl)
 
 const mapStyleUrl = "https://basemaps.cartocdn.com/gl/positron-gl-style/style.json"
 const fallbackMapStyle: StyleSpecification = {
@@ -609,7 +612,7 @@ export const TravelMap = () => {
             text: getPlaceLabel(place),
           }
         },
-        interleaved: true,
+        interleaved: false,
         layers: createLayers(),
         pickingRadius: 8,
       })
