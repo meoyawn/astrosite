@@ -468,6 +468,13 @@
       "longitude": 13.3951309
     },
     {
+      "id": "varnsdorf",
+      "name": "Varnsdorf",
+      "country": "Czechia",
+      "latitude": 50.9124244,
+      "longitude": 14.6194058
+    },
+    {
       "id": "dunkirk",
       "name": "Dunkirk",
       "region": "Hauts-de-France",
@@ -518,7 +525,9 @@
     {"id": "2016-02-15-saint-petersburg", "start": "2016-02-15", "end": "2016-03-06", "placeIds": ["saint-petersburg"], "kind": "visit"},
     {"id": "2016-06-16-saint-petersburg", "start": "2016-06-16", "end": "2016-06-18", "placeIds": ["saint-petersburg"], "kind": "visit"},
     {"id": "2016-12-24-hamburg", "start": "2016-12-24", "end": "2016-12-29", "placeIds": ["hamburg"], "kind": "visit"},
-    {"id": "2016-12-30-berlin", "start": "2016-12-30", "end": "2017-01-12", "placeIds": ["berlin"], "kind": "visit"},
+    {"id": "2016-12-30-berlin", "start": "2016-12-30", "end": "2016-12-30", "placeIds": ["berlin"], "kind": "visit"},
+    {"id": "2016-12-31-varnsdorf", "start": "2016-12-31", "end": "2016-12-31", "placeIds": ["varnsdorf"], "kind": "overnight"},
+    {"id": "2017-01-01-berlin", "start": "2017-01-01", "end": "2017-01-12", "placeIds": ["berlin"], "kind": "visit"},
     {"id": "2017-08-07-paris", "start": "2017-08-07", "end": "2017-08-12", "placeIds": ["paris"], "kind": "visit"},
     {"id": "2017-08-13-dunkirk", "start": "2017-08-13", "end": "2017-08-13", "placeIds": ["dunkirk"], "kind": "visit"},
     {"id": "2017-08-14-paris", "start": "2017-08-14", "end": "2017-08-16", "placeIds": ["paris"], "kind": "visit"},
@@ -650,6 +659,24 @@
       "tripId": "2016-saint-petersburg-june",
       "legs": [
         {"from": {"placeId": "saint-petersburg"}, "to": {"placeId": "kazan"}, "mode": "plane"}
+      ]
+    },
+    {
+      "date": "2016-12-31",
+      "fromPlaceId": "berlin",
+      "toPlaceId": "varnsdorf",
+      "tripId": "2016-germany",
+      "legs": [
+        {"from": {"placeId": "berlin"}, "to": {"placeId": "varnsdorf"}, "mode": "ground"}
+      ]
+    },
+    {
+      "date": "2017-01-01",
+      "fromPlaceId": "varnsdorf",
+      "toPlaceId": "berlin",
+      "tripId": "2016-germany",
+      "legs": [
+        {"from": {"placeId": "varnsdorf"}, "to": {"placeId": "berlin"}, "mode": "ground"}
       ]
     },
     {
