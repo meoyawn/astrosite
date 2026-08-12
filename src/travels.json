@@ -492,6 +492,8 @@
     {"id": "dfw-airport", "code": "DFW", "name": "Dallas/Fort Worth International Airport", "country": "United States", "latitude": 32.8962506, "longitude": -97.0453389, "kind": "airport"},
     {"id": "ist-airport", "code": "IST", "name": "Istanbul Airport", "country": "Turkey", "latitude": 41.2748684, "longitude": 28.7322749, "kind": "airport"},
     {"id": "dxb-airport", "code": "DXB", "name": "Dubai International Airport", "country": "United Arab Emirates", "latitude": 25.2515424, "longitude": 55.3666519, "kind": "airport"},
+    {"id": "ruh-airport", "code": "RUH", "name": "King Khalid International Airport", "country": "Saudi Arabia", "latitude": 24.9576, "longitude": 46.6988, "kind": "airport"},
+    {"id": "del-airport", "code": "DEL", "name": "Indira Gandhi International Airport", "country": "India", "latitude": 28.5562, "longitude": 77.1, "kind": "airport"},
     {"id": "svx-airport", "code": "SVX", "name": "Koltsovo International Airport", "country": "Russia", "latitude": 56.7445764, "longitude": 60.8027902, "kind": "airport"},
     {"id": "tpe-airport", "code": "TPE", "name": "Taiwan Taoyuan International Airport", "country": "Taiwan", "latitude": 25.0793174, "longitude": 121.2345977, "kind": "airport"},
     {"id": "sfo-airport", "code": "SFO", "name": "San Francisco International Airport", "country": "United States", "latitude": 37.622452, "longitude": -122.3839894, "kind": "airport"},
@@ -504,8 +506,8 @@
     {"id": "2013-07-29-vienna", "start": "2013-07-29", "end": "2013-07-29", "placeIds": ["vienna"], "kind": "visit", "note": "Stephansdom."},
     {"id": "2013-07-29-st-margarethen-im-lungau", "start": "2013-07-29", "end": "2013-07-30", "placeIds": ["st-margarethen-im-lungau"], "kind": "overnight", "note": "Landhotel Almstubn."},
     {"id": "2013-07-30-verona", "start": "2013-07-30", "end": "2013-07-30", "placeIds": ["verona"], "kind": "visit", "note": "Torre dei Lamberti and central Verona."},
+    {"id": "2013-07-30-sanremo-overnight", "start": "2013-07-30", "end": "2013-07-31", "placeIds": ["sanremo"], "kind": "overnight"},
     {"id": "2013-07-31-nice", "start": "2013-07-31", "end": "2013-07-31", "placeIds": ["nice"], "kind": "visit", "note": "Hôtel de Ville and Le Pouce."},
-    {"id": "2013-07-31-sanremo-overnight", "start": "2013-07-31", "end": "2013-08-01", "placeIds": ["sanremo"], "kind": "overnight"},
     {"id": "2013-08-01-barcelona-lloret-de-mar", "start": "2013-08-01", "end": "2013-08-04", "placeIds": ["barcelona", "lloret-de-mar"], "kind": "regionalStay", "note": "Moving and staying between Barcelona and Lloret de Mar."},
     {"id": "2013-08-05-chateau-de-chambord", "start": "2013-08-05", "end": "2013-08-05", "placeIds": ["chateau-de-chambord"], "kind": "visit"},
     {"id": "2013-08-05-paris", "start": "2013-08-05", "end": "2013-08-07", "placeIds": ["paris"], "kind": "visit"},
@@ -852,8 +854,11 @@
       "toPlaceId": "bangkok",
       "tripId": "2022-2024-continuous-travel",
       "legs": [
-        {"from": {"placeId": "baku"}, "to": {"placeId": "bangkok"}, "mode": "plane"}
-      ]
+        {"from": {"placeId": "baku"}, "to": {"waypointId": "ruh-airport"}, "mode": "plane"},
+        {"from": {"waypointId": "ruh-airport"}, "to": {"waypointId": "del-airport"}, "mode": "plane"},
+        {"from": {"waypointId": "del-airport"}, "to": {"placeId": "bangkok"}, "mode": "plane"}
+      ],
+      "note": "Riyadh and Indira Gandhi International Airport were flight-only layovers."
     },
     {
       "date": "2023-07-02",

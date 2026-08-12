@@ -405,8 +405,8 @@ describe("travel data", () => {
       "2013-07-29-vienna",
       "2013-07-29-st-margarethen-im-lungau",
       "2013-07-30-verona",
+      "2013-07-30-sanremo-overnight",
       "2013-07-31-nice",
-      "2013-07-31-sanremo-overnight",
       "2013-08-01-barcelona-lloret-de-mar",
       "2013-08-05-chateau-de-chambord",
       "2013-08-05-paris",
@@ -428,8 +428,8 @@ describe("travel data", () => {
     expect(
       routes.some(
         route =>
-          route.sourcePosition[0] === nice?.longitude &&
-          route.targetPosition[0] === sanremo?.longitude,
+          route.sourcePosition[0] === sanremo?.longitude &&
+          route.targetPosition[0] === nice?.longitude,
       ),
     ).toBe(true)
   })
