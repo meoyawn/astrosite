@@ -10,7 +10,8 @@
       "@oxlint/*",
       "oxlint-tailwindcss",
       "wrangler",
-      "miniflare"
+      "miniflare",
+      "solid-static"
     ]
   }
 }

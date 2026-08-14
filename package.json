@@ -12,9 +12,9 @@
     "workerd": true
   },
   "dependencies": {
-    "@deck.gl/core": "^9.3.9",
-    "@deck.gl/layers": "^9.3.9",
-    "@deck.gl/mapbox": "^9.3.9",
+    "@deck.gl/core": "^9.3.10",
+    "@deck.gl/layers": "^9.3.10",
+    "@deck.gl/mapbox": "^9.3.10",
     "@kobalte/core": "^0.13.13",
     "date-fns": "^4.4.0",
     "github-slugger": "^2.0.0",
@@ -28,7 +28,7 @@
     "remark-parse": "^11.0.0",
     "remark-rehype": "^11.1.2",
     "solid-js": "^1.9.14",
-    "solid-static": "link:/Users/meoyawn/Developer/solid-static",
+    "solid-static": "^0.2.0",
     "topojson-client": "^3.1.0",
     "unified": "11.0.5",
     "valibot": "^1.4.2",
@@ -48,7 +48,7 @@
     "effection": "^4.1.0",
     "oxfmt": "^0.63.0",
     "oxlint": "^1.78.0",
-    "oxlint-tailwindcss": "^1.8.0",
+    "oxlint-tailwindcss": "^1.9.0",
     "oxlint-tsgolint": "^7.0.2001",
     "postcss": "^8.5.26",
     "remark-frontmatter": "^5.0.0",
@@ -60,7 +60,7 @@
     "vite": "^8.2.1",
     "vite-plugin-solid": "^2.11.14",
     "vitest": "^4.1.10",
-    "wrangler": "^4.120.1"
+    "wrangler": "^4.123.0"
   },
   "devEngines": {
     "packageManager": {
