@@ -174,8 +174,8 @@ and a single custom metadata gray.
 into pale gray for elegance.
 
 **The Accent Is Evidence Rule.** Color only appears when it carries state,
-links, dates, or CV-specific link affordance. Do not add decorative accent
-fills.
+links, dates, syntax semantics, data visualization, or CV-specific link
+affordance. Do not add decorative accent fills.
 
 ## 3. Typography
 

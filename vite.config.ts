@@ -1,5 +1,5 @@
 import mdx from "@mdx-js/rollup"
-import rehypeShiki from "@shikijs/rehype"
+import rehypeShiki, { type RehypeShikiOptions } from "@shikijs/rehype"
 import tailwindcss from "@tailwindcss/postcss"
 import type { Root } from "hast"
 import rehypeAutolinkHeadings from "rehype-autolink-headings"
@@ -15,6 +15,84 @@ import { externalLinkOptions } from "./src/app/markdown-options.ts"
 import { collections } from "./src/content.config.ts"
 import { staticSite } from "solid-static"
 import { createMarkdownProcessor } from "solid-static/markdown"
+
+const codeTheme = "github-dark-default"
+const codeColors = {
+  attribute: "#79C0FF",
+  comment: "#8B949E",
+  foreground: "#C9D1D9",
+  identifier: "#79C0FF",
+  keyword: "#FF7B72",
+  literal: "#D2A8FF",
+  operator: "#FF7B72",
+  punctuation: "#C9D1D9",
+  string: "#A5D6FF",
+  tag: "#D2A8FF",
+  type: "#79C0FF",
+}
+const codeHighlightOptions: RehypeShikiOptions = {
+  includeExplanation: true,
+  theme: codeTheme,
+  transformers: [
+    {
+      name: "apply-deep-cool-palette",
+      tokens(lines) {
+        for (const line of lines) {
+          for (const token of line) {
+            const scopeNames =
+              token.explanation?.flatMap((explanation) =>
+                explanation.scopes.map((scope) => scope.scopeName),
+              ) ?? []
+            function hasScope(prefix: string): boolean {
+              return scopeNames.some((scopeName) =>
+                scopeName.startsWith(prefix),
+              )
+            }
+
+            if (hasScope("comment")) {
+              token.color = codeColors.comment
+            } else if (hasScope("string")) {
+              token.color = codeColors.string
+            } else if (hasScope("entity.name.tag")) {
+              token.color = codeColors.tag
+            } else if (hasScope("entity.other.attribute-name")) {
+              token.color = codeColors.attribute
+            } else if (
+              hasScope("variable") ||
+              hasScope("entity.name.function") ||
+              hasScope("support.function")
+            ) {
+              token.color = codeColors.identifier
+            } else if (
+              hasScope("entity.name.type") ||
+              hasScope("entity.name.class") ||
+              hasScope("storage.type") ||
+              hasScope("support.type")
+            ) {
+              token.color = codeColors.type
+            } else if (hasScope("constant")) {
+              token.color = codeColors.literal
+            } else if (hasScope("keyword.operator")) {
+              token.color = codeColors.operator
+            } else if (
+              hasScope("keyword") ||
+              hasScope("storage.modifier")
+            ) {
+              token.color = codeColors.keyword
+            } else if (hasScope("punctuation")) {
+              token.color = codeColors.punctuation
+            }
+
+            token.htmlStyle = {
+              ...token.htmlStyle,
+              color: token.color ?? codeColors.foreground,
+            }
+          }
+        }
+      },
+    },
+  ],
+}
 
 const autolinkWritingHeadings = rehypeAutolinkHeadings({
   behavior: "wrap",
@@ -34,7 +112,7 @@ const markdownProcessor = createMarkdownProcessor()
   .use(rehypeSlug)
   .use(rehypeWritingAutolinkHeadings)
   .use(rehypeExternalLinks, externalLinkOptions)
-  .use(rehypeShiki, { theme: "github-dark-default" })
+  .use(rehypeShiki, codeHighlightOptions)
   .use(rehypeStringify)
 
 const mdxPlugin = mdx({
@@ -43,7 +121,7 @@ const mdxPlugin = mdx({
   rehypePlugins: [
     rehypeSlug,
     [rehypeExternalLinks, externalLinkOptions],
-    [rehypeShiki, { theme: "github-dark-default" }],
+    [rehypeShiki, codeHighlightOptions],
   ],
   remarkPlugins: [
     remarkFrontmatter,

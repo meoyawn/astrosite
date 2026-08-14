@@ -12,7 +12,7 @@ Recruiter-supplied repos are code execution until proven otherwise.
 
 The dangerous path is usually ordinary:
 
-```text
+```sh
 git clone
 npm install
 ```
