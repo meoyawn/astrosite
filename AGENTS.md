@@ -25,9 +25,7 @@
 ## CLI tools
 
 - never call `node`, call `nub` instead
-- never call `npx` or `nubx`:
-  - if a package is missing, stop and ask to add it to `package.json`
-  - if a package is present, call through `nubx`
+- never call `npx`, call `nubx` instead
 - never run code formatting unless explicitly asked
 - never call `vitest` directly
 - `rg`, `ast-grep`, `jq` are available for calling

@@ -1,4 +1,5 @@
 import mdx from "@mdx-js/rollup"
+import rehypeShiki from "@shikijs/rehype"
 import tailwindcss from "@tailwindcss/postcss"
 import type { Root } from "hast"
 import rehypeAutolinkHeadings from "rehype-autolink-headings"
@@ -33,12 +34,17 @@ const markdownProcessor = createMarkdownProcessor()
   .use(rehypeSlug)
   .use(rehypeWritingAutolinkHeadings)
   .use(rehypeExternalLinks, externalLinkOptions)
+  .use(rehypeShiki, { theme: "github-dark-default" })
   .use(rehypeStringify)
 
 const mdxPlugin = mdx({
   include: /\.mdx?$/,
   jsxImportSource: "solid-jsx",
-  rehypePlugins: [rehypeSlug, [rehypeExternalLinks, externalLinkOptions]],
+  rehypePlugins: [
+    rehypeSlug,
+    [rehypeExternalLinks, externalLinkOptions],
+    [rehypeShiki, { theme: "github-dark-default" }],
+  ],
   remarkPlugins: [
     remarkFrontmatter,
     [remarkMdxFrontmatter, { name: "frontmatter" }],

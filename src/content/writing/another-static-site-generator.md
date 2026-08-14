@@ -27,7 +27,7 @@ imports.
 ```tsx
 import counterIsland from "../app/counter-island.tsx?island"
 
-;<script type="module" src={counterIsland} />
+<script type="module" src={counterIsland} />
 ```
 
 Vite serves the source entry during development, then emits hashed JavaScript

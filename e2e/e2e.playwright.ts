@@ -783,6 +783,27 @@ test.describe("e2e tests", () => {
       .toBeGreaterThan(beforeScrollY)
   })
 
+  test("code highlighting preserves article source", async ({ page }) => {
+    await routeBuiltFiles(page)
+
+    const response = await page.goto(
+      `${builtOrigin}${writingRoute("another-static-site-generator")}`,
+    )
+
+    expect(response?.ok() ?? false).toEqual(true)
+
+    const codeBlock = page.getByRole("main").locator("pre.shiki code")
+
+    await expect(codeBlock).toHaveCount(1)
+    expect(await codeBlock.textContent()).toEqual(
+      [
+        'import counterIsland from "../app/counter-island.tsx?island"',
+        "",
+        '<script type="module" src={counterIsland} />',
+      ].join("\n"),
+    )
+  })
+
   test("tatar consulting page sets html language", async ({ page }) => {
     await routeBuiltFiles(page)
 
