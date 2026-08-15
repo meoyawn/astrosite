@@ -38,6 +38,61 @@ const codeHighlightOptions: RehypeShikiOptions = {
       name: "apply-deep-cool-palette",
       tokens(lines) {
         for (const line of lines) {
+          const explainedTokens = line.flatMap((token) => {
+            if (!token.explanation || token.explanation.length < 2) {
+              return [token]
+            }
+
+            let contentOffset = 0
+            let tokenOffset = token.offset
+            const tokenSegments = []
+            for (const explanation of token.explanation) {
+              if (!explanation.content) {
+                continue
+              }
+
+              const explanationOffset = token.content.indexOf(
+                explanation.content,
+                contentOffset,
+              )
+              if (explanationOffset === -1) {
+                return [token]
+              }
+              if (explanationOffset > contentOffset) {
+                const gap = token.content.slice(
+                  contentOffset,
+                  explanationOffset,
+                )
+                tokenSegments.push({
+                  ...token,
+                  content: gap,
+                  explanation: [],
+                  offset: tokenOffset,
+                })
+                tokenOffset += gap.length
+              }
+
+              tokenSegments.push({
+                ...token,
+                content: explanation.content,
+                explanation: [explanation],
+                offset: tokenOffset,
+              })
+              contentOffset = explanationOffset + explanation.content.length
+              tokenOffset += explanation.content.length
+            }
+            if (contentOffset < token.content.length) {
+              tokenSegments.push({
+                ...token,
+                content: token.content.slice(contentOffset),
+                explanation: [],
+                offset: tokenOffset,
+              })
+            }
+            return tokenSegments
+          })
+          line.splice(0, line.length, ...explainedTokens)
+
           for (const token of line) {
             const scopeNames =
               token.explanation?.flatMap((explanation) =>

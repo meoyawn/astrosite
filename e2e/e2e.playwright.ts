@@ -804,6 +804,28 @@ test.describe("e2e tests", () => {
     )
   })
 
+  test("code highlighting colors equivalent object keys consistently", async ({
+    page,
+  }) => {
+    await routeBuiltFiles(page)
+
+    const response = await page.goto(
+      `${builtOrigin}${writingRoute("how-to-openapi")}`,
+    )
+
+    expect(response?.ok() ?? false).toEqual(true)
+
+    const codeBlock = page.getByRole("main").locator("pre.shiki code").first()
+    const requestKey = codeBlock.locator("span").filter({ hasText: /^req$/ })
+    const responseKey = codeBlock.locator("span").filter({ hasText: /^res$/ })
+
+    await expect(requestKey).toHaveCount(1)
+    await expect(responseKey).toHaveCount(1)
+    expect(await requestKey.evaluate((element) => element.style.color)).toEqual(
+      await responseKey.evaluate((element) => element.style.color),
+    )
+  })
+
   test("tatar consulting page sets html language", async ({ page }) => {
     await routeBuiltFiles(page)
 
