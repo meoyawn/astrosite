@@ -7,7 +7,13 @@ published_at: 2026-08-19
 Current-generation LLMs reward simple, composable tools. They already know how
 to turn files, text search, and the shell into a code-navigation workflow, and
 they can write the missing glue themselves. Every extra layer has to earn the
-cost of replacing that familiar workflow.
+cost of replacing that familiar workflow. The tools tested here did not.
+
+The decision for humans is not how an agent should recover from an ambiguous
+search. The agent will keep working until it has an answer. The decision is
+whether another tool reduces wall-clock time and actual cost per successful
+task. That requires independent, end-to-end agent benchmarks. The evidence so
+far favors ripgrep, but the evidence base is still small.
 
 This article started with a Sunday meditation from Pi:
 
@@ -16,9 +22,10 @@ This article started with a Sunday meditation from Pi:
 The video's argument is more specific than those three bullet points. For
 coding, the repository is the memory system: code is the evolving ground truth,
 while a separate semantic memory becomes another thing to maintain. Models can
-usually infer structure and style from a few files; at most, they may need a
-lightweight map of folders. Embeddings, AST indexes, and other layers should
-have to prove that they improve the result instead of being installed on faith.
+usually infer structure and style from a few files and `rg` results. Embeddings,
+AST indexes, and other navigation layers duplicate a workflow the model already
+has. Their value has to be measured at task completion, not inferred from a
+cleaner query or smaller tool response.
 
 “Bash is all you need” is the operational half of the argument. Models already
 speak shell, so a small agent can extend itself by composing programs and files.
@@ -33,11 +40,12 @@ themselves. Every extra index, protocol, or specialist replaces a skill they
 already have with another interface they must learn.
 
 That gives semantic code navigation a sharper test. Compiler-aware tools can
-distinguish symbols that text search cannot. But will a cleaner query improve
-the completed task, or is a model already fluent in shell tools better off
-reading the code directly?
+distinguish symbols that text search cannot, but capability is not a reason to
+put them in an agent toolkit. The relevant question is whether they improve the
+completed task at the same quality while reducing time or cost. Here they did
+not. Ripgrep remained the better tool in the measured workflow.
 
-## The strongest case for semantics
+## Testing the strongest case
 
 [`gopls`](https://go.dev/gopls/) is the strongest case for giving an agent more
 than grep. Pronounced “Go please,” it is the official Go language server,
@@ -63,12 +71,15 @@ Unlike ripgrep, `gopls` knows which symbol an identifier resolves to. Its
 same-named methods, follow references across packages, and find concrete types
 that implement an interface. That last operation is especially valuable in
 Go: interface satisfaction is implicit, so there is no `implements` keyword
-for a text search to find.
+for a text search to find. Agents can still trace the relevant types through
+names, method sets, compile errors, and targeted reads without another tool.
 
-This is useful for agents too. On an unfamiliar Go codebase, exact definitions,
-references, implementations, and call hierarchies can replace a lot of manual
-disambiguation. Its capability is not in question. Whether adding and
-maintaining that machinery improves the agent's whole workflow is.
+These commands can return exact definitions, references, implementations, and
+call hierarchies. That precision sounds compelling on an unfamiliar Go
+codebase, especially around implicit interfaces and repeated names. It still
+does not establish that adding and maintaining another navigation system makes
+tasks cheaper or faster. Ripgrep plus targeted reads reaches the answer without
+requiring a server, project model, source position, or specialist interface.
 
 <blockquote class="twitter-tweet"><p lang="en" dir="ltr">I&#39;m writing Go again (for what, you&#39;ll see later...). `go doc` and `gopls` are like agent superpowers and its shocking how productive agents are out of the box at writing [good] Go code versus other languages I&#39;ve used (including the JS ecosystem). Also, Go + Zig is a good mix.…</p>&mdash; Mitchell Hashimoto (@mitchellh) <a href="https://x.com/mitchellh/status/2046319366489407803?ref_src=twsrc%5Etfw">April 20, 2026</a></blockquote> <script async src="https://platform.x.com/widgets.js" charset="utf-8"></script>
 
@@ -76,9 +87,9 @@ The comparison is asymmetric because of the agent's starting point. Most work
 begins with a vague bug report, a behavior, or a name—not a perfect source
 position. Models in 2026 already know how to turn those clues into `rg` queries,
 targeted reads, and follow-up searches. A new semantic tool asks them to learn
-another interface and often to locate an exact position before using it. The
-semantic answer may be better while the whole task becomes no simpler. In my
-experience, Go agents remain just as effective with ripgrep for most work. I
+another interface and often to locate an exact position before using it. A more
+precise intermediate answer is irrelevant when the whole task becomes no
+simpler. In my experience, Go agents remain just as effective with ripgrep. I
 have not run a controlled `gopls`-versus-ripgrep benchmark, so that is an
 observation, not a quantitative claim.
 
@@ -116,25 +127,27 @@ process, or persistent index. Each invocation treats the current directory as
 a workspace, discovers its `tsconfig.json` files, opens the projects in one
 session, executes one query, prints stable file spans, and exits.
 
-That shape is intentional: one command in, compact source spans out. `tspls`
-keeps the repository as the source of truth and composes with files, pipes, and
-the rest of the CLI. It is substantial semantic machinery packaged as a simple
-tool an agent can inspect and combine.
+That shape is intentional: one command in, compact source spans out. Even after
+removing the server, protocol, daemon, child process, and persistent index,
+`tspls` still asks the agent to learn a specialist interface and locate exact
+source positions. The experiment gave semantics every architectural advantage
+without making it a better addition than ripgrep.
 
 GPT-5.6 Sol built the
 [initial tspls implementation](https://github.com/meoyawn/tspls/commit/d8d171cdb2a20072ea61a5d78124b2e5f01ad3b5)
 in about 40 minutes using high reasoning.
 
-The tool had already proved that semantics could return a cleaner result. The
-benchmark asked whether adding even this lean specialist to a model's existing
-toolkit would improve the completed work.
+The tool had already proved that semantics could return a cleaner intermediate
+result. The benchmark asked whether that distinction mattered enough to add
+even this lean specialist to a model's existing toolkit. It did not.
 
 ## The benchmark
 
-I tested that bet on three code-navigation tasks in the real Listenbox
-monorepo. Two searched for consumers of distinctive names: `isHttpURL` and
-`pricingCheckoutHref`. The third targeted an exported symbol named `api`,
-surrounded by unrelated APIs and textual collisions.
+I tested that bet with three benchmarks on
+[Listenbox](https://listenbox.app/). Two asked agents to find every consumer of
+a distinctive name, where a literal search should be straightforward. The
+third asked them to trace a common name surrounded by unrelated textual
+matches, deliberately testing the case most favorable to semantic navigation.
 
 Each task used two arms: one agent could use the tspls skill, while the other
 was limited to ripgrep and ordinary file reads. Both ran
@@ -164,9 +177,9 @@ For the collision-heavy task, I averaged two clean repeats. Tokens and tool
 calls are counts, so I rounded those task-level averages to whole units before
 computing the aggregate.
 
-The table shows two kinds of simplicity. tspls simplified the context: it
-examined far less of the repository and made fewer calls. ripgrep simplified the
-workflow: it used a tool the model already knew, consumed slightly fewer total
+tspls reduced context: it examined far less of the repository and made fewer
+calls. That is not simplicity for the agent. ripgrep kept the whole workflow
+simple: it used a tool the model already knew, consumed slightly fewer total
 input and output tokens, and finished 5.5% sooner. Both arms got every answer
 right and their estimated cost was effectively tied.
 
@@ -185,13 +198,16 @@ cost win would overstate the evidence.
 
 tspls did exactly what it was built to do. Across the benchmark it opened 40
 fewer files, emitted 95,730 fewer bytes of tool output, and used five fewer tool
-calls. On the generic `api` symbol it was clearly more efficient: seven fewer
-calls, 38 fewer files, 75 KB less tool output, and about 40 seconds less wall
-time. Semantics helped exactly where lexical ambiguity was highest.
+calls. On the collision-heavy benchmark it used seven fewer calls, opened 38
+fewer files, emitted 75 KB less tool output, and took about 40 seconds less wall
+time. Ripgrep still produced the same correct answer, won aggregate speed, used
+fewer total tokens, and required no extra tool. A specialist winning selected
+intermediate metrics on one task does not establish an end-to-end advantage.
 
 But the benchmark measured the whole agent workflow, not the purity of one
-query. On the two distinctive names, the model could search a literal, inspect
-a few matches, and reconstruct the answer using a workflow it already knew.
+query. On the two low-collision benchmarks, the model could search a literal,
+inspect a few matches, and reconstruct the answer using a workflow it already
+knew.
 With tspls it still had to discover projects, initialize the compiler, locate a
 precise source position, and decide when the unfamiliar tool was worth calling.
 The cleaner intermediate result did not improve the final answer, cost, or
@@ -200,13 +216,15 @@ aggregate speed.
 Current models reward simplicity because familiar primitives compound. The
 agent can vary an `rg` pattern, pipe the result, narrow its reads, and verify the
 answer without switching mental models. A new tool does not compete with raw
-text search in isolation; it competes with that whole learned repertoire. Being
-more precise is not enough. It has to improve the completed task after the cost
-of teaching and using it.
+text search in isolation; it competes with that whole learned repertoire.
+Intermediate precision alone does not establish an end-to-end win.
 
-Three tasks in one repository do not justify a universal claim. They support a
-narrower one: a good semantic tool is not automatically a useful addition to a
-strong coding agent. In this benchmark, teaching tspls did not pay overall.
+Three tasks in one repository do not prove that ripgrep wins every possible
+benchmark. They do show why hypothetical edge cases are a bad basis for agent
+tooling: even when the benchmark included a collision-heavy symbol chosen to
+favor semantics, ripgrep got the same answer and won the aggregate workflow.
+Teaching tspls did not pay in this experiment. Broader, independent benchmarks
+should decide whether that result generalizes.
 
 ## What other benchmarks show
 
@@ -225,18 +243,20 @@ agent actually chooses or spends to finish a task.
 A more relevant 2026 preprint,
 [*Does a Language Server Save Tokens for Coding Agents?*](https://arxiv.org/abs/2608.13568),
 runs real agent loops with grep and LSP tools on Python and TypeScript—not Go or
-`gopls`. Its answer is conditional and usually negative. On symbol-named
+`gopls`. Its aggregate answer is negative for the tooling strategy argued here.
+On symbol-named
 localization, LSP cost strong models 6–118% more tokens. On reference-finding it
 bought precision but still carried a token premium for capable models. Yet on
 the collision-heavy Hono codebase it was both more accurate and 12% cheaper.
 
-That pilot has its own small-sample and harness limitations, but its boundary
-matches mine. Strong models do not automatically become cheaper when given an
-LSP because they are not starting from zero: they already know how to search
-code. A compact semantic answer has marginal value when lexical ambiguity
-finally overwhelms that existing skill.
+That pilot has its own small-sample and harness limitations. More importantly,
+its mixed results show why a query-level heuristic is the wrong conclusion.
+Humans should not guess when an agent will need semantics; they should compare
+tool stacks across representative tasks and measure successful-task cost and
+wall time. This study adds useful evidence, but not enough to settle the tool
+choice across models, languages, and repositories.
 
-## Complexity has to earn its keep
+## Complexity needs task-level evidence
 
 The same standard applies to structural tools.
 [`ast-grep`](https://github.com/ast-grep/ast-grep) matches Tree-sitter syntax
@@ -252,11 +272,12 @@ reading an entire repository—an upper bound no competent grep-driven agent
 pays. Tool-output size is not dollar cost, and a short answer is not a win if
 the agent misses a file or needs extra turns to recover.
 
-These tools need independent agent benchmarks: same model, same tasks, same
-correctness threshold, actual API usage, and wall-clock time to successful task
-completion. Cold indexing, warm queries, graph maintenance, failed searches,
-and verification all need to count. Until then, the numbers show that a tool
-can compress its chosen examples, not that it improves the whole job.
+Research comparisons still need the same model, tasks, correctness threshold,
+actual API usage, and wall-clock time to successful completion. Cold indexing,
+warm queries, graph maintenance, failed searches, and verification all need to
+count. Payload-compression demos do not justify putting these tools in an agent
+stack. Current end-to-end evidence favors `rg`; more independent benchmarks
+should try to overturn that result.
 
 A persistent graph also creates a second representation of the repository, with
 its own maintenance burden. In my use, `code-review-graph` becomes least reliable
@@ -274,19 +295,57 @@ cost has been moved into a background process.
 In my TypeScript 7 test, Probe with the `tsgo` LSP did not work out of the box; I
 had to put a custom Node.js wrapper in front of it. A daemon starting language
 servers through a wrapper, all to avoid `rg`: this is exactly the kind of
-complexity current models do not need.
+complexity whose end-to-end benefit needs to be measured, not assumed.
 
-## Keep it simple, stupid
+## RTK loses where it matters
 
-The bottom line: for 2026-generation LLMs, stick to ripgrep. `rg`, file reads,
-and the shell already form a fast, flexible code-navigation system that models
-know how to use. Do not spend time and energy building semantic navigation,
-indexes, graphs, or daemons for coding agents.
+[`rtk`](https://github.com/rtk-ai/rtk), the Rust Token Killer, is an even clearer
+example of complexity optimized for the wrong metric. It installs a binary and
+hook that intercept shell commands, runs them through a proxy, and replaces
+their output with a compressed dialect. That means more installation, command
+rewriting, compatibility risk, and recovery behavior in the workflow. It is a
+shitty trade unless the whole task becomes cheaper or faster.
 
-Semantics won one ambiguity-heavy task here. That is not enough to make them a
-foundation, or even a default escape hatch. Cleaner intermediate results do not
-matter when the completed work is no better, cheaper, or faster. Keep the
-toolkit small and the repository greppable.
+An independent
+[JetBrains paired benchmark](https://blog.jetbrains.com/ai/2026/07/rtk-claude-code-token-savings/)
+tested RTK as shipped across 86 SkillsBench tasks. Quality stayed unchanged.
+At low reasoning effort, RTK made the median task 7.6% more expensive and used
+13.8% more turns; at high effort, cost was effectively flat. RTK's own counter
+claimed 96.2 million tokens saved during the low-effort run while the measured
+bill increased. The proxy compressed output and still lost the economic test.
+
+The independent
+[*LogDx-CI* benchmark](https://arxiv.org/abs/2605.28876) compared 11 ways to
+reduce logs across 35 real CI failures, including three RTK modes. Hybrid
+grep-and-tail routers dominated its cost-quality frontier. In agent loops,
+models often recovered from weak initial context, but recovery took two to four
+times more tool calls. Again, output compression was not the outcome; diagnosis
+quality and recovery cost were.
+
+Smaller tests point in the same methodological direction. JetBrains measured
+the [Caveman skill's claimed 65% saving](https://blog.jetbrains.com/ai/2026/07/speak-to-ai-agents-like-cavemen-tosave-tokens/)
+at 8.5% of output tokens and roughly 10% of cost at best when activation was
+forced. A separate
+[Codex comparison of Caveman and RTK](https://github.com/dd3ok/caveman-rtk-benchmark/blob/main/docs/results-official-caveman-gpt55-v1.md)
+kept correctness at 100% across 60 runs, but RTK frequently added overhead on
+the smaller fixture and produced mixed results on the larger one. That study is
+too small for a universal verdict, which is exactly the point: claims about
+agent efficiency need broader independent replication.
+
+## Benchmark the whole task
+
+The conclusion is not an instruction for agents to search twice, narrow a
+pattern, or choose a fallback. Agents will pursue the goal with whatever tools
+they have. The human decision is which toolkit minimizes wall-clock time and
+actual cost per successful task at the same correctness level.
+
+We need more independent, paired benchmarks of LSPs, indexes, graphs, and
+context compressors. They must include setup, startup, retries, cache pricing,
+verification, and failures—not just tool-output bytes. Right now those
+benchmarks favor ripgrep and simple shell pipelines. tspls did not improve the
+aggregate workflow here, agent-level LSP results are mixed and usually more
+expensive for strong models, and RTK loses despite impressive self-reported
+compression. That is the current evidence, not a permanent law.
 
 Shoutout to Jesse Wilson, who wrote a decade ago that
 [case mapping breaks search](https://publicobject.com/2016/01/20/strict-naming-conventions-are-a-liability/).
