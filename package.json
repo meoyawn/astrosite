@@ -18,7 +18,7 @@
     "@kobalte/core": "^0.13.13",
     "date-fns": "^4.4.0",
     "github-slugger": "^2.0.0",
-    "js-yaml": "^5.2.3",
+    "js-yaml": "^5.3.0",
     "maplibre-gl": "5.24.0",
     "mdast-util-from-markdown": "^2.0.3",
     "rehype-autolink-headings": "^7.1.0",
@@ -27,7 +27,7 @@
     "rehype-stringify": "^10.0.1",
     "remark-parse": "^11.0.0",
     "remark-rehype": "^11.1.2",
-    "solid-js": "^1.9.14",
+    "solid-js": "^1.9.15",
     "solid-static": "file:../solid-static",
     "topojson-client": "^3.1.0",
     "unified": "11.0.5",
@@ -46,8 +46,8 @@
     "@types/node": "^26.2.0",
     "@types/topojson-client": "^3.1.5",
     "effection": "^4.1.0",
-    "oxfmt": "^0.63.0",
-    "oxlint": "^1.78.0",
+    "oxfmt": "^0.64.0",
+    "oxlint": "^1.79.0",
     "oxlint-tailwindcss": "^1.9.0",
     "oxlint-tsgolint": "^7.0.2001",
     "postcss": "^8.5.26",
@@ -60,8 +60,8 @@
     "typescript": "^7.0.2",
     "vite": "^8.2.1",
     "vite-plugin-solid": "^2.11.14",
-    "vitest": "^4.1.10",
-    "wrangler": "^4.123.0"
+    "vitest": "^4.1.11",
+    "wrangler": "^4.124.0"
   },
   "devEngines": {
     "packageManager": {
