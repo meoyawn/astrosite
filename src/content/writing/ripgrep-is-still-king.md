@@ -67,8 +67,8 @@ for a text search to find.
 
 This is useful for agents too. On an unfamiliar Go codebase, exact definitions,
 references, implementations, and call hierarchies can replace a lot of manual
-disambiguation. A warm `gopls` integration is an excellent semantic escape
-hatch. Its capability is not in question.
+disambiguation. Its capability is not in question. Whether adding and
+maintaining that machinery improves the agent's whole workflow is.
 
 <blockquote class="twitter-tweet"><p lang="en" dir="ltr">I&#39;m writing Go again (for what, you&#39;ll see later...). `go doc` and `gopls` are like agent superpowers and its shocking how productive agents are out of the box at writing [good] Go code versus other languages I&#39;ve used (including the JS ecosystem). Also, Go + Zig is a good mix.…</p>&mdash; Mitchell Hashimoto (@mitchellh) <a href="https://x.com/mitchellh/status/2046319366489407803?ref_src=twsrc%5Etfw">April 20, 2026</a></blockquote> <script async src="https://platform.x.com/widgets.js" charset="utf-8"></script>
 
@@ -276,8 +276,18 @@ had to put a custom Node.js wrapper in front of it. A daemon starting language
 servers through a wrapper, all to avoid `rg`: this is exactly the kind of
 complexity current models do not need.
 
-## Never break grep
+## Keep it simple, stupid
+
+The bottom line: for 2026-generation LLMs, stick to ripgrep. `rg`, file reads,
+and the shell already form a fast, flexible code-navigation system that models
+know how to use. Do not spend time and energy building semantic navigation,
+indexes, graphs, or daemons for coding agents.
+
+Semantics won one ambiguity-heavy task here. That is not enough to make them a
+foundation, or even a default escape hatch. Cleaner intermediate results do not
+matter when the completed work is no better, cheaper, or faster. Keep the
+toolkit small and the repository greppable.
 
 Shoutout to Jesse Wilson, who wrote a decade ago that
 [case mapping breaks search](https://publicobject.com/2016/01/20/strict-naming-conventions-are-a-liability/).
-Coding tools change; greppable code keeps winning.
+Coding tools change; greppable code keeps winning. Never break grep.
