@@ -257,7 +257,7 @@ test.describe("e2e tests", () => {
         )
         await expect(openGraphImage).toHaveAttribute(
           "content",
-          /^https:\/\/adelnz\.com\/assets\/og-[\w-]+\.jpg$/,
+          /^\/assets\/og-[\w-]+\.jpg$/,
         )
         await expect(openGraphImageType).toHaveAttribute(
           "content",
@@ -275,9 +275,9 @@ test.describe("e2e tests", () => {
           )
         }
 
-        const canonicalUrl = new URL(openGraphUrlContent)
+        const canonicalUrl = new URL(openGraphUrlContent, page.url())
 
-        expect(canonicalUrl.origin).toEqual("https://adelnz.com")
+        expect(canonicalUrl.origin).toEqual(new URL(page.url()).origin)
 
         if (target.fileName === "404.html") {
           expect(["/404", "/404/"]).toContain(canonicalUrl.pathname)
@@ -307,7 +307,7 @@ test.describe("e2e tests", () => {
       imageUrl = match.groups.url
       const imagePath = join(
         distDir,
-        new URL(imageUrl).pathname.replace(/^\//, ""),
+        new URL(imageUrl, builtOrigin).pathname.replace(/^\//, ""),
       )
 
       expect(existsSync(imagePath)).toEqual(true)
@@ -324,7 +324,7 @@ test.describe("e2e tests", () => {
 
       imageUrl = content
       const response = await page.request.get(
-        new URL(new URL(imageUrl).pathname, builtOrigin).href,
+        new URL(imageUrl, builtOrigin).href,
       )
 
       expect(response.ok()).toEqual(true)
@@ -333,7 +333,7 @@ test.describe("e2e tests", () => {
     }
 
     expect(imageUrl).toMatch(
-      /^https:\/\/adelnz\.com\/assets\/og-[\w-]+\.jpg$/,
+      /^\/assets\/og-[\w-]+\.jpg$/,
     )
     expect(image.subarray(0, 3).toString("hex")).toEqual("ffd8ff")
     const metadata = await sharp(image).metadata()
@@ -890,7 +890,7 @@ test.describe("e2e tests", () => {
     ).toBeHidden()
     await expect(page.locator('meta[property="og:site_name"]')).toHaveAttribute(
       "content",
-      "adelnz.com",
+      "Adel Nizamutdinov",
     )
     await expect(page).toHaveTitle(frontmatter.title)
     await expect(page.locator('meta[name="description"]')).toHaveAttribute(

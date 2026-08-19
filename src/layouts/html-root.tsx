@@ -14,7 +14,6 @@ export interface HtmlRootProps {
   title: string
 }
 
-const siteOrigin = "https://adelnz.com"
 const openGraphImageWidth = 1200
 const openGraphImageHeight = 630
 const openGraphImage = await getImage({
@@ -24,8 +23,6 @@ const openGraphImage = await getImage({
   src: openGraphImageSource,
   width: openGraphImageWidth,
 })
-const openGraphImageUrl = new URL(openGraphImage.src, siteOrigin).href
-
 export const HtmlRoot = (props: HtmlRootProps): JSX.Element => (
   <html lang={props.lang} class="scroll-smooth motion-reduce:scroll-auto">
     <head>
@@ -39,12 +36,12 @@ export const HtmlRoot = (props: HtmlRootProps): JSX.Element => (
       />
       <title>{props.title}</title>
       <meta name="description" content={props.description} />
-      <meta property="og:site_name" content="adelnz.com" />
+      <meta property="og:site_name" content="Adel Nizamutdinov" />
       <meta property="og:title" content={props.title} />
       <meta property="og:description" content={props.description} />
       <meta property="og:type" content={props.openGraphType} />
-      <meta property="og:url" content={new URL(props.path, siteOrigin).href} />
-      <meta property="og:image" content={openGraphImageUrl} />
+      <meta property="og:url" content={props.path} />
+      <meta property="og:image" content={openGraphImage.src} />
       <meta property="og:image:type" content="image/jpeg" />
       <meta property="og:image:width" content={String(openGraphImageWidth)} />
       <meta property="og:image:height" content={String(openGraphImageHeight)} />
