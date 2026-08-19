@@ -52,6 +52,7 @@
     "oxlint-tsgolint": "^7.0.2001",
     "postcss": "^8.5.26",
     "remark-frontmatter": "^5.0.0",
+    "remark-gfm": "^4.0.1",
     "remark-mdx-frontmatter": "^5.2.0",
     "sharp": "^0.35.3",
     "solid-jsx": "^1.1.4",

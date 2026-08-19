@@ -16,6 +16,15 @@
 - never disable, skip or ignore tests
 - never edit [tsconfig.json](tsconfig.json) unless explicitly asked
 
+## Writing
+
+- when changes are limited to [src/content/writing](src/content/writing/), never
+  run `task build`, `vite build`, or any other full-site build
+- validate the affected writing route through the already-running dev server
+  with a targeted `curl`
+- if the dev server is unavailable, report that targeted validation could not
+  run; never launch it or substitute a full-site build
+
 ## i18n sync
 
 - keep translations in [src/pages/ru](src/pages/ru/) and

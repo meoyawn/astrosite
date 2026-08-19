@@ -2,19 +2,23 @@ import mdx from "@mdx-js/rollup"
 import rehypeShiki, { type RehypeShikiOptions } from "@shikijs/rehype"
 import tailwindcss from "@tailwindcss/postcss"
 import type { Root } from "hast"
+import type { Root as MdastRoot } from "mdast"
+import { fromMarkdown } from "mdast-util-from-markdown"
 import rehypeAutolinkHeadings from "rehype-autolink-headings"
 import rehypeExternalLinks from "rehype-external-links"
 import rehypeSlug from "rehype-slug"
 import rehypeStringify from "rehype-stringify"
 import remarkFrontmatter from "remark-frontmatter"
+import remarkGfm from "remark-gfm"
 import remarkMdxFrontmatter from "remark-mdx-frontmatter"
-import type { Plugin } from "unified"
+import type { Options as RemarkParseOptions } from "remark-parse"
+import remarkRehype from "remark-rehype"
+import { type Plugin, unified } from "unified"
 import { defineConfig } from "vite"
 import { defaultLocale, locales } from "./src/app/i18n.ts"
 import { externalLinkOptions } from "./src/app/markdown-options.ts"
 import { collections } from "./src/content.config.ts"
 import { staticSite } from "solid-static"
-import { createMarkdownProcessor } from "solid-static/markdown"
 
 const codeTheme = "github-dark-default"
 const codeColors = {
@@ -163,12 +167,29 @@ const rehypeWritingAutolinkHeadings: Plugin<[], Root> = () => (tree, file) => {
   }
 }
 
-const markdownProcessor = createMarkdownProcessor()
+const remarkParsePlugin: Plugin<
+  [(Readonly<RemarkParseOptions> | null | undefined)?],
+  string,
+  MdastRoot
+> = function (options) {
+  this.parser = document =>
+    fromMarkdown(document, {
+      ...this.data("settings"),
+      ...options,
+      extensions: this.data("micromarkExtensions") ?? [],
+      mdastExtensions: this.data("fromMarkdownExtensions") ?? [],
+    })
+}
+
+const markdownProcessor = unified()
+  .use(remarkParsePlugin)
+  .use(remarkGfm)
+  .use(remarkRehype, { allowDangerousHtml: true })
   .use(rehypeSlug)
   .use(rehypeWritingAutolinkHeadings)
   .use(rehypeExternalLinks, externalLinkOptions)
   .use(rehypeShiki, codeHighlightOptions)
-  .use(rehypeStringify)
+  .use(rehypeStringify, { allowDangerousHtml: true })
 
 const mdxPlugin = mdx({
   include: /\.mdx?$/,
