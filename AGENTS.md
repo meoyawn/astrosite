@@ -18,7 +18,9 @@
 
 ## Verification
 
-- after every code change, run `task check` before reporting completion
+- run `task check` before reporting completion for every code/config change;
+  edits limited to [src/content/writing](src/content/writing/) are the sole
+  exception and do **not** require `task check`
 - individual lint, typecheck, build, or test commands never substitute for
   `task check`
 - do not report a code change as complete until `task check` exits successfully

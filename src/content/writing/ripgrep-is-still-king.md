@@ -4,16 +4,10 @@ description: Current gen LLMs reward simple tools
 published_at: 2026-08-19
 ---
 
-Current-generation LLMs reward simple, composable tools. They already know how
-to turn files, text search, and the shell into a code-navigation workflow, and
-they can write the missing glue themselves. Every extra layer has to earn the
-cost of replacing that familiar workflow. The tools tested here did not.
-
-The decision for humans is not how an agent should recover from an ambiguous
-search. The agent will keep working until it has an answer. The decision is
-whether another tool reduces wall-clock time and actual cost per successful
-task. That requires independent, end-to-end agent benchmarks. The evidence so
-far favors ripgrep, but the evidence base is still small.
+Current-generation LLMs already turn files, search, and shell into a practical
+way to explore and edit code. Tools that advertise workflow improvements are
+not improvements by default; they must beat this baseline before adding
+another interface.
 
 This article started with a Sunday meditation from Pi:
 
