@@ -1,9 +1,6 @@
 ---
 title: "npm install is extremely dangerous"
-description:
-  How install scripts in recruiter repos can run malicious dependency code, and
-  which install gates to use before trusting JavaScript projects.
-teaser: Treat dependency installation as code execution.
+description: Treat dependency installation as code execution.
 published_at: 2026-05-29
 updated_at: 2026-06-18
 ---

@@ -1,0 +1,22 @@
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  width="1200"
+  height="630"
+  viewBox="0 0 1200 630"
+  role="img"
+  aria-labelledby="title description"
+>
+  <title id="title">Adel Nizamutdinov</title>
+  <desc id="description">Black angular mark on a white field.</desc>
+  <rect width="1200" height="630" fill="#fff" />
+  <g transform="translate(222 -63) scale(3.6)">
+    <path
+      d="M45 148.727 103.587 26.8985c.365-.7597 1.449-.7542 1.807.0092l57.939 123.6683c.31.663-.174 1.424-.906 1.424H94.0385"
+      transform="translate(0 8)"
+      fill="none"
+      stroke="#000"
+      stroke-width="20"
+      stroke-linecap="square"
+    />
+  </g>
+</svg>

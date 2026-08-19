@@ -12,6 +12,8 @@ export interface SiteShellProps {
   description: string
   lang: Locale
   navClass: string | undefined
+  openGraphType: "article" | "website"
+  path: string
   title: string
 }
 
@@ -24,6 +26,8 @@ export const SiteShell = (props: SiteShellProps) => {
     <HtmlRoot
       description={props.description}
       lang={props.lang}
+      openGraphType={props.openGraphType}
+      path={props.path}
       title={props.title}
     >
       {props.bodyStart}

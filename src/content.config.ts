@@ -4,7 +4,6 @@ import type { CollectionDefinition } from "solid-static/content"
 export const writingSchema = v.object({
   title: v.pipe(v.string(), v.minLength(1)),
   description: v.pipe(v.string(), v.minLength(1)),
-  teaser: v.pipe(v.string(), v.minLength(1)),
   published_at: v.exactOptional(v.date()),
   updated_at: v.exactOptional(v.date()),
 })

@@ -1,9 +1,6 @@
 ---
 title: "2026: ripgrep is still king"
-description:
-  What gopls, TypeScript’s native port, and an agent benchmark reveal about why
-  current-generation coding agents reward simple, composable tools.
-teaser: Current-generation LLMs reward simple tools—and they already know ripgrep.
+description: Current gen LLMs reward simple tools
 published_at: 2026-08-19
 ---
 

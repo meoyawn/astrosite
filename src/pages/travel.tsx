@@ -2,6 +2,7 @@ import type { JSX } from "solid-js"
 import { ssr } from "solid-js/web"
 import travelIsland from "../app/travels/travel-island.tsx?island"
 import { SiteShell } from "../layouts/site-shell.tsx"
+import { routes } from "../routes.ts"
 
 const isSolidSsrNode = (value: unknown): value is JSX.Element =>
   typeof value === "object" &&
@@ -34,6 +35,8 @@ const TravelPage = (): JSX.Element => (
     description="An interactive globe and timeline of travels from 2013 to 2026."
     lang="en"
     navClass="w-full max-w-none"
+    openGraphType="website"
+    path={routes.travel}
     title="Travels — Adel"
   >
     <div id="travel-island">

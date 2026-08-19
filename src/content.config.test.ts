@@ -10,7 +10,6 @@ describe("writing collection schema", () => {
         {
           description: "Description",
           published_at: publishedAt,
-          teaser: "Teaser",
           title: "Title",
         },
         "valid.md",
@@ -18,7 +17,6 @@ describe("writing collection schema", () => {
     ).toEqual({
       description: "Description",
       published_at: publishedAt,
-      teaser: "Teaser",
       title: "Title",
     })
   })
@@ -27,10 +25,9 @@ describe("writing collection schema", () => {
     expect(() =>
       parseWritingData(
         {
-          description: "Description",
           title: "Title",
         },
-        "missing-teaser.md",
+        "missing-description.md",
       ),
     ).toThrow("writing collection schema")
   })
@@ -41,7 +38,6 @@ describe("writing collection schema", () => {
         {
           description: "Description",
           published_at: "2026-05-29",
-          teaser: "Teaser",
           title: "Title",
         },
         "invalid-date.md",

@@ -1,7 +1,6 @@
 ---
 title: How to OpenAPI
-description: A maintainable OpenAPI 3.2 pipeline for humans and coding agents
-teaser: Author contracts in TypeScript, then generate focused Go and TypeScript code.
+description: Author contracts in TypeScript, then generate focused Go and TypeScript code.
 published_at: 2026-08-15
 ---
 

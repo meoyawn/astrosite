@@ -75,7 +75,7 @@ export const WritingList = (props: WritingListProps) => {
                     {entry.data.title}
                   </a>
                   <p class="mt-1 text-base leading-7 text-zinc-600">
-                    {entry.data.teaser}
+                    {entry.data.description}
                   </p>
                 </article>
               </li>

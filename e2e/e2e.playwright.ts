@@ -3,6 +3,7 @@ import { join, relative, resolve } from "node:path"
 import { expect, type Page, test } from "@playwright/test"
 import { load } from "js-yaml"
 import postcss from "postcss"
+import sharp from "sharp"
 import {
   localizedRoute,
   routes,
@@ -181,6 +182,171 @@ const routeBuiltFiles = async (page: Page): Promise<void> => {
 }
 
 test.describe("e2e tests", () => {
+  test("every emitted html file has matching HTML and Open Graph metadata", async ({
+    browser,
+  }) => {
+    const htmlTargets = await collectHtmlTargets()
+
+    await Promise.all(
+      htmlTargets.map(async target => {
+        await using page = await browser.newPage()
+
+        await routeBuiltFiles(page)
+
+        const response = await page.goto(`${builtOrigin}${target.pagePath}`)
+
+        expect(
+          response?.ok() ?? false,
+          `Expected Playwright to load HTML route: ${target.pagePath}.`,
+        ).toEqual(true)
+
+        const title = page.locator("head > title")
+        const description = page.locator('meta[name="description"]')
+        const openGraphTitle = page.locator('meta[property="og:title"]')
+        const openGraphDescription = page.locator(
+          'meta[property="og:description"]',
+        )
+        const openGraphType = page.locator('meta[property="og:type"]')
+        const openGraphUrl = page.locator('meta[property="og:url"]')
+        const openGraphImage = page.locator('meta[property="og:image"]')
+        const openGraphImageType = page.locator(
+          'meta[property="og:image:type"]',
+        )
+        const openGraphImageWidth = page.locator(
+          'meta[property="og:image:width"]',
+        )
+        const openGraphImageHeight = page.locator(
+          'meta[property="og:image:height"]',
+        )
+        const openGraphImageAlt = page.locator(
+          'meta[property="og:image:alt"]',
+        )
+
+        await expect(title).toHaveCount(1)
+        await expect(description).toHaveCount(1)
+        await expect(openGraphTitle).toHaveCount(1)
+        await expect(openGraphDescription).toHaveCount(1)
+        await expect(openGraphType).toHaveCount(1)
+        await expect(openGraphUrl).toHaveCount(1)
+        await expect(openGraphImage).toHaveCount(1)
+        await expect(openGraphImageType).toHaveCount(1)
+        await expect(openGraphImageWidth).toHaveCount(1)
+        await expect(openGraphImageHeight).toHaveCount(1)
+        await expect(openGraphImageAlt).toHaveCount(1)
+        await expect(description).toHaveAttribute("content", /\S/)
+
+        const titleText = await page.title()
+        const descriptionContent = await description.getAttribute("content")
+
+        expect(titleText).toMatch(/\S/)
+
+        if (descriptionContent === null) {
+          throw new Error(
+            `Expected ${target.pagePath} to have title and description metadata.`,
+          )
+        }
+
+        await expect(openGraphTitle).toHaveAttribute("content", titleText)
+        await expect(openGraphDescription).toHaveAttribute(
+          "content",
+          descriptionContent,
+        )
+        await expect(openGraphType).toHaveAttribute(
+          "content",
+          target.pagePath.startsWith(routes.writing) ? "article" : "website",
+        )
+        await expect(openGraphImage).toHaveAttribute(
+          "content",
+          /^https:\/\/adelnz\.com\/assets\/og-[\w-]+\.jpg$/,
+        )
+        await expect(openGraphImageType).toHaveAttribute(
+          "content",
+          "image/jpeg",
+        )
+        await expect(openGraphImageWidth).toHaveAttribute("content", "1200")
+        await expect(openGraphImageHeight).toHaveAttribute("content", "630")
+        await expect(openGraphImageAlt).toHaveAttribute("content", /\S/)
+
+        const openGraphUrlContent = await openGraphUrl.getAttribute("content")
+
+        if (openGraphUrlContent === null) {
+          throw new Error(
+            `Expected ${target.pagePath} to have Open Graph URL metadata.`,
+          )
+        }
+
+        const canonicalUrl = new URL(openGraphUrlContent)
+
+        expect(canonicalUrl.origin).toEqual("https://adelnz.com")
+
+        if (target.fileName === "404.html") {
+          expect(["/404", "/404/"]).toContain(canonicalUrl.pathname)
+        } else {
+          expect(canonicalUrl.pathname).toEqual(
+            pagePathForFileName(target.fileName),
+          )
+        }
+      }),
+    )
+  })
+
+  test("Open Graph image is a 1200 by 630 JPEG", async ({ page }) => {
+    let imageUrl: string
+    let image: Buffer
+
+    if (siteUrl === undefined) {
+      const html = readFileSync(join(distDir, "index.html"), "utf8")
+      const match = html.match(
+        /<meta property="og:image" content="(?<url>[^"]+)"/,
+      )
+
+      if (match?.groups?.url === undefined) {
+        throw new Error("Expected built home page Open Graph image metadata.")
+      }
+
+      imageUrl = match.groups.url
+      const imagePath = join(
+        distDir,
+        new URL(imageUrl).pathname.replace(/^\//, ""),
+      )
+
+      expect(existsSync(imagePath)).toEqual(true)
+      image = readFileSync(imagePath)
+    } else {
+      await page.goto(builtOrigin)
+      const content = await page
+        .locator('meta[property="og:image"]')
+        .getAttribute("content")
+
+      if (content === null) {
+        throw new Error("Expected home page Open Graph image metadata.")
+      }
+
+      imageUrl = content
+      const response = await page.request.get(
+        new URL(new URL(imageUrl).pathname, builtOrigin).href,
+      )
+
+      expect(response.ok()).toEqual(true)
+      expect(response.headers()["content-type"]).toContain("image/jpeg")
+      image = await response.body()
+    }
+
+    expect(imageUrl).toMatch(
+      /^https:\/\/adelnz\.com\/assets\/og-[\w-]+\.jpg$/,
+    )
+    expect(image.subarray(0, 3).toString("hex")).toEqual("ffd8ff")
+    const metadata = await sharp(image).metadata()
+
+    expect({
+      height: metadata.height,
+      width: metadata.width,
+    }).toEqual({
+      height: 630,
+      width: 1200,
+    })
+  })
+
   test("every emitted html file references parseable css assets", async ({
     browser,
   }) => {
@@ -624,7 +790,7 @@ test.describe("e2e tests", () => {
     await expect(sliderInput).toHaveValue(initialValue)
   })
 
-  test("npm install article frontmatter matches article metadata and open graph tags", async ({
+  test("npm install article frontmatter matches HTML and Open Graph metadata", async ({
     page,
   }) => {
     function readArticleFrontmatter(markdownPath: string): {
@@ -726,6 +892,11 @@ test.describe("e2e tests", () => {
       "content",
       "adelnz.com",
     )
+    await expect(page).toHaveTitle(frontmatter.title)
+    await expect(page.locator('meta[name="description"]')).toHaveAttribute(
+      "content",
+      frontmatter.description,
+    )
     await expect(page.locator('meta[property="og:title"]')).toHaveAttribute(
       "content",
       frontmatter.title,
@@ -733,6 +904,10 @@ test.describe("e2e tests", () => {
     await expect(
       page.locator('meta[property="og:description"]'),
     ).toHaveAttribute("content", frontmatter.description)
+    await expect(page.locator('meta[property="og:type"]')).toHaveAttribute(
+      "content",
+      "article",
+    )
 
     const metadataTimes = page.getByRole("main").locator("time")
 

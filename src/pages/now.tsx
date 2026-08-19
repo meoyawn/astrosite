@@ -8,6 +8,8 @@ const Now = () => (
     description="What Adel Nizamutdinov is focused on now in Kazan, Tatarstan, Russia."
     lang="en"
     navClass={undefined}
+    openGraphType="website"
+    path={routes.now}
     title="Now | Adel Nizamutdinov"
   >
     <h1 class="mb-0">Now</h1>

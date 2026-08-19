@@ -8,6 +8,7 @@ import { IconLink } from "./icon-link.tsx"
 import { Org } from "./org.tsx"
 import { Products } from "./products.tsx"
 import { SiteShell } from "../../layouts/site-shell.tsx"
+import { localizedRoute } from "../../routes.ts"
 
 export interface CvPageProps {
   copy: CVPageCopy
@@ -31,6 +32,8 @@ export const CvPage = (props: CvPageProps) => (
     description="Personal website"
     lang={props.locale}
     navClass="print:hidden"
+    openGraphType="website"
+    path={localizedRoute(props.locale, "cv")}
     title={props.copy.cvTitle}
   >
     <section>

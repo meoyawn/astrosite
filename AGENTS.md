@@ -16,6 +16,18 @@
 - never disable, skip or ignore tests
 - never edit [tsconfig.json](tsconfig.json) unless explicitly asked
 
+## Images
+
+- never put images in [public](public/); every local image, including social
+  previews and generated source artwork, must live under [src](src/)
+- always import local images through Vite so content changes invalidate its
+  cache and production builds emit content-hashed asset URLs
+- use `solid-static/image` for local images: `ResponsiveImage` for HTML images
+  and `getImage()` for URLs used outside image markup, including Open Graph
+  metadata
+- never hand-copy an optimized image into `public`; keep one source asset in
+  `src` and let `solid-static` optimize, cache, and emit the derivative
+
 ## Writing
 
 - when changes are limited to [src/content/writing](src/content/writing/), never

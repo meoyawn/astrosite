@@ -1,7 +1,6 @@
 ---
 title: Another static site generator
-description: Why I left Astro and built solid-static on Vite and SolidJS
-teaser: Astro-inspired static sites with a faster, simpler toolchain
+description: Astro-inspired static sites with a faster, simpler toolchain
 published_at: 2026-08-14
 ---
 
