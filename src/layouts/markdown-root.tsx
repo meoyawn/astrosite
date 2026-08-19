@@ -27,7 +27,6 @@ const MarkdownRoot = (props: PageLayoutProps<MarkdownFrontmatter>) => {
       lang={props.frontmatter.lang ?? "en"}
       navClass={undefined}
       openGraphType="website"
-      path={props.route.path}
       title={props.frontmatter.title}
     >
       {props.children}

@@ -5,7 +5,6 @@ import {
   type WritingEntry,
 } from "../../app/static-site-types.ts"
 import { SiteShell } from "../../layouts/site-shell.tsx"
-import { writingRoute } from "../../routes.ts"
 import { getCollection } from "solid-static/runtime"
 
 export interface ArticlePageProps {
@@ -44,7 +43,6 @@ const ArticlePage = (props: ArticlePageProps) => {
       lang="en"
       navClass={undefined}
       openGraphType="article"
-      path={writingRoute(props.entry.id)}
       title={props.entry.data.title}
     >
       <h1 id={titleId} class="mb-0">

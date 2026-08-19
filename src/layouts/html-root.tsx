@@ -10,12 +10,12 @@ export interface HtmlRootProps {
   description: string
   lang: Locale
   openGraphType: "article" | "website"
-  path: string
   title: string
 }
 
 const openGraphImageWidth = 1200
 const openGraphImageHeight = 630
+const openGraphImageAlt = "Black angular mark on a white field"
 const openGraphImage = await getImage({
   format: "jpg",
   height: openGraphImageHeight,
@@ -40,15 +40,18 @@ export const HtmlRoot = (props: HtmlRootProps): JSX.Element => (
       <meta property="og:title" content={props.title} />
       <meta property="og:description" content={props.description} />
       <meta property="og:type" content={props.openGraphType} />
-      <meta property="og:url" content={props.path} />
       <meta property="og:image" content={openGraphImage.src} />
       <meta property="og:image:type" content="image/jpeg" />
       <meta property="og:image:width" content={String(openGraphImageWidth)} />
       <meta property="og:image:height" content={String(openGraphImageHeight)} />
-      <meta
-        property="og:image:alt"
-        content="Black angular mark on a white field"
-      />
+      <meta property="og:image:alt" content={openGraphImageAlt} />
+      <meta name="twitter:card" content="summary_large_image" />
+      <meta name="twitter:site" content="@meoyawn" />
+      <meta name="twitter:creator" content="@meoyawn" />
+      <meta name="twitter:title" content={props.title} />
+      <meta name="twitter:description" content={props.description} />
+      <meta name="twitter:image" content={openGraphImage.src} />
+      <meta name="twitter:image:alt" content={openGraphImageAlt} />
       <link rel="stylesheet" href={stylesheet} />
     </head>
     <body class="bg-white text-zinc-950">{props.children}</body>

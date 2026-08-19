@@ -16,6 +16,15 @@
 - never disable, skip or ignore tests
 - never edit [tsconfig.json](tsconfig.json) unless explicitly asked
 
+## Verification
+
+- after every code change, run `task check` before reporting completion
+- individual lint, typecheck, build, or test commands never substitute for
+  `task check`
+- do not report a code change as complete until `task check` exits successfully
+- when `task check` fails, fix the failures and rerun the full `task check`;
+  never skip, disable, or ignore a failing check
+
 ## Images
 
 - never put images in [public](public/); every local image, including social
@@ -27,6 +36,14 @@
   metadata
 - never hand-copy an optimized image into `public`; keep one source asset in
   `src` and let `solid-static` optimize, cache, and emit the derivative
+
+## Social metadata URLs
+
+- production and preview deployments use unpredictable domains; never hardcode
+  a deployment origin in metadata
+- `og:image` and `twitter:image` are the only Open Graph or Twitter fields that
+  may contain URLs, and both must use root-relative `/assets/...` paths
+- never emit `og:url` or any other URL-valued Open Graph or Twitter field
 
 ## Writing
 

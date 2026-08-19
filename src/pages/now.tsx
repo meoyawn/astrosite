@@ -9,7 +9,6 @@ const Now = () => (
     lang="en"
     navClass={undefined}
     openGraphType="website"
-    path={routes.now}
     title="Now | Adel Nizamutdinov"
   >
     <h1 class="mb-0">Now</h1>

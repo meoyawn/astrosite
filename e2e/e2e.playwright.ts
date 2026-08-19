@@ -13,6 +13,7 @@ import {
 
 const siteUrl = process.env.SITE_URL?.replace(/\/$/, "")
 const builtOrigin = siteUrl ?? "http://built.local"
+const socialImagePattern = /^\/assets\/og-[\w-]+\.jpg$/
 const distDir = resolve("dist")
 const devRoutesPath = "/@solid-static/routes.json"
 
@@ -182,7 +183,7 @@ const routeBuiltFiles = async (page: Page): Promise<void> => {
 }
 
 test.describe("e2e tests", () => {
-  test("every emitted html file has matching HTML and Open Graph metadata", async ({
+  test("every emitted html file has matching HTML and social metadata", async ({
     browser,
   }) => {
     const htmlTargets = await collectHtmlTargets()
@@ -221,18 +222,36 @@ test.describe("e2e tests", () => {
         const openGraphImageAlt = page.locator(
           'meta[property="og:image:alt"]',
         )
+        const twitterCard = page.locator('meta[name="twitter:card"]')
+        const twitterSite = page.locator('meta[name="twitter:site"]')
+        const twitterCreator = page.locator('meta[name="twitter:creator"]')
+        const twitterTitle = page.locator('meta[name="twitter:title"]')
+        const twitterDescription = page.locator(
+          'meta[name="twitter:description"]',
+        )
+        const twitterImage = page.locator('meta[name="twitter:image"]')
+        const twitterImageAlt = page.locator(
+          'meta[name="twitter:image:alt"]',
+        )
 
         await expect(title).toHaveCount(1)
         await expect(description).toHaveCount(1)
         await expect(openGraphTitle).toHaveCount(1)
         await expect(openGraphDescription).toHaveCount(1)
         await expect(openGraphType).toHaveCount(1)
-        await expect(openGraphUrl).toHaveCount(1)
+        await expect(openGraphUrl).toHaveCount(0)
         await expect(openGraphImage).toHaveCount(1)
         await expect(openGraphImageType).toHaveCount(1)
         await expect(openGraphImageWidth).toHaveCount(1)
         await expect(openGraphImageHeight).toHaveCount(1)
         await expect(openGraphImageAlt).toHaveCount(1)
+        await expect(twitterCard).toHaveCount(1)
+        await expect(twitterSite).toHaveCount(1)
+        await expect(twitterCreator).toHaveCount(1)
+        await expect(twitterTitle).toHaveCount(1)
+        await expect(twitterDescription).toHaveCount(1)
+        await expect(twitterImage).toHaveCount(1)
+        await expect(twitterImageAlt).toHaveCount(1)
         await expect(description).toHaveAttribute("content", /\S/)
 
         const titleText = await page.title()
@@ -257,7 +276,7 @@ test.describe("e2e tests", () => {
         )
         await expect(openGraphImage).toHaveAttribute(
           "content",
-          /^\/assets\/og-[\w-]+\.jpg$/,
+          socialImagePattern,
         )
         await expect(openGraphImageType).toHaveAttribute(
           "content",
@@ -266,26 +285,46 @@ test.describe("e2e tests", () => {
         await expect(openGraphImageWidth).toHaveAttribute("content", "1200")
         await expect(openGraphImageHeight).toHaveAttribute("content", "630")
         await expect(openGraphImageAlt).toHaveAttribute("content", /\S/)
+        await expect(twitterCard).toHaveAttribute(
+          "content",
+          "summary_large_image",
+        )
+        await expect(twitterSite).toHaveAttribute("content", "@meoyawn")
+        await expect(twitterCreator).toHaveAttribute("content", "@meoyawn")
+        await expect(twitterTitle).toHaveAttribute("content", titleText)
+        await expect(twitterDescription).toHaveAttribute(
+          "content",
+          descriptionContent,
+        )
+        await expect(twitterImage).toHaveAttribute(
+          "content",
+          socialImagePattern,
+        )
 
-        const openGraphUrlContent = await openGraphUrl.getAttribute("content")
+        const openGraphImageContent = await openGraphImage.getAttribute(
+          "content",
+        )
+        const openGraphImageAltContent = await openGraphImageAlt.getAttribute(
+          "content",
+        )
 
-        if (openGraphUrlContent === null) {
+        if (
+          openGraphImageContent === null ||
+          openGraphImageAltContent === null
+        ) {
           throw new Error(
-            `Expected ${target.pagePath} to have Open Graph URL metadata.`,
+            `Expected ${target.pagePath} to have Open Graph image metadata.`,
           )
         }
 
-        const canonicalUrl = new URL(openGraphUrlContent, page.url())
-
-        expect(canonicalUrl.origin).toEqual(new URL(page.url()).origin)
-
-        if (target.fileName === "404.html") {
-          expect(["/404", "/404/"]).toContain(canonicalUrl.pathname)
-        } else {
-          expect(canonicalUrl.pathname).toEqual(
-            pagePathForFileName(target.fileName),
-          )
-        }
+        await expect(twitterImage).toHaveAttribute(
+          "content",
+          openGraphImageContent,
+        )
+        await expect(twitterImageAlt).toHaveAttribute(
+          "content",
+          openGraphImageAltContent,
+        )
       }),
     )
   })
@@ -332,9 +371,7 @@ test.describe("e2e tests", () => {
       image = await response.body()
     }
 
-    expect(imageUrl).toMatch(
-      /^\/assets\/og-[\w-]+\.jpg$/,
-    )
+    expect(imageUrl).toMatch(socialImagePattern)
     expect(image.subarray(0, 3).toString("hex")).toEqual("ffd8ff")
     const metadata = await sharp(image).metadata()
 
