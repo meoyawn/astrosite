@@ -1,6 +1,7 @@
 ---
 title: How to OpenAPI
-description: Author contracts in TypeScript, then generate focused Go and TypeScript code.
+description:
+  Author contracts in TypeScript, then generate focused Go and TypeScript code.
 published_at: 2026-08-15
 ---
 
@@ -61,10 +62,11 @@ Our build first typechecks the ResponsibleAPI sources, then compiles them to
 OpenAPI 3.2. YAML and JSON are build artifacts for the ecosystem, not the source
 of truth.
 
-The compiled contracts feed [OASmith](https://github.com/responsibleapi/oasmith),
-which generates focused Go models and HTTP clients, TypeScript clients, and Go
-configuration structs. Shared source schemas therefore stay shared across
-servers, web apps, CLIs, and configuration parsing.
+The compiled contracts feed
+[OASmith](https://github.com/responsibleapi/oasmith), which generates focused Go
+models and HTTP clients, TypeScript clients, and Go configuration structs.
+Shared source schemas therefore stay shared across servers, web apps, CLIs, and
+configuration parsing.
 
 OASmith is deliberately focused. For our contract subset it is a much smaller,
 faster, and simpler replacement for the JVM-based
@@ -73,8 +75,8 @@ supporting OpenAPI 3.2 and both Go and TypeScript clients.
 
 [`oapi-codegen`](https://github.com/oapi-codegen/oapi-codegen) also supports
 OpenAPI 3.2 and is a strong lightweight choice for Go, but it does not generate
-TypeScript clients. OASmith covers both sides of our stack without bringing in
-a general-purpose generator.
+TypeScript clients. OASmith covers both sides of our stack without bringing in a
+general-purpose generator.
 
 ## Build and validate the router
 
@@ -98,8 +100,8 @@ if err := builder.Mount(e); err != nil {
 The router builds paths and methods from the contract. Bind each handler by its
 OpenAPI `operationId`, register handlers for security scheme names, then mount
 the result into Echo. Incoming requests are validated before application code
-runs. An operation without a handler remains visible and returns `501 Not
-Implemented`, rather than silently disappearing from the server.
+runs. An operation without a handler remains visible and returns
+`501 Not Implemented`, rather than silently disappearing from the server.
 
 Java teams can use the same pattern with
 [`vertx-web-openapi-router`](https://vertx.io/docs/vertx-web-openapi-router/java/),

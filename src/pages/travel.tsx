@@ -1,6 +1,6 @@
 import type { JSX } from "solid-js"
 import { ssr } from "solid-js/web"
-import travelIsland from "../app/travels/travel-island.tsx?island"
+import travelIsland from "../app/travel/travel-island.tsx?island"
 import { SiteShell } from "../layouts/site-shell.tsx"
 
 const isSolidSsrNode = (value: unknown): value is JSX.Element =>
@@ -42,7 +42,9 @@ const TravelPage = (): JSX.Element => (
         <p data-travel-globe-status>Loading...</p>
       </section>
     </div>
-    <noscript>This map needs JavaScript for globe and timeline interaction.</noscript>
+    <noscript>
+      This map needs JavaScript for globe and timeline interaction.
+    </noscript>
     <script type="module" src={travelIsland} />
   </SiteShell>
 )

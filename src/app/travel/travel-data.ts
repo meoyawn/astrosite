@@ -1,4 +1,4 @@
-import rawTravelData from "../../travels.json"
+import rawTravelData from "./travels.json"
 
 export interface TravelPlace {
   country: string
