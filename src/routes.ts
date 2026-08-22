@@ -10,6 +10,12 @@ export const routes = {
   writing: "/writing/",
 } as const
 
+export const trustRoutes = {
+  about: "/about/",
+  contact: "/contact/",
+  privacy: "/privacy/",
+} as const
+
 export const navRouteNames = ["home", "consulting", "cv"] as const
 
 export type NavRouteName = (typeof navRouteNames)[number]
@@ -24,6 +30,8 @@ export const localizedRoute = (
 
   return route === "home" ? `/${locale}/` : `/${locale}${routes[route]}`
 }
+
+export type TrustRouteName = keyof typeof trustRoutes
 
 export const travelRoute = (eventId?: string): string =>
   eventId === undefined ? routes.travel : `${routes.travel}#${eventId}`

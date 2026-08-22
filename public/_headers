@@ -1,2 +1,17 @@
 /assets/*
   Cache-Control: public, max-age=31536000, immutable
+
+/*
+  Vary: Accept, Accept-Encoding
+
+/
+  Link: </index.md>; rel="alternate"; type="text/markdown"
+
+/about/
+  Link: </about/index.md>; rel="alternate"; type="text/markdown"
+
+/contact/
+  Link: </contact/index.md>; rel="alternate"; type="text/markdown"
+
+/privacy/
+  Link: </privacy/index.md>; rel="alternate"; type="text/markdown"

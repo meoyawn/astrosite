@@ -143,6 +143,23 @@ const collectHtmlTargets = async (): Promise<HtmlTarget[]> => {
   })
 }
 
+const markdown404SourceFor = async (
+  target: HtmlTarget,
+): Promise<string | undefined> => {
+  if (target.fileName !== "404.html") {
+    return undefined
+  }
+
+  const source =
+    target.diskPath === undefined
+      ? await fetch(`${builtOrigin}${target.pagePath}`).then(response =>
+          response.text(),
+        )
+      : readFileSync(target.diskPath, "utf8")
+
+  return source.trimStart().startsWith("# Page not found") ? source : undefined
+}
+
 const routeExists = async (fileName: string): Promise<boolean> =>
   siteUrl === undefined
     ? existsSync(join(distDir, fileName))
@@ -190,6 +207,15 @@ test.describe("e2e tests", () => {
 
     await Promise.all(
       htmlTargets.map(async target => {
+        const markdown404 = await markdown404SourceFor(target)
+
+        if (markdown404 !== undefined) {
+          expect(markdown404).toMatch(/^\s*# Page not found/m)
+          expect(markdown404).toContain("[sitemap](/sitemap.xml)")
+          expect(markdown404).toContain("[agent index](/llms.txt)")
+          return
+        }
+
         await using page = await browser.newPage()
 
         await routeBuiltFiles(page)
@@ -403,6 +429,14 @@ test.describe("e2e tests", () => {
 
     await Promise.all(
       htmlTargets.map(async target => {
+        const markdown404 = await markdown404SourceFor(target)
+
+        if (markdown404 !== undefined) {
+          expect(markdown404).toMatch(/^\s*# Page not found/m)
+          expect(markdown404).toContain("[sitemap](/sitemap.xml)")
+          return
+        }
+
         await using page = await browser.newPage()
 
         await routeBuiltFiles(page)
@@ -475,6 +509,14 @@ test.describe("e2e tests", () => {
 
     await Promise.all(
       htmlTargets.map(async target => {
+        const markdown404 = await markdown404SourceFor(target)
+
+        if (markdown404 !== undefined) {
+          expect(markdown404).toMatch(/^\s*# Page not found/m)
+          expect(markdown404).toContain("[home page](/")
+          return
+        }
+
         await using page = await browser.newPage()
 
         await routeBuiltFiles(page)

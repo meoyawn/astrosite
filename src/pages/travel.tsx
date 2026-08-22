@@ -2,6 +2,7 @@ import type { JSX } from "solid-js"
 import { ssr } from "solid-js/web"
 import travelIsland from "../app/travel/travel-island.tsx?island"
 import { SiteShell } from "../layouts/site-shell.tsx"
+import { routes } from "../routes.ts"
 
 const isSolidSsrNode = (value: unknown): value is JSX.Element =>
   typeof value === "object" &&
@@ -29,6 +30,7 @@ FINISH: unreviewed and undocumented is unfinished; this build ends with the fini
 const TravelPage = (): JSX.Element => (
   <SiteShell
     bodyStart={<DesignContract />}
+    canonicalPath={routes.travel}
     contentClass="max-w-none p-0"
     currentPath={undefined}
     description="An interactive globe and timeline of travels from 2013 to 2026."

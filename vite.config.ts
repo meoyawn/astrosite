@@ -229,6 +229,13 @@ export default defineConfig({
       markdown: {
         processor: markdownProcessor,
       },
+      markdownExport: {
+        force404Markdown: false,
+        exclude: [],
+      },
+      sitemap: {
+        site: "https://adelnz.com",
+      },
       trailingSlash: "always",
     }),
   ],

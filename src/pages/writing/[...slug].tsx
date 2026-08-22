@@ -5,6 +5,7 @@ import {
   type WritingEntry,
 } from "../../app/static-site-types.ts"
 import { SiteShell } from "../../layouts/site-shell.tsx"
+import { writingRoute } from "../../routes.ts"
 import { getCollection } from "solid-static/runtime"
 
 export interface ArticlePageProps {
@@ -37,6 +38,7 @@ const ArticlePage = (props: ArticlePageProps) => {
 
   return (
     <SiteShell
+      canonicalPath={writingRoute(props.entry.id)}
       contentClass={undefined}
       currentPath={undefined}
       description={props.entry.data.description}

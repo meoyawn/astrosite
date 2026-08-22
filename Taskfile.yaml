@@ -133,7 +133,7 @@ tasks:
     deps:
       - build
       - check
-    cmd: nubx wrangler pages deploy dist/ --commit-dirty=true
+    cmd: nubx wrangler pages deploy dist/ --project-name adelnz --commit-dirty=true
     sources:
       - nub.lock
       - Taskfile.yaml

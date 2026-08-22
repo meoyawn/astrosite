@@ -3,6 +3,7 @@ import { routes } from "../routes.ts"
 
 const Now = () => (
   <SiteShell
+    canonicalPath={routes.now}
     contentClass={undefined}
     currentPath={undefined}
     description="What Adel Nizamutdinov is focused on now in Kazan, Tatarstan, Russia."

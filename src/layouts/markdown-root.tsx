@@ -21,6 +21,7 @@ const MarkdownRoot = (props: PageLayoutProps<MarkdownFrontmatter>) => {
 
   return (
     <SiteShell
+      canonicalPath={props.route.path}
       contentClass={undefined}
       currentPath={currentPath}
       description={props.frontmatter.description}
