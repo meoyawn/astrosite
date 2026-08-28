@@ -18,7 +18,7 @@ const openGraphImageWidth = 1200
 const openGraphImageHeight = 630
 const openGraphImageAlt = "Black angular mark on a white field"
 const openGraphImage = await getImage({
-  format: "jpg",
+  format: "png",
   height: openGraphImageHeight,
   quality: "max",
   src: openGraphImageSource,
@@ -89,7 +89,7 @@ export const HtmlRoot = (props: HtmlRootProps): JSX.Element => (
       <meta property="og:description" content={props.description} />
       <meta property="og:type" content={props.openGraphType} />
       <meta property="og:image" content={openGraphImageUrl} />
-      <meta property="og:image:type" content="image/jpeg" />
+      <meta property="og:image:type" content="image/png" />
       <meta property="og:image:width" content={String(openGraphImageWidth)} />
       <meta property="og:image:height" content={String(openGraphImageHeight)} />
       <meta property="og:image:alt" content={openGraphImageAlt} />

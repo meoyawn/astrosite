@@ -14,7 +14,7 @@ import {
 const siteUrl = process.env.SITE_URL?.replace(/\/$/, "")
 const builtOrigin = siteUrl ?? "http://built.local"
 const socialImagePattern =
-  /^https?:\/\/[^/]+\/assets\/og-[\w-]+\.jpg$/
+  /^https?:\/\/[^/]+\/assets\/og-[\w-]+\.png$/
 const distDir = resolve("dist")
 const devRoutesPath = "/@solid-static/routes.json"
 
@@ -307,7 +307,7 @@ test.describe("e2e tests", () => {
         )
         await expect(openGraphImageType).toHaveAttribute(
           "content",
-          "image/jpeg",
+          "image/png",
         )
         await expect(openGraphImageWidth).toHaveAttribute("content", "1200")
         await expect(openGraphImageHeight).toHaveAttribute("content", "630")
@@ -356,7 +356,9 @@ test.describe("e2e tests", () => {
     )
   })
 
-  test("Open Graph image is a 1200 by 630 JPEG", async ({ page }) => {
+  test("Open Graph image is a 1200 by 630 PNG smaller than the prior JPEG", async ({
+    page,
+  }) => {
     let imageUrl: string
     let image: Buffer
 
@@ -394,12 +396,13 @@ test.describe("e2e tests", () => {
       )
 
       expect(response.ok()).toEqual(true)
-      expect(response.headers()["content-type"]).toContain("image/jpeg")
+      expect(response.headers()["content-type"]).toContain("image/png")
       image = await response.body()
     }
 
     expect(imageUrl).toMatch(socialImagePattern)
-    expect(image.subarray(0, 3).toString("hex")).toEqual("ffd8ff")
+    expect(image.subarray(0, 8).toString("hex")).toEqual("89504e470d0a1a0a")
+    expect(image.byteLength).toBeLessThan(28_509)
     const metadata = await sharp(image).metadata()
 
     expect({
