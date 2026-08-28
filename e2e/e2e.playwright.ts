@@ -13,7 +13,8 @@ import {
 
 const siteUrl = process.env.SITE_URL?.replace(/\/$/, "")
 const builtOrigin = siteUrl ?? "http://built.local"
-const socialImagePattern = /^\/assets\/og-[\w-]+\.jpg$/
+const socialImagePattern =
+  /^https?:\/\/[^/]+\/assets\/og-[\w-]+\.jpg$/
 const distDir = resolve("dist")
 const devRoutesPath = "/@solid-static/routes.json"
 

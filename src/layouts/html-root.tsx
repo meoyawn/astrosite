@@ -24,6 +24,10 @@ const openGraphImage = await getImage({
   src: openGraphImageSource,
   width: openGraphImageWidth,
 })
+const openGraphImageUrl = new URL(
+  openGraphImage.src,
+  import.meta.env.SITE_ORIGIN,
+).href
 
 const structuredDataFor = (props: HtmlRootProps): string =>
   JSON.stringify({
@@ -84,7 +88,7 @@ export const HtmlRoot = (props: HtmlRootProps): JSX.Element => (
       <meta property="og:title" content={props.title} />
       <meta property="og:description" content={props.description} />
       <meta property="og:type" content={props.openGraphType} />
-      <meta property="og:image" content={openGraphImage.src} />
+      <meta property="og:image" content={openGraphImageUrl} />
       <meta property="og:image:type" content="image/jpeg" />
       <meta property="og:image:width" content={String(openGraphImageWidth)} />
       <meta property="og:image:height" content={String(openGraphImageHeight)} />
@@ -94,7 +98,7 @@ export const HtmlRoot = (props: HtmlRootProps): JSX.Element => (
       <meta name="twitter:creator" content="@meoyawn" />
       <meta name="twitter:title" content={props.title} />
       <meta name="twitter:description" content={props.description} />
-      <meta name="twitter:image" content={openGraphImage.src} />
+      <meta name="twitter:image" content={openGraphImageUrl} />
       <meta name="twitter:image:alt" content={openGraphImageAlt} />
       <script type="application/ld+json">
         {structuredDataFor(props)}

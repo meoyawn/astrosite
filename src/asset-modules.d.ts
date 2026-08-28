@@ -25,6 +25,14 @@ declare module "*?island" {
 
 declare module "*.css" {}
 
+interface ImportMetaEnv {
+  readonly SITE_ORIGIN: string
+}
+
+interface ImportMeta {
+  readonly env: ImportMetaEnv
+}
+
 declare module "world-atlas/countries-110m.json" {
   import type { feature } from "topojson-client"
 

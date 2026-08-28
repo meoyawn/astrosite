@@ -204,6 +204,10 @@ const mdxPlugin = mdx({
     [remarkMdxFrontmatter, { name: "frontmatter" }],
   ],
 })
+const siteOrigin = (process.env.SITE_URL ?? "https://adelnz.com").replace(
+  /\/+$/,
+  "",
+)
 
 export default defineConfig({
   build: {
@@ -214,6 +218,9 @@ export default defineConfig({
     postcss: {
       plugins: [tailwindcss()],
     },
+  },
+  define: {
+    "import.meta.env.SITE_ORIGIN": JSON.stringify(siteOrigin),
   },
   plugins: [
     staticSite({
@@ -234,7 +241,7 @@ export default defineConfig({
         exclude: [],
       },
       sitemap: {
-        site: "https://adelnz.com",
+        site: siteOrigin,
       },
       trailingSlash: "always",
     }),
