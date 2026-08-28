@@ -1037,6 +1037,46 @@ test.describe("e2e tests", () => {
       .toBeGreaterThan(beforeScrollY)
   })
 
+  test("article fragments stay aligned when an embed above expands", async ({
+    page,
+  }) => {
+    await routeBuiltFiles(page)
+    await page.setViewportSize({ height: 900, width: 1280 })
+    await page.addInitScript(() => {
+      addEventListener(
+        "DOMContentLoaded",
+        () => {
+          document.documentElement.style.overflowAnchor = "none"
+        },
+        { once: true },
+      )
+    })
+    await page.route("https://platform.x.com/widgets.js", async route => {
+      await new Promise(finishDelay => setTimeout(finishDelay, 500))
+      await route.fulfill({
+        body: String.raw`document.querySelector(".twitter-tweet").style.height = "1288px"`,
+        contentType: "text/javascript",
+      })
+    })
+
+    const response = await page.goto(
+      `${builtOrigin}${writingRoute("javascript-binaries")}#results`,
+    )
+
+    expect(response?.ok() ?? false).toEqual(true)
+
+    const heading = page.getByRole("heading", { level: 2, name: "Results" })
+
+    await expect(page.locator(".twitter-tweet")).toHaveCSS("height", "1288px")
+    await expect
+      .poll(async () =>
+        Math.abs(
+          await heading.evaluate(element => element.getBoundingClientRect().top),
+        ),
+      )
+      .toBeLessThan(1)
+  })
+
   test("code highlighting preserves article source", async ({ page }) => {
     await routeBuiltFiles(page)
 

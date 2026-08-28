@@ -28,6 +28,55 @@ const formatDate = (date: Date): string =>
     year: "numeric",
   }).format(date)
 
+const alignFragmentTargetScript = String.raw`
+{
+  const initialFragment = location.hash
+  let targetId = initialFragment.slice(1)
+
+  try {
+    targetId = decodeURIComponent(targetId)
+  } catch {
+    targetId = initialFragment.slice(1)
+  }
+
+  const target = document.getElementById(targetId)
+
+  if (target !== null) {
+    const interruptionEvents = ["keydown", "pointerdown", "touchstart", "wheel"]
+    const root = document.documentElement
+    const observer = new ResizeObserver(alignTarget)
+
+    function stopTracking() {
+      observer.disconnect()
+      removeEventListener("hashchange", stopTracking)
+      removeEventListener("pagehide", stopTracking)
+      for (const eventName of interruptionEvents) {
+        removeEventListener(eventName, stopTracking)
+      }
+    }
+
+    function alignTarget() {
+      if (location.hash !== initialFragment) {
+        stopTracking()
+        return
+      }
+
+      const scrollBehavior = root.style.scrollBehavior
+      root.style.scrollBehavior = "auto"
+      target.scrollIntoView({ block: "start", inline: "nearest" })
+      root.style.scrollBehavior = scrollBehavior
+    }
+
+    addEventListener("hashchange", stopTracking, { once: true })
+    addEventListener("pagehide", stopTracking, { once: true })
+    for (const eventName of interruptionEvents) {
+      addEventListener(eventName, stopTracking, { once: true, passive: true })
+    }
+    observer.observe(document.body)
+  }
+}
+`
+
 const ArticlePage = (props: ArticlePageProps) => {
   const titleId = new GithubSlugger().slug(props.entry.data.title)
   const shouldShowUpdatedAt =
@@ -73,6 +122,7 @@ const ArticlePage = (props: ArticlePageProps) => {
         </Show>
       </p>
       <article innerHTML={props.entry.rendered.html} />
+      <script>{alignFragmentTargetScript}</script>
     </SiteShell>
   )
 }
