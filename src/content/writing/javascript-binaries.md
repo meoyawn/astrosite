@@ -216,28 +216,6 @@ test without `postject`.
 
 ## Results
 
-### macOS
-
-| Approach                        | Binary size | Fresh first start, median / p95 | Warm startup, median / p95 | Peak RAM |
-| ------------------------------- | ----------: | ------------------------------: | --------------------------: | -------: |
-| Bun 1.4.0, direct               |   61.75 MiB |                        **FAIL** |                  **FAIL** | **FAIL** |
-| Bun 1.4.0, extraction shim      |   80.13 MiB |            13,533 / 13,634 ms |            89.83 / 99.05 ms | 47.34 MiB |
-| Deno 2.9.5, default             |   84.31 MiB |                        **FAIL** |                  **FAIL** | **FAIL** |
-| Deno 2.9.5, `--self-extracting` |   84.31 MiB |            11,886 / 12,437 ms |            86.65 / 89.40 ms | 62.81 MiB |
-| Node 26.8.1, direct SEA         |  137.49 MiB |                        **FAIL** |                  **FAIL** | **FAIL** |
-| Node 26.8.1, SEA asset loader   |  155.76 MiB |            10,616 / 11,479 ms |          108.90 / 112.55 ms | 94.67 MiB |
-
-### Linux
-
-| Approach                        | Binary size | Fresh first start, median / p95 | Warm startup, median / p95 | Peak RAM |
-| ------------------------------- | ----------: | ------------------------------: | --------------------------: | -------: |
-| Bun 1.4.0, direct               |   79.49 MiB |                        **FAIL** |                  **FAIL** | **FAIL** |
-| Bun 1.4.0, extraction shim      |  131.80 MiB |               83.99 / 143.03 ms |            27.53 / 32.72 ms | 37.51 MiB |
-| Deno 2.9.5, default             |  153.79 MiB |                        **FAIL** |                  **FAIL** | **FAIL** |
-| Deno 2.9.5, `--self-extracting` |  153.79 MiB |              132.45 / 140.14 ms |            30.05 / 31.49 ms | 54.50 MiB |
-| Node 26.8.1, direct SEA         |  141.82 MiB |                        **FAIL** |                  **FAIL** | **FAIL** |
-| Node 26.8.1, SEA asset loader   |  194.14 MiB |              153.42 / 209.10 ms |            82.15 / 97.92 ms | 109.14 MiB |
-
 The direct Bun and Deno rows fail while loading the first missing sibling
 library. Direct Node fails earlier because its SEA `require()` handles built-ins
 only. Deno turns its build into a working one with `--self-extracting`; Bun needs
@@ -260,6 +238,15 @@ executables plus Debian's `libexpat1` and `libatomic1` runtime packages.
 
 ## macOS: untouched native files mean a slower first launch
 
+| Approach                        | Binary size | Fresh first start, median / p95 | Warm startup, median / p95 | Peak RAM |
+| ------------------------------- | ----------: | ------------------------------: | --------------------------: | -------: |
+| Bun 1.4.0, direct               |   61.75 MiB |                        **FAIL** |                  **FAIL** | **FAIL** |
+| Bun 1.4.0, extraction shim      |   80.13 MiB |            13,533 / 13,634 ms |            89.83 / 99.05 ms | 47.34 MiB |
+| Deno 2.9.5, default             |   84.31 MiB |                        **FAIL** |                  **FAIL** | **FAIL** |
+| Deno 2.9.5, `--self-extracting` |   84.31 MiB |            11,886 / 12,437 ms |            86.65 / 89.40 ms | 62.81 MiB |
+| Node 26.8.1, direct SEA         |  137.49 MiB |                        **FAIL** |                  **FAIL** | **FAIL** |
+| Node 26.8.1, SEA asset loader   |  155.76 MiB |            10,616 / 11,479 ms |          108.90 / 112.55 ms | 94.67 MiB |
+
 The old sub-five-second build rewrote Mach-O dependencies to Homebrew paths and
 embedded a reduced library set. This test deletes that native-preparation step.
 Each working executable ships node-canvas's untouched prebuild instead: 32
@@ -271,6 +258,15 @@ Once the extraction cache existed, their medians fell to 108.90, 86.65, and
 89.83 ms respectively.
 
 ## ARM64 Linux: below 210 milliseconds
+
+| Approach                        | Binary size | Fresh first start, median / p95 | Warm startup, median / p95 | Peak RAM |
+| ------------------------------- | ----------: | ------------------------------: | --------------------------: | -------: |
+| Bun 1.4.0, direct               |   79.49 MiB |                        **FAIL** |                  **FAIL** | **FAIL** |
+| Bun 1.4.0, extraction shim      |  131.80 MiB |               83.99 / 143.03 ms |            27.53 / 32.72 ms | 37.51 MiB |
+| Deno 2.9.5, default             |  153.79 MiB |                        **FAIL** |                  **FAIL** | **FAIL** |
+| Deno 2.9.5, `--self-extracting` |  153.79 MiB |              132.45 / 140.14 ms |            30.05 / 31.49 ms | 54.50 MiB |
+| Node 26.8.1, direct SEA         |  141.82 MiB |                        **FAIL** |                  **FAIL** | **FAIL** |
+| Node 26.8.1, SEA asset loader   |  194.14 MiB |              153.42 / 209.10 ms |            82.15 / 97.92 ms | 109.14 MiB |
 
 The Linux run used `debian:bookworm-slim`, which resolved to Debian GNU/Linux
 12. Node, Bun, and Deno came from their official ARM64 images. The Docker engine
