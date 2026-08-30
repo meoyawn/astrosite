@@ -1,7 +1,7 @@
 head:
   name: Adel Nizamutdinov
   title: Senior Software Engineer
-  location: Kazan, Tatarstan
+  location: Kazan, Tatarstan · Remote
   email: mail@adelnz.com
   url: https://adelnz.com
   linkedin: https://www.linkedin.com/in/adelnizamuddin
@@ -9,8 +9,8 @@ head:
   twitter: https://twitter.com/meoyawn
 
 summaryMD: |
-  - Senior product engineer with 14 years building Android apps and SaaS products
-  - Founded a profitable SaaS that reached $3K MRR
+  - 14 years shipping software; 6+ years owning a bootstrapped SaaS end to end
+  - Focus: APIs and reusable HTTP/JSON tooling across Go, TypeScript, PostgreSQL, and infrastructure
   - Built and led two engineering teams
 
 experience:
@@ -29,9 +29,11 @@ experience:
       - name: Arrowbox
         url: https://arrowbox.co
     summaryMD: |
-      Founded and run a profitable SaaS from idea to production; reached $3K MRR.
+      Founded and continue to run a bootstrapped SaaS that reached $3K MRR; now rebuilding it on a new foundation.
 
-      - Built the current backend and frontend with Go, Node.js, and TypeScript
+      - Mapped an unfamiliar SaaS stack, then independently delivered product, backend, frontend, data, and infrastructure
+      - Created [ResponsibleAPI](https://responsibleapi.com), a new way to maintain HTTP/JSON contracts when conventional OpenAPI specifications become hard to evolve
+      - Built the current backend and frontend with Go and TypeScript
       - Designed and maintained PostgreSQL-backed product features
       - Automated deployments and infrastructure management with Terraform and Ansible
       - Owned production debugging, maintenance, reliability, customer support, SEO, and founder-led sales and marketing
@@ -143,6 +145,8 @@ awards:
       name: Telegram
       url: https://telegram.org
     date: 2019-04-02
+    summaryMD: |
+      Built a charting view in two weeks and indexed an oversized dataset for responsive rendering and UX.
 
   - title: Winner of Telegram Android Challenge 2016
     url: https://vk.com/wall1_1108590
@@ -165,4 +169,4 @@ skills:
   - Backend and data - PostgreSQL, Node.js, API design, backend services, SQLite
   - Frontend and mobile - TypeScript UI, Android
   - Delivery and operations - Ansible, CI/CD, Linux, Terraform
-  - Founder customer work - support, sales, marketing
+  - Customer work - support, sales, marketing

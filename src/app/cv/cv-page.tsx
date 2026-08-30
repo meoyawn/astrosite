@@ -28,7 +28,7 @@ const orgMetaLinkClass = `${orgLinkClass} font-medium`
 export const CvPage = (props: CvPageProps) => (
   <SiteShell
     canonicalPath={localizedRoute(props.locale, "cv")}
-    contentClass="mx-0 prose max-w-none px-0 pb-6 prose-sky sm:mx-12 sm:pb-12 md:mx-16 md:pb-16 print:m-0 print:text-[12px] print:leading-[1.45] prose-h1:print:mb-1.5 prose-h1:print:text-[24px] prose-h3:print:mb-1.5 prose-h3:print:mt-4 prose-h3:print:text-[13.5px] prose-p:my-2 prose-p:print:my-1.5 prose-ul:my-1 prose-ul:print:my-1 prose-li:print:my-0.5"
+    contentClass="mx-0 prose max-w-none px-0 pb-6 prose-sky sm:mx-12 sm:pb-12 md:mx-16 md:pb-16 print:m-0 print:text-[12px] print:leading-[1.35] prose-h1:print:mb-1.5 prose-h1:print:text-[24px] prose-h3:print:mb-1.5 prose-h3:print:mt-3 prose-h3:print:text-[13.5px] prose-p:my-2 prose-p:print:my-0.5 prose-ul:my-1 prose-ul:print:my-0.5 prose-li:print:my-0"
     currentPath="cv"
     description="Personal website"
     lang={props.locale}
@@ -39,6 +39,7 @@ export const CvPage = (props: CvPageProps) => (
     <section>
       <h1>{props.cv.head.name}</h1>
       <h3>{props.cv.head.title}</h3>
+      <p>{props.cv.head.location}</p>
       <p class="grid grid-cols-1 gap-x-8 gap-y-1.5 sm:grid-cols-2 print:grid-cols-2 print:gap-x-5 print:gap-y-1">
         <IconLink
           asset="email"
@@ -171,6 +172,9 @@ export const CvPage = (props: CvPageProps) => (
               </p>
               <p class={orgMutedClass}>{fmtDate(award.date, props.locale)}</p>
             </div>
+            <Show when={award.summaryMD}>
+              {summary => <div innerHTML={md2html(summary())} />}
+            </Show>
           </Org>
         )}
       </For>

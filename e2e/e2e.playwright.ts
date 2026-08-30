@@ -1315,7 +1315,7 @@ test.describe("e2e tests", () => {
     await expect(nav).toBeHidden()
   })
 
-  test("cv print PDF is exactly two pages in A4 and US Letter", async ({
+  test("cv print PDF is exactly two pages in A4 and US Letter with standard margins", async ({
     page,
   }) => {
     await routeBuiltFiles(page)
@@ -1330,6 +1330,12 @@ test.describe("e2e tests", () => {
         pdfPageCount(
           await page.pdf({
             format,
+            margin: {
+              bottom: "10mm",
+              left: "10mm",
+              right: "10mm",
+              top: "10mm",
+            },
             printBackground: true,
           }),
         ),

@@ -44,6 +44,7 @@ export interface Award {
   url: string
   org: Org
   date: string
+  summaryMD?: string
 }
 
 export interface TechSkills {

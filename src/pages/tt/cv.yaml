@@ -1,7 +1,7 @@
 head:
   name: Гадел Низаметдинов
   title: Өлкән программист
-  location: Казан, Татарстан
+  location: Казан, Татарстан · Дистанцион
   email: mail@adelnz.com
   url: https://adelnz.com
   linkedin: https://www.linkedin.com/in/adelnizamuddin
@@ -9,8 +9,8 @@ head:
   twitter: https://twitter.com/meoyawn
 
 summaryMD: |
-  - Өлкән продукт инженеры: 14 ел Android программалары һәм SaaS продуктлары ясыйм
-  - Табышлы SaaS нигезләдем һәм аны $3K MRR-га җиткердем
+  - 14 ел программа чыгарам; 6 елдан артык тышкы инвестициясез SaaS-ны тулысынча үзем алып барам
+  - Go, TypeScript, PostgreSQL һәм инфраструктура белән API-ларга һәм кабат кулланыла торган HTTP/JSON коралларына махсуслашам
   - Ике инженер командасын җыйдым һәм җитәкләдем
 
 experience:
@@ -29,9 +29,11 @@ experience:
       - name: Arrowbox
         url: https://arrowbox.co
     summaryMD: |
-      Табышлы SaaS-ны идеядан production-га кадәр нигезләдем, ясадым һәм алып барам; $3K MRR-га җиткердем.
+      Тышкы инвестициясез SaaS нигезләдем һәм алып барам; аны $3K MRR-га җиткердем, хәзер продуктны яңа нигездә кабат төзим.
 
-      - Хәзерге backend һәм frontend-ны Go, Node.js һәм TypeScript белән ясадым
+      - SaaS-ның таныш булмаган стекын тиз өйрәнеп, продуктны, backend-ны, frontend-ны, мәгълүматны һәм инфраструктураны мөстәкыйль ясадым
+      - Гадәти OpenAPI спецификацияләрен үстерү кыенлашканда HTTP/JSON контрактларын алып баруның яңа ысулын — [ResponsibleAPI](https://responsibleapi.com) — ясадым
+      - Хәзерге backend һәм frontend-ны Go һәм TypeScript белән ясадым
       - PostgreSQL нигезендәге продукт функцияләрен проектладым һәм эшләтеп тордым
       - Terraform һәм Ansible белән деплойны һәм инфраструктура белән идарә итүне автоматлаштырдым
       - Production-дагы проблемаларны табу, хезмәт күрсәтү, тотрыклылык, клиентларга ярдәм, SEO, нигезләүче буларак сатулар һәм маркетинг өчен җаваплы булдым
@@ -139,6 +141,8 @@ awards:
       name: Telegram
       url: https://telegram.org
     date: 2019-04-02
+    summaryMD: |
+      Ике атнада графиклар экранын ясадым, зур мәгълүмат җыелмасын тиз рендеринг һәм уңай интерфейс өчен индексацияләдем.
 
   - title: Telegram Android Ярышында (2016) җиңүче
     url: https://vk.com/wall1_1108590
@@ -161,4 +165,4 @@ skills:
   - Backend һәм мәгълүмат - PostgreSQL, Node.js, API проектлау, backend сервислар, SQLite
   - Frontend һәм mobile - TypeScript UI, Android
   - Чыгару һәм эксплуатация - Ansible, CI/CD, Linux, Terraform
-  - Нигезләүченең клиент эше - ярдәм, сатулар, маркетинг
+  - Клиентлар белән эш - ярдәм, сатулар, маркетинг

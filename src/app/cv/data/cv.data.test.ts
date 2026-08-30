@@ -12,7 +12,9 @@ describe("CV data schema", () => {
       ["src/pages/ru/cv.yaml", load(cvRuSource)],
       ["src/pages/tt/cv.yaml", load(cvTtSource)],
     ] as const) {
-      expect(() => parseCV(value, sourceName)).not.toThrow()
+      const cv = parseCV(value, sourceName)
+
+      expect(cv.awards[0]?.summaryMD).not.toEqual(undefined)
     }
   })
 })

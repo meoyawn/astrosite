@@ -105,6 +105,7 @@ const educationSchema: v.GenericSchema<unknown, Education> = v.object({
 const awardSchema: v.GenericSchema<unknown, Award> = v.object({
   date: v.string(),
   org: orgSchema,
+  summaryMD: v.exactOptional(v.string()),
   title: v.string(),
   url: v.string(),
 })

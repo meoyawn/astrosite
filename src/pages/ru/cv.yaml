@@ -1,7 +1,7 @@
 head:
   name: Адель Низамутдинов
   title: Старший инженер-программист
-  location: Казань, Татарстан
+  location: Казань, Татарстан · Удаленно
   email: mail@adelnz.com
   url: https://adelnz.com
   linkedin: https://www.linkedin.com/in/adelnizamuddin
@@ -9,8 +9,8 @@ head:
   twitter: https://twitter.com/meoyawn
 
 summaryMD: |
-  - Старший продуктовый инженер: 14 лет создаю Android-приложения и SaaS-продукты
-  - Основал прибыльный SaaS, который вырос до $3K MRR
+  - 14 лет выпускаю программное обеспечение; более 6 лет полностью отвечаю за SaaS без внешнего финансирования
+  - Специализируюсь на API и переиспользуемых инструментах для HTTP/JSON на Go, TypeScript, PostgreSQL и инфраструктуре
   - Собрал и возглавлял две инженерные команды
 
 experience:
@@ -29,9 +29,11 @@ experience:
       - name: Arrowbox
         url: https://arrowbox.co
     summaryMD: |
-      Основал и веду прибыльный SaaS от идеи до production; развил до $3K MRR.
+      Основал и веду SaaS без внешнего финансирования, который достиг $3K MRR; сейчас перестраиваю продукт на новой технической основе.
 
-      - Построил текущий backend и frontend на Go, Node.js и TypeScript
+      - Разобрался в незнакомом SaaS-стеке, затем самостоятельно реализовал продукт, backend, frontend, данные и инфраструктуру
+      - Создал [ResponsibleAPI](https://responsibleapi.com) — новый способ сопровождать HTTP/JSON-контракты, когда традиционные спецификации OpenAPI становится сложно развивать
+      - Построил текущий backend и frontend на Go и TypeScript
       - Проектировал и поддерживал функции на PostgreSQL
       - Автоматизировал деплой и управление инфраструктурой через Terraform и Ansible
       - Отвечал за отладку production, поддержку, надежность, клиентскую поддержку, SEO, продажи и маркетинг как основатель
@@ -139,6 +141,8 @@ awards:
       name: Telegram
       url: https://telegram.org
     date: 2019-04-02
+    summaryMD: |
+      За две недели создал экран с графиками и проиндексировал объемный набор данных для быстрого рендеринга и отзывчивого интерфейса.
 
   - title: Победитель Telegram Android Challenge 2016
     url: https://vk.com/wall1_1108590
@@ -161,4 +165,4 @@ skills:
   - Backend и данные - PostgreSQL, Node.js, проектирование API, backend-сервисы, SQLite
   - Frontend и mobile - TypeScript UI, Android
   - Поставка и эксплуатация - Ansible, CI/CD, Linux, Terraform
-  - Работа основателя с клиентами - поддержка, продажи, маркетинг
+  - Работа с клиентами - поддержка, продажи, маркетинг
