@@ -96,7 +96,7 @@ const ArticlePage = (props: ArticlePageProps) => {
       openGraphType="article"
       title={props.entry.data.title}
     >
-      <h1 id={titleId} class="mb-0">
+      <h1 id={titleId} class="-mt-6! mb-0 text-5xl! sm:-mt-10!">
         {props.entry.data.title}
       </h1>
       <p class="not-prose mt-2 mb-8 text-sm leading-6 font-medium text-zinc-500">

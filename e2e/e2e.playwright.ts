@@ -623,7 +623,9 @@ test.describe("e2e tests", () => {
     await expect(
       page.getByRole("navigation", { name: "Site navigation" }),
     ).toBeVisible()
-    await expect(page.getByRole("link", { name: "Home" })).toBeVisible()
+    await expect(
+      page.getByRole("link", { name: "Producing software" }),
+    ).toBeVisible()
     await expect(page.getByRole("button", { name: "All journeys" })).toHaveCount(0)
     await expect(
       page.getByRole("heading", { level: 2, name: "All journeys" }),
@@ -1140,28 +1142,102 @@ test.describe("e2e tests", () => {
     await expect(page.locator("html")).toHaveAttribute("lang", "tt")
   })
 
-  test("shared localized nav links home, consulting, and cv pages", async ({
+  test("localized home pages use the shell-free author index", async ({
+    browser,
+  }) => {
+    const homeCases = [
+      {
+        pagePath: routes.home,
+        navLabel: "Site navigation",
+        switcherLabel: "Switch language",
+        title: "Producing software",
+        recent: "Recent",
+      },
+      {
+        pagePath: localizedRoute("ru", "home"),
+        navLabel: "Навигация по сайту",
+        switcherLabel: "Сменить язык",
+        title: "Выпускаю софт",
+        recent: "Недавнее",
+      },
+      {
+        pagePath: localizedRoute("tt", "home"),
+        navLabel: "Сайт навигациясе",
+        switcherLabel: "Башка телләр",
+        title: "Программалар чыгарам",
+        recent: "Соңгы язмалар",
+      },
+    ]
+
+    await Promise.all(
+      homeCases.map(async homeCase => {
+        await using page = await browser.newPage()
+
+        await routeBuiltFiles(page)
+
+        const response = await page.goto(`${builtOrigin}${homeCase.pagePath}`)
+
+        expect(response?.ok() ?? false).toEqual(true)
+        await expect(
+          page.getByRole("navigation", { name: homeCase.navLabel }),
+        ).toHaveCount(0)
+        await expect(
+          page.getByRole("navigation", { name: homeCase.switcherLabel }),
+        ).toBeVisible()
+        await expect(
+          page.getByRole("heading", { level: 1, name: homeCase.title }),
+        ).toBeVisible()
+        await expect(
+          page.getByRole("heading", { level: 2, name: homeCase.recent }),
+        ).toBeVisible()
+        await expect(
+          page.getByRole("link", { name: "Listenbox" }),
+        ).toBeVisible()
+        await expect(
+          page.getByRole("link", { name: "Arrowbox" }),
+        ).toBeVisible()
+        await expect(
+          page.getByRole("link", { name: "ResponsibleAPI" }),
+        ).toBeVisible()
+        const externalLinks = page.locator('main a[href^="http"]')
+        await expect(externalLinks).toHaveCount(5)
+        await Promise.all(
+          (await externalLinks.all()).map(async link => {
+            await expect(link).toHaveAttribute("rel", "noreferrer")
+            await expect(link).toHaveAttribute("target", "_blank")
+          }),
+        )
+        await expect(
+          page.locator("#writing-heading + ol article p"),
+        ).toHaveCount(0)
+      }),
+    )
+  })
+
+  test("shared localized shell links home, consulting, and cv", async ({
     browser,
   }) => {
     const navCases = [
       {
-        pages: [routes.home, routes.consulting, routes.cv],
+        pages: [routes.consulting, routes.cv],
         navLabel: "Site navigation",
         links: {
-          home: { name: "Home", href: routes.home },
+          home: { name: "Producing software", href: routes.home },
           consulting: { name: "Consulting", href: routes.consulting },
           cv: { name: "CV", href: routes.cv },
         },
       },
       {
         pages: [
-          localizedRoute("ru", "home"),
           localizedRoute("ru", "consulting"),
           localizedRoute("ru", "cv"),
         ],
         navLabel: "Навигация по сайту",
         links: {
-          home: { name: "Главная", href: localizedRoute("ru", "home") },
+          home: {
+            name: "Выпускаю софт",
+            href: localizedRoute("ru", "home"),
+          },
           consulting: {
             name: "Консалтинг",
             href: localizedRoute("ru", "consulting"),
@@ -1171,13 +1247,15 @@ test.describe("e2e tests", () => {
       },
       {
         pages: [
-          localizedRoute("tt", "home"),
           localizedRoute("tt", "consulting"),
           localizedRoute("tt", "cv"),
         ],
         navLabel: "Сайт навигациясе",
         links: {
-          home: { name: "Баш бит", href: localizedRoute("tt", "home") },
+          home: {
+            name: "Программалар чыгарам",
+            href: localizedRoute("tt", "home"),
+          },
           consulting: {
             name: "Консалтинг",
             href: localizedRoute("tt", "consulting"),
@@ -1215,9 +1293,7 @@ test.describe("e2e tests", () => {
 
           const activeLinkKey = pagePath.endsWith(routes.consulting)
             ? "consulting"
-            : pagePath.endsWith(routes.cv)
-              ? "cv"
-              : "home"
+            : "cv"
           const activeLinkName = navCase.links[activeLinkKey].name
           const inactiveLinkNames = [
             navCase.links.home.name,

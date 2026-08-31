@@ -1,3 +1,4 @@
+import { createMemo } from "solid-js"
 import type { Locale } from "../app/i18n.ts"
 import type { PageLayoutProps } from "solid-static/render"
 import { SiteShell } from "./site-shell.tsx"
@@ -10,20 +11,17 @@ interface MarkdownFrontmatter extends Record<string, unknown> {
 }
 
 const MarkdownRoot = (props: PageLayoutProps<MarkdownFrontmatter>) => {
-  const segments = props.route.path.split("/").filter(Boolean)
-  const currentPath =
-    segments.length === 0 ||
-    (segments.length === 1 && segments[0] === props.frontmatter.lang)
-      ? "home"
-      : segments.at(-1) === "consulting"
-        ? "consulting"
-        : undefined
+  const currentPath = createMemo(() =>
+    props.route.path.split("/").filter(Boolean).at(-1) === "consulting"
+      ? "consulting"
+      : undefined,
+  )
 
   return (
     <SiteShell
       canonicalPath={props.route.path}
       contentClass={undefined}
-      currentPath={currentPath}
+      currentPath={currentPath()}
       description={props.frontmatter.description}
       lang={props.frontmatter.lang ?? "en"}
       navClass={undefined}

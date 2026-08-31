@@ -1,309 +1,305 @@
 ---
 name: Astrosite
-description:
-  A prose-first personal technical site for writing, consulting, products, and
-  CV evidence.
+description: A sparse personal index for shipped software and recent technical writing.
 colors:
   background: "#ffffff"
-  ink: "#09090b"
-  primary: "#0f172a"
-  secondary-text: "#334155"
-  body-muted: "#52525b"
-  metadata: "#71717a"
+  ink: "oklch(14.1% 0.005 285.823)"
+  heading-ink: "oklch(21% 0.006 285.885)"
+  muted-ink: "oklch(44.2% 0.017 285.786)"
+  quiet-ink: "oklch(55.2% 0.016 285.938)"
+  faint-ink: "oklch(70.5% 0.015 286.067)"
+  rule: "oklch(92% 0.004 286.32)"
+  focus-ink: "#18181b"
   date: "#6b7280"
-  rule: "#e4e4e7"
-  chip-border: "#cbd5e1"
-  cv-link: "#0284c7"
+  cv-link: "oklch(58.8% 0.158 241.966)"
 typography:
   display:
-    fontFamily: "ui-sans-serif, system-ui, sans-serif"
-    fontSize: "2.25rem"
-    fontWeight: 800
-    lineHeight: 1.111
-    letterSpacing: "0"
+    fontFamily: 'ui-serif, Georgia, Cambria, "Times New Roman", Times, serif'
+    fontSize: "clamp(2.3rem, 9vw, 6rem)"
+    fontWeight: 400
+    lineHeight: 0.96
+    letterSpacing: "-0.03em"
   headline:
-    fontFamily: "ui-sans-serif, system-ui, sans-serif"
-    fontSize: "1.5rem"
-    fontWeight: 700
-    lineHeight: 1
-    letterSpacing: "0"
-  title:
-    fontFamily: "ui-sans-serif, system-ui, sans-serif"
-    fontSize: "1.125rem"
-    fontWeight: 600
-    lineHeight: 1.333
-    letterSpacing: "0"
+    fontFamily: 'ui-serif, Georgia, Cambria, "Times New Roman", Times, serif'
+    fontSize: "clamp(3.25rem, 8vw, 4.75rem)"
+    fontWeight: 400
+    lineHeight: 0.98
+    letterSpacing: "-0.03em"
+  base:
+    fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", "Noto Sans", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"'
+    fontSize: "15px"
+    fontWeight: 400
+    lineHeight: "1.5rem"
+    letterSpacing: "-0.01em"
   body:
-    fontFamily: "ui-sans-serif, system-ui, sans-serif"
-    fontSize: "1rem"
+    fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", "Noto Sans", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"'
+    fontSize: "1.0625rem"
     fontWeight: 400
     lineHeight: 1.75
+    letterSpacing: "-0.01em"
+  title:
+    fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", "Noto Sans", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"'
+    fontSize: "1.125rem"
+    fontWeight: 500
+    lineHeight: "1.5rem"
+    letterSpacing: "-0.01em"
+  utility:
+    fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", "Noto Sans", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"'
+    fontSize: "0.9375rem"
+    fontWeight: 400
+    lineHeight: "1.5rem"
+    letterSpacing: "0"
+  small:
+    fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", "Noto Sans", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"'
+    fontSize: "0.875rem"
+    fontWeight: 400
+    lineHeight: "1.25rem"
     letterSpacing: "0"
   label:
-    fontFamily: "ui-sans-serif, system-ui, sans-serif"
-    fontSize: "0.875rem"
-    fontWeight: 500
-    lineHeight: 1.714
-    letterSpacing: "0"
+    fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", "Noto Sans", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"'
+    fontSize: "0.8125rem"
+    fontWeight: 600
+    lineHeight: "1.25rem"
+    letterSpacing: "0.05em"
 rounded:
   none: "0"
-  chip: "4px"
+  focus: "2px"
 spacing:
-  xxs: "4px"
-  xs: "8px"
-  sm: "12px"
-  md: "16px"
-  page-x: "24px"
-  page-x-wide: "32px"
-  section: "48px"
-  header-wide: "64px"
+  unit: "0.25rem"
+  narrow-gutter: "1.25rem"
+  wide-gutter: "2rem"
+  text-gap: "1.25rem"
+  group-gap: "1.5rem"
+  recent-max: "42.5rem"
+  prose-max: "48rem"
+  page-max: "64rem"
+  shell-top: "clamp(4.5rem, 9vw, 7rem)"
 components:
-  hover-link:
+  site-nav:
     backgroundColor: "transparent"
-    textColor: "{colors.ink}"
-    typography: "{typography.body}"
+    textColor: "{colors.heading-ink}"
+    typography: "{typography.utility}"
     rounded: "{rounded.none}"
     padding: "0"
-  nav-link:
+  locale-link:
     backgroundColor: "transparent"
-    textColor: "{colors.ink}"
-    typography: "{typography.body}"
+    textColor: "{colors.quiet-ink}"
+    typography: "{typography.small}"
     rounded: "{rounded.none}"
     padding: "0"
-  locale-chip:
+  writing-row:
     backgroundColor: "{colors.background}"
-    textColor: "{colors.secondary-text}"
-    typography: "{typography.label}"
-    rounded: "{rounded.chip}"
-    padding: "4px 12px"
-  locale-chip-active:
-    backgroundColor: "{colors.primary}"
-    textColor: "{colors.background}"
-    typography: "{typography.label}"
-    rounded: "{rounded.chip}"
-    padding: "4px 12px"
-  writing-list-item:
-    backgroundColor: "{colors.background}"
-    textColor: "{colors.primary}"
+    textColor: "{colors.heading-ink}"
     typography: "{typography.title}"
     rounded: "{rounded.none}"
-    padding: "16px 0"
-  cv-icon-link:
+    padding: "0.375rem 0"
+  prose-link:
     backgroundColor: "transparent"
-    textColor: "{colors.primary}"
+    textColor: "{colors.heading-ink}"
     typography: "{typography.body}"
-    rounded: "{rounded.none}"
-    padding: "0"
-  cv-org-meta-link:
-    backgroundColor: "transparent"
-    textColor: "{colors.cv-link}"
-    fontSize: "1rem"
-    fontWeight: 500
-    lineHeight: 1.375
     rounded: "{rounded.none}"
     padding: "0"
 ---
 
 # Design System: Astrosite
 
-## 1. Overview
+## Overview
 
-**Creative North Star: "The Plaintext Field Notebook"**
+**Creative North Star: "The Working Index"**
 
-Astrosite is a calm technical notebook, not a portfolio campaign. The system
-should feel like a working engineer's public record: plain page, strong titles,
-compact navigation, readable prose, and just enough structure to make writing,
-consulting context, products, and CV evidence easy to scan.
+Astrosite is a sparse author index for shipped software and recent technical
+thinking. It uses a white field, near-black zinc ink, and a quiet hierarchy so
+the author's work remains legible without portfolio ceremony. Type, links, and
+space carry the identity; there is no decorative layer competing with reading
+or search clarity.
 
-The visual language is intentionally flat. White space, text weight, dividers,
-link underlines, and print-aware layout do the work that cards, shadows, hero
-panels, and decorative imagery would normally try to do. This restraint serves
-search clarity and long-form reading, while still leaving enough typographic
-contrast for a visitor to understand hierarchy quickly.
-
-The system explicitly rejects the PRODUCT.md anti-references: generic SaaS
-landing-page patterns, decorative AI-generated editorial tropes, portfolio
-gloss, and visual flourishes that compete with reading, search clarity, or
-technical credibility.
+The system pairs a system-serif display voice with system-sans prose and utility
+text. Plain underlines, one-pixel rules, muted dates, and restrained responsive
+spacing provide structure while keeping the page close to a well-set document.
+The shared shell is text-first and multilingual, with route-specific surfaces
+remaining free to express their own interaction needs without changing the
+global author-index language.
 
 **Key Characteristics:**
 
-- Prose-first pages with narrow reading width and comfortable line-height.
-- Dense but calm hierarchy: bold headings, medium navigation, muted dates.
-- Flat surfaces: dividers and typographic weight replace cards and shadows.
-- Multilingual parity: English, Russian, and Tatar pages keep the same
-  structure.
-- Print-aware CV: compact, readable, and low-chrome when printed.
+- Flat white field with near-black zinc ink and a muted gray hierarchy.
+- System-serif display type with system-sans prose, utility, and metadata text.
+- Underlined text links and one-pixel rules provide state and separation.
+- Narrow reading measures with responsive 20px and 32px gutters.
+- Plain, keyboard-visible multilingual links rather than chips or controls.
 
-## 2. Colors
+## Colors
 
-The palette is restrained monochrome with one functional blue for CV prose links
-and a single custom metadata gray.
+The palette is near-monochrome: white and zinc neutrals carry the interface,
+with blue reserved for the CV's link-heavy prose treatment.
 
 ### Primary
 
-- **Slate Title** (`primary`): Used for headings, active language chips, active
-  nav underlines, and high-emphasis links. It is the site's main visible accent
-  because saturated brand color would compete with reading.
+- **Heading Zinc** (`oklch(21% 0.006 285.885)`): Headings, shell navigation,
+  project links, and writing titles use this near-black zinc instead of a
+  saturated brand color.
 
 ### Secondary
 
-- **CV Sky** (`cv-link`): Used by the CV page through `prose-sky` and manual
-  CV link classes. Keep it local to the CV surface or clearly link-heavy
-  contexts.
+- **CV Sky** (`oklch(58.8% 0.158 241.966)`): The CV's `prose-sky` links use this
+  functional blue for product, company, education, and award references.
 
 ### Neutral
 
-- **White Page** (`background`): The body background. It keeps article pages
-  direct and print-friendly.
-- **Zinc Ink** (`ink`): The default body text color. It must remain near-black
-  for long-form contrast.
-- **Reading Slate** (`secondary-text`): Inactive language chip text and
-  secondary UI text.
-- **Muted Body Zinc** (`body-muted`): Teaser copy and supporting descriptions.
-- **Metadata Zinc** (`metadata`): Article and writing-list dates that use
-  Tailwind `text-zinc-500`.
-- **Date Gray** (`date`): CV dates that use the project token defined in
-  `src/styles/global.css` as `--color-date`.
-- **Rule Zinc** (`rule`): Article list dividers and borders.
-- **Soft Slate Border** (`chip-border`): Locale chip borders.
+- **White Field** (`#ffffff`): The page and content background.
+- **Ink Zinc** (`oklch(14.1% 0.005 285.823)`): The default body ink from
+  `text-zinc-950`.
+- **Muted Zinc** (`oklch(44.2% 0.017 285.786)`): Supporting copy, section labels,
+  and other secondary text from `text-zinc-600`.
+- **Quiet Zinc** (`oklch(55.2% 0.016 285.938)`): Dates and quiet utility links
+  from `text-zinc-500`.
+- **Faint Zinc** (`oklch(70.5% 0.015 286.067)`): The subtle heading-anchor marker
+  color from `text-zinc-400`.
+- **Rule Zinc** (`oklch(92% 0.004 286.32)`): One-pixel borders and dividers from
+  `border-zinc-200`.
+- **Focus Ink** (`#18181b`): Selection and keyboard focus treatment.
+- **Date Gray** (`#6b7280`): The named `--color-date` token used by CV date
+  metadata.
 
 ### Named Rules
 
-**The Ink First Rule.** Body text stays near-black on white. Do not soften prose
-into pale gray for elegance.
+**The Ink First Rule.** Keep body and primary reading text near-black on white;
+muted color is reserved for metadata and supporting utility text.
 
-**The Accent Is Evidence Rule.** Color only appears when it carries state,
-links, dates, syntax semantics, data visualization, or CV-specific link
-affordance. Do not add decorative accent fills.
+**The Functional Accent Rule.** Blue is evidence-bearing CV link affordance,
+not a decorative fill or general brand accent.
 
-## 3. Typography
+## Typography
 
-**Display Font:** system sans (`ui-sans-serif, system-ui, sans-serif`) **Body
-Font:** system sans (`ui-sans-serif, system-ui, sans-serif`) **Label/Mono
-Font:** none
+**Display Font:** Tailwind `font-serif` (`ui-serif, Georgia, Cambria, "Times
+New Roman", Times, serif`)
 
-**Character:** The type is practical and system-native. It favors speed,
-readability, and platform familiarity over custom-brand display behavior.
+**Body Font:** Tailwind `font-sans` (`-apple-system, BlinkMacSystemFont,
+"Segoe UI", Roboto, "Helvetica Neue", "Noto Sans", Arial, sans-serif`, with
+the system emoji fallbacks)
+
+**Label/Mono Font:** No distinct label face; code uses the Tailwind system
+`font-mono` stack where rendered by the writing pipeline.
+
+**Character:** The pairing is native, practical, and quietly editorial. Serif
+is a deliberate signal for large page titles; sans keeps navigation, prose,
+dates, and project metadata familiar and fast to scan.
 
 ### Hierarchy
 
-- **Display** (800, `2.25rem`, `1.111`): Page and article `h1` text through
-  Tailwind Typography. It should stay compact and readable, never hero-scale.
-- **Headline** (700, `1.5rem`, `1`): Section headers such as the Writing list
+- **Display** (400, `clamp(2.3rem, 9vw, 6rem)`, `0.96`): The large serif index
   title.
-- **Title** (600, `1.125rem`, `1.333`): Writing list titles and emphasized
+- **Headline** (400, `clamp(3.25rem, 8vw, 4.75rem)`, `0.98`): Inner-route serif
+  `h1` headings in the shared prose shell.
+- **Title** (500, `1.125rem`, `1.5rem`): Recent-writing titles, with `-0.01em`
+  tracking and a hover-revealed underline.
+- **Body** (400, `1.0625rem`, `1.75`): Long-form shell prose. The default page
+  body establishes `15px` text, `24px` line-height, and `-0.01em` tracking;
+  reading surfaces widen the type slightly for sustained reading.
+- **Utility** (400, `0.9375rem`, `1.5rem`): Shared shell navigation and brand
   links.
-- **Body** (400, `1rem`, `1.75`): Long-form article and page prose. Keep the
-  prose measure around the existing `max-w-3xl` and Typography plugin rhythm.
-- **Label** (500, `0.875rem`, `1.714`, no letter spacing): Dates, metadata, and
-  language chips. Use tabular numbers for dates.
+- **Label** (600, `0.8125rem`, `1.25rem`, `0.05em`, uppercase): The recent-writing
+  section label.
+- **Small** (400, `0.875rem`, `1.25rem`): Locale links and quiet profile links;
+  dates use the same size with tabular numerals where needed.
 
 ### Named Rules
 
-**The Reading Is The Product Rule.** Do not introduce ornamental display faces,
-italic editorial treatments, or tracked uppercase section labels. The writing
-must remain the strongest signal.
+**The Serif Signal Rule.** Use the system serif for display and inner-page
+headings; keep utility text, prose, titles, and metadata in the system sans.
 
-**The No Negative Tracking Rule.** Letter spacing stays at `0`. This site does
-not use compressed display typography.
+## Layout
 
-## 4. Elevation
+The site uses a centered max-width model with Tailwind utilities as the layout
+source of truth. The outer page measure is `64rem` (`max-w-5xl`), with `1.25rem`
+horizontal gutters on narrow screens and `2rem` from the `sm` breakpoint
+(`640px`). Shared prose and shell content use a `48rem` (`max-w-3xl`) measure;
+the recent-writing list uses a narrower `42.5rem` (`680px`) measure.
 
-The system is flat. There are no shadows in the scanned source. Depth is
-conveyed through vertical rhythm, typographic weight, dividers, active
-underlines, and filled active language chips.
+The shell header and content follow responsive clamp-based vertical spacing. The
+navigation is a wrapping flex row with a compact utility group, and locale links
+stay inline with plain text. The writing list uses a single vertical column;
+rows are separated by rhythm and link state rather than cards. CV content is
+print-aware and uses its own print density while retaining the same typography
+and link language.
+
+## Elevation & Depth
+
+The global shell and reading surfaces are flat: they use no shadows, gradients,
+or layered cards. Depth comes from whitespace, one-pixel rules, near-black versus
+muted ink, and underlines that reveal state. The interactive travel island has
+scoped map-control styling of its own; those surface-local shadows and colors
+are deliberately not global primitives.
 
 ### Named Rules
 
-**The No Shadow Rule.** Do not add card shadows, glass panels, or soft glow
-effects. If a surface needs separation, use a divider, spacing, or a filled
-state.
+**The Flat by Default Rule.** Keep shell and prose surfaces flat. Use spacing,
+rules, type weight, and link state to establish hierarchy before adding any
+surface treatment.
 
-**The Divider Over Card Rule.** Writing lists use `border-y` and `divide-y`;
-they are not card grids.
+## Shapes
 
-## 5. Components
+The text system has a square, document-like silhouette: shell links, locale
+links, writing rows, and prose links have no radius and no filled container.
+Underlines are one pixel, offset `3px`, with a muted decoration at rest where
+the implementation uses `hover-underline`. Rules are one pixel in Rule Zinc.
 
-### Buttons
+Keyboard focus is explicit and consistent: a `2px` Focus Ink outline with a
+`4px` offset and a `2px` radius. There is no clipping, pill geometry, or chip
+language in the shared author index.
 
-No button system exists in the current code. Do not invent campaign buttons for
-ordinary navigation. When an action truly needs a button, derive it from the
-locale chip pattern: 4px radius, medium text, direct border or filled active
-state.
-
-### Chips
-
-- **Style:** Locale chips use a small rounded rectangle (`4px`) with `1px`
-  border, `4px 12px` padding, medium `0.875rem` text, and no shadow.
-- **State:** Active chips fill with Slate Title and white text. Inactive chips
-  stay white with Soft Slate Border and Reading Slate text.
-
-### Cards / Containers
-
-- **Corner Style:** No card radius is used for content containers.
-- **Background:** Content stays on White Page.
-- **Shadow Strategy:** No shadows.
-- **Border:** Writing lists use Rule Zinc dividers. Locale chips use Soft Slate
-  Border.
-- **Internal Padding:** Repeated list rows use `16px 0`; page gutters use `24px`
-  on narrow screens and `32px` from `sm`.
-
-### Inputs / Fields
-
-No input system exists in the current code. If fields are added later, keep them
-flat, white, 4px radius, and visibly focused with border color instead of
-shadow.
+## Components
 
 ### Navigation
 
-Navigation is compact and text-first. The main nav is a flex row with wrapping,
-`16px` horizontal link gaps, `8px` row gaps, and `12px` between nav and locale
-switcher. Current nav links use a 2px underline with `3px` offset. Inactive
-links use the shared hover underline utility, which starts at 25% currentColor
-and resolves to full currentColor on hover.
+The shared shell navigation is a text-first flex row. The site-title brand and
+Consulting/CV links use `0.9375rem` system-sans text, near-black ink, a muted
+one-pixel underline at rest, and a current-color underline on hover. The active
+route keeps the underline and adds medium weight. The group wraps on narrow
+screens with `1rem` horizontal gaps and `0.625rem` row gaps; the wider layout
+uses `1.5rem` gaps.
 
-### Writing List
+### Locale links
 
-Writing rows are separated by top and bottom borders plus row dividers. Dates
-are `0.875rem`, medium, tabular, and muted. Titles are `1.125rem`, semibold, and
-underlined on hover. Teasers cap around `44ch`.
+Locale switching is plain text (`EN`, `RU`, `TT`) in a three-item inline list.
+Links are `0.875rem`, quiet zinc, and have no container or border. The current
+locale becomes near-black with a one-pixel underline and `3px` offset; hover
+only changes the text to near-black. The list gap is `0.75rem`.
 
-### CV Link Row
+### Recent writing rows
 
-CV contact links use a 16px icon, `4px` icon-to-text gap, and direct text. The
-contact grid uses one column by default and two columns from `sm`, with `32px`
-column gap and `6px` row gap for breathing room. Print keeps the same two-column
-shape with tighter `16px` column and `2px` row gaps. The CV content area is
-print-aware and drops extra chrome through print utilities.
+The recent-writing list is a narrow, single-column index. Each row is a block
+link with `0.375rem` vertical padding; its date is `0.8125rem`, `1.25rem`
+line-height, quiet zinc, and tabular numerals. The title is `1.125rem`, medium
+weight, `1.5rem` line-height, and `-0.01em` tracking. Its underline is hidden at
+rest and resolves to current color when the row is hovered.
 
-### CV Links
+### Prose links and focus
 
-CV prose, product, company, education, and award links use CV Sky with the
-shared `hover-underline` treatment. Company and award organization metadata
-links use medium weight (`500`) to match Tailwind Typography prose links. Links
-inside title/headline contexts inherit the surrounding title weight instead of
-forcing a lighter link style.
+Normal prose links use the shared `hover-underline` treatment: one-pixel
+underline, `3px` offset, decoration mixed from `25%` current color at rest, and
+full current color on hover. Global keyboard focus uses the Focus Ink outline
+with a `4px` offset. Heading anchors in prose additionally reveal a muted `#`
+marker on hover or focus without changing the surrounding heading weight.
 
-## 6. Do's and Don'ts
+## Do's and Don'ts
 
-### Do:
-
-- **Do** keep long prose on a narrow measure with the existing `prose` rhythm.
-- **Do** use `hover-underline` for normal prose and navigation links.
-- **Do** preserve multilingual parity across English, Russian, and Tatar
-  surfaces.
-- **Do** use dividers and typographic weight before adding containers.
-- **Do** keep CV changes print-readable, compact, and low-chrome.
-
-### Don't:
-
-- **Don't** use generic SaaS landing-page patterns.
-- **Don't** use decorative AI-generated editorial tropes.
-- **Don't** add portfolio gloss.
-- **Don't** add visual flourishes that compete with reading, search clarity, or
-  technical credibility.
-- **Don't** add card grids, hero metrics, gradient text, glass panels, or
-  ornamental imagery to article pages.
-- **Don't** use repeated tiny uppercase tracked labels above section headings.
-- **Don't** soften body copy below WCAG AA contrast.
+- Do use Tailwind `font-serif`, `font-sans`, and `font-mono` system stacks; do
+  not add font packages, remote font stylesheets, or `@font-face` rules.
+- Do let Tailwind utilities own component layout, spacing, typography, color,
+  responsive behavior, and interaction states.
+- Do keep the field white, the reading ink near-black, and muted tones for
+  dates, labels, and supporting links.
+- Do use one-pixel underlines, rules, and the shared focus treatment to express
+  state.
+- Do preserve the `20px`/`32px` responsive gutters and the `42.5rem` recent
+  writing measure where those patterns apply.
+- Do keep language switching as accessible, underlined text rather than chips.
+- Don't add generic SaaS hero panels, portfolio ceremony, gradient text, glass
+  surfaces, or ornamental imagery to the text-first shell.
+- Don't add cards, shadows, pills, or invented buttons and inputs where the
+  shipped surface has no such primitive.
+- Don't use low-contrast gray for body copy or treat a functional CV accent as
+  decoration.
+- Don't promote a single route's composition into a global component rule; use
+  the matching surface brief for route-specific structure.

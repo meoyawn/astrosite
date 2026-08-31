@@ -6,6 +6,7 @@ import openGraphImageSource from "../assets/og.svg?no-inline"
 import stylesheet from "../styles/global.css?url"
 
 export interface HtmlRootProps {
+  bodyStart?: JSX.Element
   canonicalPath: string
   children: JSX.Element
   description: string
@@ -105,6 +106,9 @@ export const HtmlRoot = (props: HtmlRootProps): JSX.Element => (
       </script>
       <link rel="stylesheet" href={stylesheet} />
     </head>
-    <body class="bg-white text-zinc-950">{props.children}</body>
+    <body class="m-0 min-h-screen bg-white font-sans text-[15px] leading-6 tracking-[-0.01em] text-zinc-950 antialiased">
+      {props.bodyStart}
+      {props.children}
+    </body>
   </html>
 )

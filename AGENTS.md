@@ -3,6 +3,16 @@
 - language: 100% TypeScript
 - framework: [SolidJS](https://www.solidjs.com/) with [Vite](https://vite.dev/)
 
+## Frontend styling
+
+- use only system font stacks through Tailwind's `font-sans`, `font-serif`, and
+  `font-mono` utilities; never add font packages, remote font stylesheets, or
+  self-hosted webfonts
+- use Tailwind CSS utilities first for component layout, spacing, typography,
+  color, responsive behavior, and interaction states
+- never add component-specific selectors to the global stylesheet when the
+  same styling can be expressed cleanly with Tailwind utilities
+
 ## Dev server
 
 - dev server port is in [vite.config.ts](vite.config.ts)
