@@ -59,9 +59,15 @@
 
 ## i18n sync
 
-- keep translations in [src/pages/ru](src/pages/ru/) and
-  [src/pages/tt](src/pages/tt/) in sync with original pages in
-  [src/pages](src/pages/)
+- every edit to an original page in [src/pages](src/pages/) must begin by
+  checking for matching translations in [src/pages/ru](src/pages/ru/) and
+  [src/pages/tt](src/pages/tt/)
+- when a matching translation exists, update every locale in the same change;
+  never leave locale sync for a later task or wait for the user to request it
+- before reporting completion, explicitly compare the affected original,
+  Russian, and Tatar content and confirm that wording and structure remain in
+  sync
+- a page change is incomplete while any matching locale is stale
 
 ## CLI tools
 

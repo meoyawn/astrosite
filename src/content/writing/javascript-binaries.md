@@ -118,12 +118,18 @@ The macOS first-start and RAM numbers below make the first and third costs easy
 to see. Bun's custom shim and Node's asset loader have the same extraction,
 disk, and tamper concerns.
 
-Bun needs this small wrapper, but does not prepare or modify any native file:
+## Bun mixes CommonJS and ESM
+
+The `.cjs` suffix is for Deno and Node, not Bun. Bun
+[supports both module systems in the same file](https://bun.com/docs/runtime/module-resolution#using-import-and-require-together),
+so its wrapper can use ESM imports and still `require()` the unchanged CommonJS
+test. The wrapper exists only to place node-canvas's sibling libraries beside
+its extracted addon; it does not prepare or modify any native file:
 
 ```js
-const { existsSync, mkdirSync, statSync } = require("node:fs");
-const { tmpdir } = require("node:os");
-const { basename, join } = require("node:path");
+import { existsSync, mkdirSync, statSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { basename, join } from "node:path";
 
 function isSharedLibrary(file) {
   return file.name.endsWith(".dylib") || file.name.includes(".so.");
@@ -174,7 +180,7 @@ main().catch((error) => {
 It becomes the compiled entry point while `index.cjs` remains unchanged:
 
 ```sh
-bun build bun-entry.cjs --compile --minify --bytecode \
+bun build bun-entry.js --compile --minify --bytecode \
   --asset=node_modules/canvas/build/Release --outfile dist/canvas-bun
 ```
 
