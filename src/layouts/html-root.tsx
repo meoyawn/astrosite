@@ -94,7 +94,7 @@ export const HtmlRoot = (props: HtmlRootProps): JSX.Element => (
       <meta property="og:image:width" content={String(openGraphImageWidth)} />
       <meta property="og:image:height" content={String(openGraphImageHeight)} />
       <meta property="og:image:alt" content={openGraphImageAlt} />
-      <meta name="twitter:card" content="summary_large_image" />
+      <meta name="twitter:card" content="summary" />
       <meta name="twitter:site" content="@meoyawn" />
       <meta name="twitter:creator" content="@meoyawn" />
       <meta name="twitter:title" content={props.title} />

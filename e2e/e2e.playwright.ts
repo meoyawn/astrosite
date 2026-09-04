@@ -312,10 +312,7 @@ test.describe("e2e tests", () => {
         await expect(openGraphImageWidth).toHaveAttribute("content", "1200")
         await expect(openGraphImageHeight).toHaveAttribute("content", "630")
         await expect(openGraphImageAlt).toHaveAttribute("content", /\S/)
-        await expect(twitterCard).toHaveAttribute(
-          "content",
-          "summary_large_image",
-        )
+        await expect(twitterCard).toHaveAttribute("content", "summary")
         await expect(twitterSite).toHaveAttribute("content", "@meoyawn")
         await expect(twitterCreator).toHaveAttribute("content", "@meoyawn")
         await expect(twitterTitle).toHaveAttribute("content", titleText)
