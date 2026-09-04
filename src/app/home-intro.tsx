@@ -1,4 +1,5 @@
 import { createMemo } from "solid-js"
+import { HomeTimepiece } from "./home-timepiece.tsx"
 import type { Locale } from "./i18n.ts"
 import { LocaleSwitcher } from "./locale-switcher.tsx"
 import { siteCopy } from "./site-copy.ts"
@@ -11,7 +12,8 @@ export const HomeIntro = (props: HomeIntroProps) => {
   const copy = createMemo(() => siteCopy[props.locale])
 
   return (
-    <section class="text-center" aria-labelledby="home-title">
+    <section class="relative text-center" aria-labelledby="home-title">
+      <HomeTimepiece />
       <h1
         id="home-title"
         class="m-0 font-serif text-[clamp(2.3rem,9vw,6rem)] leading-[0.96] font-normal tracking-[-0.03em] text-balance text-zinc-900"

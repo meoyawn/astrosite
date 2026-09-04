@@ -237,7 +237,6 @@ export default defineConfig({
         processor: markdownProcessor,
       },
       markdownExport: {
-        force404Markdown: false,
         exclude: [],
       },
       sitemap: {
