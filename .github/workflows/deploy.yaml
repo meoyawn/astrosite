@@ -1,0 +1,52 @@
+name: Deploy adelnz.com
+
+on:
+  push:
+    branches: [master]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: adelnz-production
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    if: github.ref == 'refs/heads/master'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Check out site
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+
+      - name: Set up Nub
+        uses: nubjs/setup-nub@47e5e7393d50f4e9544ddaf756aa277972afba2d # v0
+        with:
+          nub-version: 0.8.3
+
+      - name: Set up Task
+        uses: go-task/setup-task@70f2430ad412f838533de8c0515c749ffb2b8bd3 # v1
+
+      - name: Install dependencies
+        run: nub install --frozen-lockfile
+
+      - name: Install browser dependencies
+        run: nubx playwright install --with-deps chromium
+
+      - name: Build, check, and deploy
+        run: task deploy
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+
+      - name: Verify production JavaScript islands
+        run: >-
+          nubx playwright test e2e/e2e.playwright.ts
+          --grep 'home timepiece island|travel stay clicks update the timeline fragment'
+          --retries=3
+        env:
+          SITE_URL: https://adelnz.com

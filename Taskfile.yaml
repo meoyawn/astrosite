@@ -1,10 +1,5 @@
 version: "3"
 
-includes:
-  solid-static:
-    taskfile: ../solid-static/Taskfile.yaml
-    dir: ../solid-static
-
 tasks:
   lint:
     run: once
@@ -23,8 +18,6 @@ tasks:
 
   typecheck:
     run: once
-    deps:
-      - solid-static:build
     cmd: nubx tsc -p tsconfig.json
     sources:
       - nub.lock
@@ -35,8 +28,6 @@ tasks:
       - tooling/**/*.ts
 
   dev:
-    deps:
-      - solid-static:build
     cmd: nubx vite --config vite.config.ts
 
   favicon:png:
@@ -48,15 +39,11 @@ tasks:
 
   build:
     run: once
-    deps:
-      - solid-static:build
     cmd: nubx vite build --config vite.config.ts
     sources:
       - package.json
       - nub.lock
       - vite.config.ts
-      - ../solid-static/package.json
-      - ../solid-static/src/**/*
       - src/**/*
       - public/**/*
     generates:
@@ -90,8 +77,6 @@ tasks:
       - nub.lock
       - e2e/**/*
       - scripts/with-dev-server.ts
-      - ../solid-static/package.json
-      - ../solid-static/src/**/*
       - src/**/*
 
   playwright:install:
@@ -123,8 +108,6 @@ tasks:
 
   check:
     run: once
-    deps:
-      - solid-static:build
     cmds:
       - nub install
       - task: check-impl

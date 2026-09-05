@@ -1139,6 +1139,30 @@ test.describe("e2e tests", () => {
     await expect(page.locator("html")).toHaveAttribute("lang", "tt")
   })
 
+  test("home timepiece island loads and animates", async ({ page }) => {
+    const pageErrors: string[] = []
+    page.on("pageerror", error => pageErrors.push(error.message))
+
+    await routeBuiltFiles(page)
+    await page.emulateMedia({ reducedMotion: "no-preference" })
+    const response = await page.goto(`${builtOrigin}${routes.home}`)
+
+    expect(response?.ok() ?? false).toEqual(true)
+    const timepiece = page.locator("#home-timepiece")
+    const islandScript = timepiece.locator('script[type="module"]')
+    await expect(islandScript).toHaveAttribute("src", /\S+/)
+    await expect(timepiece).toHaveAttribute("data-running", "true")
+    await expect.poll(() => timepiece.evaluate(element =>
+      element.getAnimations({ subtree: true }).filter(animation =>
+        animation.playState === "running",
+      ).length,
+    )).toEqual(2)
+
+    await page.emulateMedia({ reducedMotion: "reduce" })
+    await expect(timepiece).toHaveAttribute("data-running", "false")
+    expect(pageErrors).toEqual([])
+  })
+
   test("localized home pages use the shell-free author index", async ({
     browser,
   }) => {
