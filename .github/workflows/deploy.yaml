@@ -43,10 +43,33 @@ jobs:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
 
+      - name: Upload build E2E results
+        if: ${{ !cancelled() && hashFiles('playwright-report/index.html') != '' }}
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: e2e-build-results
+          path: |
+            playwright-report/
+            test-results/
+          retention-days: 14
+          if-no-files-found: error
+
       - name: Verify production JavaScript islands
+        id: production-e2e
         run: >-
           nubx playwright test e2e/e2e.playwright.ts
           --grep 'home timepiece island|travel stay clicks update the timeline fragment'
           --retries=3
         env:
           SITE_URL: https://adelnz.com
+
+      - name: Upload production E2E results
+        if: ${{ !cancelled() && steps.production-e2e.outcome != 'skipped' }}
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: e2e-production-results
+          path: |
+            playwright-report/
+            test-results/
+          retention-days: 14
+          if-no-files-found: error

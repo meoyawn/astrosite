@@ -54,7 +54,7 @@ tasks:
     deps:
       - build
       - playwright:install
-    cmd: nubx playwright test e2e/e2e.playwright.ts
+    cmd: nubx playwright test
     sources:
       - Taskfile.yaml
       - playwright.config.ts
@@ -70,7 +70,7 @@ tasks:
       SITE_URL: http://127.0.0.1:4321
     cmd: >-
       nub scripts/with-dev-server.ts
-      nubx playwright test e2e/e2e.playwright.ts
+      nubx playwright test
     sources:
       - Taskfile.yaml
       - playwright.config.ts
