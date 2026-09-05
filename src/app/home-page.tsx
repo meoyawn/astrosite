@@ -21,7 +21,7 @@ export const HomePage = (props: HomePageProps): JSX.Element => (
     openGraphType="website"
     title={props.title}
   >
-    <main class="mx-auto max-w-5xl px-5 pt-[clamp(5rem,12vw,9rem)] pb-24 max-sm:pt-18">
+    <main class="mx-auto flex max-w-5xl flex-col gap-12 px-5 pt-18 pb-12 sm:min-h-svh sm:justify-center sm:gap-[clamp(3rem,8svh,5rem)] sm:pt-24">
       <HomeIntro locale={props.locale} />
       <WritingList locale={props.locale} />
     </main>

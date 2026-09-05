@@ -39,7 +39,7 @@ export const WritingList = (props: WritingListProps) => {
     <Show when={published.length > 0}>
       <section
         aria-labelledby="writing-heading"
-        class="mx-auto mt-[clamp(4.5rem,10vw,7rem)] max-w-[42.5rem]"
+        class="mx-auto w-full max-w-[42.5rem]"
       >
         <h2
           id="writing-heading"
