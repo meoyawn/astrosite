@@ -1,14 +1,22 @@
 ---
 title: Vibecoding a SaaS
-description: What building Listenbox taught me about architecture, tests, product judgment, and what to try differently next time.
+description: Three busy months rebuilding Listenbox with Codex, no clear answer on time saved, and why $100/month isn't enough for a SaaS build like this.
 ---
 
-I spent three months rebuilding [Listenbox](https://listenbox.app/) with Codex.
+I spent three busy months rebuilding [Listenbox](https://listenbox.app/) with
+Codex. I can't say it made building the SaaS less stressful, and I don't know
+how much time it saved overall.
 
 Listenbox is audio and video podcast hosting: uploads, imports, YouTube
 publishing, billing, teams, and a public API. I was the solo developer, using
 frontier GPT models. This was a substantial new implementation of an existing
 product.
+
+Coding it by hand might have taken the same three months. Maybe. Writing
+reliable distributed orchestration along the lines of Temporal would certainly
+have taken me more than three months by hand, so the comparison also depends
+on what I would have built and which infrastructure I would have used. It's
+hard to put a confident number on the overall time saved.
 
 The early progress felt ridiculous. I was showing friends what happened after
 the prompt “this ugly, fix,” and yelling about a dropdown the agent built
@@ -18,13 +26,9 @@ like this:
 > And now it's working on it again, then another deploy, I test again, and so
 > on every day.
 
-Another of my messages describes the whole experience better:
-
-> With Codex there's almost zero stress, but still a shitload of work.
-
-Both quotes are my own, translated from Russian. The excitement was real. So
-was the amount of attention the product continued to need. I am still awaiting
-Apple's HLS delivery approval, which has been pending since August 25.
+That quote is my own, translated from Russian. The excitement was real. So was
+the daily work of reviewing, debugging, and deciding what to build. I am still
+awaiting Apple's HLS delivery approval, which has been pending since August 25.
 
 The weekend SaaS pitch leaves all that work out of the estimate. Looking back
 through my commits and messages, these are the lessons I want to carry into the
@@ -90,6 +94,10 @@ feature. It didn't feel the difference between an interesting afternoon and an
 afternoon that got Listenbox closer to a paying customer. I had to make that
 choice. Blaming the model for all three months would let me off far too easily.
 
+**$100/month of Codex is just not enough to build a SaaS like this.** I need to
+budget for more Codex usage alongside my own time. Getting an implementation
+quickly doesn't mean the whole project is cheap.
+
 **Shipping depends on people and platforms too.** My definition of release in
 the chat was “MRR > 0”: recurring revenue. Working checkout code was one step
 toward that. Apple's approval for HTTP Live Streaming delivery runs on Apple's
@@ -138,6 +146,8 @@ time getting a complete workflow into a customer's hands.
    days go; repeated visits to the same feature should prompt a closer look at
    its requirements or design.
 
-I would still use Codex. What I want to find out next is how much faster I can
-reach a paying customer by giving it fewer things to build, better evidence
-about how those things behave, and earlier decisions about what they need to do.
+I would still use Codex. That is a preference, not evidence that it made these
+three months faster or less stressful. Next time I want to give it fewer things
+to build, better evidence about how those things behave, and earlier decisions
+about what they need to do. Whether that gets me to a paying customer sooner is
+something I still need to find out.
