@@ -1,11 +1,12 @@
 ---
 title: Vibecoding a SaaS
-description: Three busy months rebuilding Listenbox with Codex, no clear answer on time saved, and why $100/month isn't enough for a SaaS build like this.
+description: Rebuilding Listenbox with Codex took three months and produced the best engineering of my life, with fast workflows, deterministic tests, tracing, and reliable CI.
 ---
 
 I spent three busy months rebuilding [Listenbox](https://listenbox.app/) with
-Codex. I can't say it made building the SaaS less stressful, and I don't know
-how much time it saved overall.
+Codex. That was much longer than I expected. It also produced the best
+engineering of my life. Overall, this was a positive experience, even though
+I can't say it made building the SaaS less stressful.
 
 Listenbox is audio and video podcast hosting: uploads, imports, YouTube
 publishing, billing, teams, and a public API. I was the solo developer, using
@@ -34,11 +35,32 @@ The weekend SaaS pitch leaves all that work out of the estimate. Looking back
 through my commits and messages, these are the lessons I want to carry into the
 next project.
 
-**A working implementation can still be a bad design.** One media storage design
-could put close to a thousand records into PostgreSQL for a single upload by
-recording every object in the package. I had to work out which objects actually
-needed individual ownership records. The upload producing a playable result
-didn't answer that question.
+**The biggest gain was engineering quality.** I am 100% confident in every part
+of the system because of the deterministic end-to-end testing and end-to-end
+tracing we built alongside it. I've never had this level of confidence in my
+own engineering before.
+
+Local mock servers make external services controllable during tests. The
+YouTube mock can exhaust quota after an exact number of requests, delay an
+operation, or make the next upload fail. I can reproduce those conditions and
+test how the application handles them. The traces show the work happening
+throughout the system, and the tests check that the expected spans are present.
+
+Codex also made sure CI was green and the tests weren't flaky. Getting this
+level of testing, tracing, and reliable CI felt like a luxury normally reserved
+for big teams. I had it as a solo developer. That is a much clearer benefit to
+me than any estimate of hours saved.
+
+**Traces helped the LLM make the system fast.** I am happy with performance as
+well as correctness and determinism. My workflow is to feed a trace to the LLM
+and ask it to make that path fast. If that requires rearchitecting the path,
+I'm comfortable with that because the end-to-end tests let me verify the
+behavior after the change.
+
+One media storage design could put close to a thousand records into PostgreSQL
+for a single upload by recording every object in the package. I had to work out
+which objects actually needed individual ownership records. The upload
+producing a playable result didn't answer that question.
 
 I traced the downloads, FFmpeg processing, probes, and uploads, then gave Codex
 a trace about six megabytes in size. That was when it started making useful
@@ -53,6 +75,12 @@ but the application added another completion check using UI progress counters.
 Those counters could drift and leave a completed import looking stuck. The fix
 was to let Temporal determine completion. Adopting infrastructure only helps if
 the application actually uses its guarantees.
+
+**E2E tests made large changes practical from a single prompt.** I could ask for
+a rearchitecture in one prompt, or a subsystem replacement in one prompt:
+`rclone` to `gofakes3`, SolidStart to Inertia. The tests checked the application's
+behavior through those changes. That confidence meant I could choose a better
+architecture without worrying about losing what already worked.
 
 **The test has to describe what the customer gets.** In the upgrade flow, the
 API correctly rejected an import with `402 Payment Required`. The frontend's
@@ -146,8 +174,10 @@ time getting a complete workflow into a customer's hands.
    days go; repeated visits to the same feature should prompt a closer look at
    its requirements or design.
 
-I would still use Codex. That is a preference, not evidence that it made these
-three months faster or less stressful. Next time I want to give it fewer things
-to build, better evidence about how those things behave, and earlier decisions
-about what they need to do. Whether that gets me to a paying customer sooner is
-something I still need to find out.
+I would absolutely use Codex again. It helped me build a system I trust more
+than anything I've engineered before, with performance I'm happy with and the
+confidence to change its architecture. The surprise was that getting there
+still took three months. Next time I want to keep that standard of performance,
+testing, tracing, and reliable CI while giving it fewer things to build and
+making product decisions earlier. Whether that gets me to a paying customer
+sooner is something I still need to find out.
