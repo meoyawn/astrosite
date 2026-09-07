@@ -2,10 +2,8 @@ import { createMemo } from "solid-js"
 import type { JSX } from "solid-js"
 import { ssr } from "solid-js/web"
 import type { Locale } from "../app/i18n.ts"
-import { trustRoutes } from "../routes.ts"
 import type { NavRouteName } from "../routes.ts"
 import { SiteNav } from "../app/site-nav.tsx"
-import { siteCopy } from "../app/site-copy.ts"
 import { HtmlRoot } from "./html-root.tsx"
 
 export interface SiteShellProps {
@@ -69,36 +67,6 @@ export const SiteShell = (props: SiteShellProps) => {
         />
       </header>
       <main class={props.contentClass ?? defaultContentClass}>{props.children}</main>
-      <footer class="mx-auto mt-16 max-w-3xl border-t border-zinc-200 px-5 py-8 text-[0.8125rem] text-zinc-600 sm:px-8 print:hidden">
-        <nav aria-label={siteCopy[props.lang].footerLabel}>
-          <ul class="m-0 flex list-none flex-wrap gap-x-4 gap-y-2 p-0">
-            <li class="m-0 p-0">
-              <a
-                class="hover-underline"
-                href={trustRoutes.about}
-              >
-                {siteCopy[props.lang].about}
-              </a>
-            </li>
-            <li class="m-0 p-0">
-              <a
-                class="hover-underline"
-                href={trustRoutes.contact}
-              >
-                {siteCopy[props.lang].contact}
-              </a>
-            </li>
-            <li class="m-0 p-0">
-              <a
-                class="hover-underline"
-                href={trustRoutes.privacy}
-              >
-                {siteCopy[props.lang].privacy}
-              </a>
-            </li>
-          </ul>
-        </nav>
-      </footer>
     </HtmlRoot>
   )
 }
