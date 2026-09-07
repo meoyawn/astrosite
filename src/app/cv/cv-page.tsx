@@ -16,19 +16,20 @@ export interface CvPageProps {
   locale: Locale
 }
 
-const orgHeaderClass = "not-prose mb-2 print:mb-1.5"
+const orgHeaderClass = "not-prose mb-3 print:mb-1.5"
 const orgTitleClass =
-  "m-0 text-lg font-bold leading-tight text-zinc-950 print:text-[13px]"
+  "m-0 text-lg font-semibold leading-snug text-zinc-950 print:text-[13px] print:font-bold print:leading-tight"
 const orgMetaClass =
-  "m-0 mt-0.5 text-base leading-snug text-zinc-950 print:text-[12px]"
-const orgMutedClass = "m-0 text-base leading-snug text-date print:text-[12px]"
-const orgLinkClass = "text-(--tw-prose-links) hover-underline"
+  "m-0 mt-0.5 text-[15px] leading-6 text-zinc-900 print:text-[12px] print:leading-snug"
+const orgMutedClass =
+  "m-0 text-sm leading-5 text-date print:text-[12px] print:leading-snug print:text-zinc-600"
+const orgLinkClass = "text-sky-700 hover-underline"
 const orgMetaLinkClass = `${orgLinkClass} font-medium`
 
 export const CvPage = (props: CvPageProps) => (
   <SiteShell
     canonicalPath={localizedRoute(props.locale, "cv")}
-    contentClass="mx-0 prose max-w-none px-0 pb-6 prose-sky sm:mx-12 sm:pb-12 md:mx-16 md:pb-16 print:m-0 print:text-[12px] print:leading-[1.35] prose-h1:print:mb-1.5 prose-h1:print:text-[24px] prose-h3:print:mb-1.5 prose-h3:print:mt-3 prose-h3:print:text-[13.5px] prose-p:my-2 prose-p:print:my-0.5 prose-ul:my-1 prose-ul:print:my-0.5 prose-li:print:my-0"
+    contentClass="mx-0 prose max-w-none px-5 pt-10 pb-6 leading-[1.65] text-zinc-800 prose-sky sm:mx-12 sm:px-0 sm:pt-12 sm:pb-12 md:mx-16 md:pb-16 print:m-0 print:p-0 print:text-[12px] print:leading-[1.35] prose-h3:mt-8 prose-h3:mb-3 prose-h3:text-xl prose-h3:leading-7 prose-h3:font-semibold prose-h3:tracking-[-0.02em] prose-h3:text-zinc-950 prose-h3:print:break-after-avoid-page prose-h3:print:mt-3 prose-h3:print:mb-1.5 prose-h3:print:text-[13.5px] prose-h3:print:leading-snug prose-p:my-2 prose-p:print:my-0.5 prose-a:text-sky-700 prose-ul:my-1 prose-ul:pl-5 prose-ul:print:my-0.5 prose-li:my-1 prose-li:pl-0.5 prose-li:marker:text-zinc-500 prose-li:print:my-0"
     currentPath="cv"
     description="Personal website"
     lang={props.locale}
@@ -36,11 +37,17 @@ export const CvPage = (props: CvPageProps) => (
     openGraphType="website"
     title={props.copy.cvTitle}
   >
-    <section>
-      <h1>{props.cv.head.name}</h1>
-      <h3>{props.cv.head.title}</h3>
-      <p>{props.cv.head.location}</p>
-      <p class="grid grid-cols-1 gap-x-8 gap-y-1.5 sm:grid-cols-2 print:grid-cols-2 print:gap-x-5 print:gap-y-1">
+    <section class="not-prose">
+      <h1 class="m-0 text-[2rem] leading-tight font-semibold tracking-tight text-zinc-950 sm:text-4xl print:text-[24px] print:font-bold">
+        {props.cv.head.name}
+      </h1>
+      <h3 class="m-0 mt-2 text-xl leading-7 font-normal text-zinc-800 print:mt-1 print:text-[13.5px] print:leading-snug">
+        {props.cv.head.title}
+      </h3>
+      <p class="m-0 mt-1.5 text-sm leading-6 text-zinc-600 print:mt-1 print:text-[12px] print:leading-[1.35]">
+        {props.cv.head.location}
+      </p>
+      <p class="m-0 mt-4 grid grid-cols-1 gap-x-8 gap-y-1.5 sm:grid-cols-2 print:mt-2 print:grid-cols-2 print:gap-x-5 print:gap-y-1">
         <IconLink
           asset="email"
           href={`mailto:${props.cv.head.email}`}

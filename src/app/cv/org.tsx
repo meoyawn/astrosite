@@ -11,7 +11,7 @@ const isImageUrl = (value: string): value is keyof typeof images =>
   Object.hasOwn(images, value)
 
 export const Org = (props: OrgProps) => (
-  <div class="grid break-inside-avoid-page grid-cols-[3rem_minmax(0,1fr)] gap-x-4 py-3 first:pt-0 print:grid-cols-[2rem_minmax(0,1fr)] print:gap-x-2.5 print:py-2">
+  <div class="grid break-inside-avoid-page grid-cols-[3rem_minmax(0,1fr)] gap-x-4 py-4 first:pt-0 print:grid-cols-[2rem_minmax(0,1fr)] print:gap-x-2.5 print:py-2">
     <a
       class="not-prose block shrink-0"
       target="_blank"
