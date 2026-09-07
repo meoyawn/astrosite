@@ -1,12 +1,15 @@
 ---
-title: "2026: ripgrep is still king"
-description: Current gen LLMs reward simple tools
+title: "2026: regex search is still king"
+description: Coding agents still reward regex search and shell. Indexed grep fits that model.
 published_at: 2026-08-19
+updated_at: 2026-09-08
 ---
 
-Current-generation LLMs can already explore and edit code with files, search,
-and shell. Any proposed workflow improvement must beat that baseline before it
-earns another interface.
+Current-generation LLMs can already explore and edit code with files, regex
+search, and shell. Literal strings and regular expressions remain my default
+for code discovery in 2026: the agent finds text, reads the surrounding code,
+and reasons about its meaning. Any proposed workflow improvement must beat that
+baseline before it earns another interface.
 
 This article started with a Sunday meditation from Pi:
 
@@ -24,6 +27,27 @@ Current models make general-purpose primitives unusually powerful because they
 write the glue themselves. Every extra index, protocol, or specialist must
 therefore prove an end-to-end gain at equal quality—not merely a cleaner query
 or smaller tool response. I tested that standard against semantic navigation.
+
+## September 8, 2026 update: tgrep
+
+Microsoft has released [`tgrep`](https://github.com/microsoft/tgrep), which
+adds a trigram index to regex search. It uses literal fragments from a pattern
+to narrow the candidate files, then checks those files with the full regex
+engine. The index makes fewer files worth scanning; matches still come from
+source text. This is indexed regex search, without symbol resolution or
+embedding-based retrieval.
+
+Regex search can get faster while keeping the workflow agents already know:
+search for a pattern, read the matches, refine the query, and compose the
+results with shell tools. Ripgrep is one implementation of that workflow;
+tgrep is another.
+
+An index still has to earn its keep. tgrep offers a server mode and file
+watching, so index construction, memory use, and updates belong in the cost
+comparison. The benchmarks below measure `tspls` against ripgrep and say
+nothing about tgrep's effect on agent performance. Faster searches are
+promising; the test remains time and cost per completed task at equal
+correctness.
 
 ## Testing the strongest case
 
@@ -238,11 +262,12 @@ cost per successful task at equal correctness.
 
 That requires paired benchmarks of LSPs, indexes, graphs, and context
 compressors that include setup, startup, retries, cache pricing, verification,
-and failures—not just tool-output bytes. Current evidence favors ripgrep and
-simple shell pipelines: `tspls` did not improve this aggregate workflow,
-agent-level LSP results are mixed and usually costlier for strong models, and
-RTK loses despite impressive self-reported compression. This is the evidence
-now, not a permanent law.
+and failures—not just tool-output bytes. Current evidence favors regex search
+and simple shell pipelines as the default: `tspls` did not improve this
+aggregate workflow, agent-level LSP results are mixed and usually costlier for
+strong models, and RTK loses despite impressive self-reported compression.
+Indexed regex tools such as tgrep can advance that baseline while preserving
+the same search model. This is the evidence now, not a permanent law.
 
 Shoutout to Jesse Wilson, who wrote a decade ago that
 [case mapping breaks search](https://publicobject.com/2016/01/20/strict-naming-conventions-are-a-liability/).

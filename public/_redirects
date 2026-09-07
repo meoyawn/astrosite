@@ -1,2 +1,5 @@
 /travels /travel/ 301
+/writing/ripgrep-is-still-king /writing/regex-search-is-still-king/ 301
+/writing/ripgrep-is-still-king/ /writing/regex-search-is-still-king/ 301
+/writing/ripgrep-is-still-king/index.md /writing/regex-search-is-still-king/index.md 301
 /travels/* /travel/ 301
