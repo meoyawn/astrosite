@@ -1,7 +1,7 @@
 head:
   name: Адель Низамутдинов
   title: Старший инженер-программист
-  location: Казань, Татарстан · Удаленно
+  location: Казань, Татарстан · Удалённо
   email: mail@adelnz.com
   url: https://adelnz.com
   linkedin: https://www.linkedin.com/in/adelnizamuddin
@@ -9,9 +9,9 @@ head:
   twitter: https://twitter.com/meoyawn
 
 summaryMD: |
-  - 14 лет выпускаю программное обеспечение; более 6 лет полностью отвечаю за SaaS без внешнего финансирования
-  - Специализируюсь на API и переиспользуемых инструментах для HTTP/JSON на Go, TypeScript, PostgreSQL и инфраструктуре
-  - Собрал и возглавлял две инженерные команды
+  - 14 лет разрабатываю и выпускаю ПО; более 6 лет развиваю SaaS без внешнего финансирования
+  - Проектирую API и создаю инструменты для разработчиков
+  - Сформировал две команды разработки и руководил ими
 
 experience:
   - title: Основатель
@@ -19,24 +19,29 @@ experience:
       name: Listenbox
       url: https://listenbox.app
       imgURL: https://listenbox.app/assets/favicon-C-MTzUIS.svg
-    location: Удаленно
+    location: Удалённо
     start: 2019-10-01
     products:
       - name: Listenbox
         url: https://listenbox.app
-      - name: ResponsibleAPI
-        url: https://responsibleapi.com
+      - name: StrengthMCP
+        url: https://strengthmcp.com/
       - name: Arrowbox
         url: https://arrowbox.co
     summaryMD: |
-      Основал и веду SaaS без внешнего финансирования, который достиг $3K MRR; сейчас перестраиваю продукт на новой технической основе.
+      Основал и развиваю Listenbox — подкаст-хостинг без внешнего финансирования. Довёл выручку от подписок до $3 тыс. в месяц.
 
-      - Разобрался в незнакомом SaaS-стеке, затем самостоятельно реализовал продукт, backend, frontend, данные и инфраструктуру
-      - Создал [ResponsibleAPI](https://responsibleapi.com) — новый способ сопровождать HTTP/JSON-контракты, когда традиционные спецификации OpenAPI становится сложно развивать
-      - Построил текущий backend и frontend на Go и TypeScript
-      - Проектировал и поддерживал функции на PostgreSQL
-      - Автоматизировал деплой и управление инфраструктурой через Terraform и Ansible
-      - Отвечал за отладку, техническое обслуживание и надежность продукта, поддержку клиентов, SEO, продажи и маркетинг
+      - Разрабатываю и поддерживаю Listenbox на Go и TypeScript
+      - Реализовал загрузку, импорт и публикацию медиафайлов, биллинг, работу в командах и публичный API
+      - Организовал обработку медиафайлов в Temporal с повторными попытками, отменой задач и очисткой ресурсов
+      - Написал детерминированные E2E-тесты с настраиваемыми моками внешних сервисов и проверками трассировок OpenTelemetry
+      - Автоматизировал развёртывание и управление инфраструктурой с помощью Terraform и Ansible
+      - Отвечал за эксплуатацию и надёжность сервиса, устранение сбоев, поддержку клиентов, SEO, продажи и маркетинг
+
+      Другие проекты:
+
+      - Создал [StrengthMCP](https://strengthmcp.com/) — сервис, через который ИИ-ассистенты получают доступ к программам тренировок, записывают занятия и просматривают историю по протоколу MCP
+      - Создал [ResponsibleAPI](https://github.com/responsibleapi/responsible) — DSL на TypeScript с компиляцией в OpenAPI 3+
 
   - title: Старший Android-разработчик
     org:
@@ -45,16 +50,17 @@ experience:
       imgURL: https://web.archive.org/web/20190413125708im_/https://lh3.googleusercontent.com/rabzxoEzij4c3yuxZLipLF0dSv5dKrpgoaVSRxnXUrkY4dMUmGTJjBu-dXwqsi2wsA=s180
     start: 2017-06-01
     end: 2019-06-01
-    location: Удаленно
+    location: Удалённо
     products:
       - name: Wheely
         url: https://play.google.com/store/apps/details?id=com.wheely.wheely
       - name: Wheely для водителей
         url: https://play.google.com/store/apps/details?id=com.wheely.groundio
     summaryMD: |
-      Разрабатывал Android-приложения для пассажиров и водителей. Проводил собеседования Android-разработчиков.
-      - Переработал приложение для пассажиров
-      - Внедрил UI-интеграционные тесты
+      Разрабатывал Android-приложения для пассажиров и водителей. Проводил собеседования с Android-разработчиками.
+
+      - Переработал дизайн приложения для пассажиров
+      - Внедрил интеграционные тесты интерфейса
 
   - title: Ведущий Android-разработчик
     org:
@@ -70,10 +76,11 @@ experience:
       - name: Служба Горения
         url: https://play.google.com/store/apps/details?id=group.infotech.gorenie
     summaryMD: |
-      Разрабатывал Android-приложения, нанимал разработчиков и обеспечивал техническое руководство.
-      - Выстроил внутренние процессы и инфраструктуру для Android-разработки
-      - Нанял и руководил 3 Android-разработчиками
-      - Создал 2 приложения с нуля
+      Руководил Android-разработкой, писал приложения и нанимал разработчиков.
+
+      - Наладил процессы и инфраструктуру Android-разработки
+      - Нанял трёх Android-разработчиков и руководил ими
+      - Создал два приложения с нуля
 
   - title: Android-разработчик
     org:
@@ -87,9 +94,10 @@ experience:
         url: https://play.google.com/store/apps/details?id=ru.yandex.searchplugin
     summaryMD: |
       Разрабатывал [Яндекс Поиск для Android](https://play.google.com/store/apps/details?id=ru.yandex.searchplugin).
-      - Адаптировал UI для планшетов
+
+      - Адаптировал интерфейс для планшетов
       - Улучшил производительность приложения
-      - Внедрил тесты обновления приложения
+      - Добавил тесты обновления приложения
 
   - title: Ведущий Android-разработчик
     org:
@@ -111,10 +119,11 @@ experience:
       - name: Roadtrippers
         url: https://play.google.com/store/apps/details?id=com.roadtrippers
     summaryMD: |
-      Разрабатывал Android-приложения, нанимал разработчиков, обеспечивал техническое руководство и проводил демо для заказчиков.
-      - Создал 4 приложения с нуля
-      - Выстроил внутренние процессы для Android-разработки
-      - Нанял и руководил 3 Android-разработчиками
+      Руководил Android-разработкой, писал приложения, нанимал разработчиков и проводил демонстрации для заказчиков.
+
+      - Создал четыре приложения с нуля
+      - Наладил процессы Android-разработки
+      - Нанял трёх Android-разработчиков и руководил ими
 
 education:
   - org:
@@ -132,26 +141,26 @@ education:
       - name: Hitster.fm
         url: https://web.archive.org/web/20150905213140/https://play.google.com/store/apps/details?id=fm.hitster
     degreeMD: |
-      Прикладная математика и информатика. Специалитет
+      Специалитет по прикладной математике и информатике
 
 awards:
-  - title: 4-е место в Telegram Android Contest 2019
+  - title: 4-е место на конкурсе Telegram Android Contest 2019
     url: https://t.me/contest/23
     org:
       name: Telegram
       url: https://telegram.org
     date: 2019-04-02
     summaryMD: |
-      За две недели создал экран с графиками и проиндексировал объемный набор данных для быстрого рендеринга и отзывчивого интерфейса.
+      За две недели написал компонент для отображения графиков. Проиндексировал большой набор данных, чтобы обеспечить быструю отрисовку и отзывчивость интерфейса.
 
-  - title: Победитель Telegram Android Challenge 2016
+  - title: Победитель конкурса Telegram Android Challenge 2016
     url: https://vk.com/wall1_1108590
     org:
       name: Telegram
       url: https://telegram.org
     date: 2016-07-01
 
-  - title: 55-е место в субрегионале ACM ICPC 2011
+  - title: 55-е место на субрегиональном этапе ACM ICPC 2011
     url: https://neerc.ifmo.ru/archive/2011/southern/standings.html
     org:
       name: ACM
@@ -160,9 +169,10 @@ awards:
     date: 2011-10-01
 
 skills:
-  - Продуктовая разработка - SaaS, создание продуктов, customer discovery, SEO
-  - Языки - Go, TypeScript, Kotlin, Java, Python
-  - Backend и данные - PostgreSQL, Node.js, проектирование API, backend-сервисы, SQLite
-  - Frontend и mobile - TypeScript UI, Android
-  - Поставка и эксплуатация - Ansible, CI/CD, Linux, Terraform
+  - Языки программирования - Go, TypeScript, Kotlin, Java, Python
+  - Бэкенд и данные - PostgreSQL, SQLite, Temporal, Node.js, проектирование API
+  - Медиа - FFmpeg, HLS
+  - Развёртывание и эксплуатация - Ansible, CI/CD, Linux, OpenTelemetry, Terraform
+  - Фронтенд и мобильная разработка - React, SolidJS, Android
+  - Продуктовая разработка - SaaS, создание продуктов, изучение потребностей клиентов, SEO
   - Работа с клиентами - поддержка, продажи, маркетинг

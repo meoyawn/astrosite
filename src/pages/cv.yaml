@@ -9,8 +9,8 @@ head:
   twitter: https://twitter.com/meoyawn
 
 summaryMD: |
-  - 14 years shipping software; 6+ years owning a bootstrapped SaaS end to end
-  - Focus: APIs and reusable HTTP/JSON tooling across Go, TypeScript, PostgreSQL, and infrastructure
+  - 14 years of experience shipping software; 6+ years building and running a bootstrapped SaaS
+  - Design APIs and build reusable developer tooling
   - Built and led two engineering teams
 
 experience:
@@ -24,19 +24,24 @@ experience:
     products:
       - name: Listenbox
         url: https://listenbox.app
-      - name: ResponsibleAPI
-        url: https://responsibleapi.com
+      - name: StrengthMCP
+        url: https://strengthmcp.com/
       - name: Arrowbox
         url: https://arrowbox.co
     summaryMD: |
-      Founded and continue to run a bootstrapped SaaS that reached $3K MRR; now rebuilding it on a new foundation.
+      Founded and run Listenbox, a bootstrapped podcast hosting SaaS that reached $3K in monthly recurring revenue.
 
-      - Mapped an unfamiliar SaaS stack, then independently delivered product, backend, frontend, data, and infrastructure
-      - Created [ResponsibleAPI](https://responsibleapi.com), a new way to maintain HTTP/JSON contracts when conventional OpenAPI specifications become hard to evolve
-      - Built the current backend and frontend with Go and TypeScript
-      - Designed and maintained PostgreSQL-backed product features
+      - Develop and maintain Listenbox using Go and TypeScript
+      - Delivered media uploads, imports, publishing, billing, teams, and a public API
+      - Orchestrated media processing with Temporal, including retries, cancellation, and cleanup
+      - Built deterministic E2E tests with controllable service mocks and OpenTelemetry trace assertions
       - Automated deployments and infrastructure management with Terraform and Ansible
       - Owned production debugging, maintenance, reliability, customer support, SEO, sales, and marketing
+
+      Other projects:
+
+      - Built [StrengthMCP](https://strengthmcp.com/), connecting AI assistants to training programs, workout logging, and training history via the Model Context Protocol (MCP)
+      - Created [ResponsibleAPI](https://github.com/responsibleapi/responsible), a TypeScript DSL and compiler targeting OpenAPI 3+
 
   - title: Senior Android Developer
     org:
@@ -54,7 +59,7 @@ experience:
     summaryMD: |
       Developed passenger and driver Android apps. Interviewed Android developers.
 
-      - Redesigned the Passenger app
+      - Redesigned the passenger app
       - Introduced UI integration tests
 
   - title: Lead Android Developer
@@ -74,8 +79,8 @@ experience:
       Developed Android apps, hired developers, and provided technical leadership.
 
       - Created internal processes and infrastructure for Android development
-      - Hired and led 3 Android developers
-      - Built 2 apps from scratch
+      - Hired and led three Android developers
+      - Built two apps from scratch
 
   - title: Android Developer
     org:
@@ -90,9 +95,9 @@ experience:
     summaryMD: |
       Developed [Yandex.Search for Android](https://play.google.com/store/apps/details?id=ru.yandex.searchplugin).
 
-      - Adapted UI for tablets
+      - Adapted the UI for tablets
       - Improved app performance
-      - Introduced application upgrade tests
+      - Introduced tests for application upgrades
 
   - title: Lead Android Developer
     org:
@@ -116,9 +121,9 @@ experience:
     summaryMD: |
       Developed Android apps, hired developers, provided technical leadership, and presented customer demos.
 
-      - Built 4 apps from scratch
+      - Built four apps from scratch
       - Created internal processes for Android development
-      - Hired and led 3 Android developers
+      - Hired and led three Android developers
 
 education:
   - org:
@@ -146,9 +151,9 @@ awards:
       url: https://telegram.org
     date: 2019-04-02
     summaryMD: |
-      Built a charting view in two weeks and indexed an oversized dataset for responsive rendering and UX.
+      Built a charting view in two weeks and indexed a large dataset for fast rendering and a responsive UI.
 
-  - title: Winner of Telegram Android Challenge 2016
+  - title: Winner of the Telegram Android Challenge 2016
     url: https://vk.com/wall1_1108590
     org:
       name: Telegram
@@ -164,9 +169,10 @@ awards:
     date: 2011-10-01
 
 skills:
-  - Product engineering - SaaS, product development, customer discovery, SEO
   - Languages - Go, TypeScript, Kotlin, Java, Python
-  - Backend and data - PostgreSQL, Node.js, API design, backend services, SQLite
-  - Frontend and mobile - TypeScript UI, Android
-  - Delivery and operations - Ansible, CI/CD, Linux, Terraform
+  - Backend and data - PostgreSQL, SQLite, Temporal, Node.js, API design
+  - Media - FFmpeg, HLS
+  - Delivery and operations - Ansible, CI/CD, Linux, OpenTelemetry, Terraform
+  - Frontend and mobile - React, SolidJS, Android
+  - Product engineering - SaaS, product development, customer discovery, SEO
   - Customer work - support, sales, marketing
