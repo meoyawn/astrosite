@@ -1,6 +1,7 @@
 ---
-title: Vibecoding a SaaS
+title: Vibe coding a SaaS
 description: Rebuilding Listenbox with Codex took three months and produced the best engineering of my life, with fast workflows, deterministic tests, tracing, and reliable CI.
+published_at: 2026-09-08
 ---
 
 I spent three busy months rebuilding [Listenbox](https://listenbox.app/) with
@@ -8,16 +9,16 @@ Codex. That was much longer than I expected. It also produced the best
 engineering of my life. Overall, this was a positive experience, even though
 I can't say it made building the SaaS less stressful.
 
-Listenbox is audio and video podcast hosting: uploads, imports, YouTube
-publishing, billing, teams, and a public API. I was the solo developer, using
-frontier GPT models. This was a substantial new implementation of an existing
-product.
+Listenbox is an audio and video podcast hosting service with uploads, imports,
+YouTube publishing, billing, teams, and a public API. I was the solo developer,
+using frontier GPT models. This was a substantial new implementation of an
+existing product.
 
 Coding it by hand might have taken the same three months. Maybe. Writing
-reliable distributed orchestration along the lines of Temporal would certainly
-have taken me more than three months by hand, so the comparison also depends
-on what I would have built and which infrastructure I would have used. It's
-hard to put a confident number on the overall time saved.
+reliable distributed workflows would certainly have taken me more than three
+months by hand, so the comparison also depends on what I would have built and
+which infrastructure I would have used. It's hard to put a confident number on
+the overall time saved.
 
 The early progress felt ridiculous. I was showing friends what happened after
 the prompt “this ugly, fix,” and yelling about a dropdown the agent built
@@ -28,15 +29,17 @@ like this:
 > on every day.
 
 That quote is my own, translated from Russian. The excitement was real. So was
-the daily work of reviewing, debugging, and deciding what to build. I am still
-awaiting Apple's HLS delivery approval, which has been pending since August 25.
+the daily work of reviewing, debugging, and deciding what to build. As I write
+this, I'm still waiting for approval to deliver video to Apple Podcasts via
+[HTTP Live Streaming (HLS)](https://podcasters.apple.com/support/5593-how-to-publish-video).
+The request has been pending since August 25.
 
 The weekend SaaS pitch leaves all that work out of the estimate. Looking back
 through my commits and messages, these are the lessons I want to carry into the
 next project.
 
-**The biggest gain was engineering quality.** I am 100% confident in every part
-of the system because of the deterministic end-to-end testing and end-to-end
+**The biggest gain was engineering quality.** I am extremely confident in every
+part of the system because of the deterministic end-to-end testing and end-to-end
 tracing we built alongside it. I've never had this level of confidence in my
 own engineering before.
 
@@ -59,15 +62,15 @@ behavior after the change.
 
 One media storage design could put close to a thousand records into PostgreSQL
 for a single upload by recording every object in the package. I had to work out
-which objects actually needed individual ownership records. The upload
-producing a playable result didn't answer that question.
+which objects actually needed individual ownership records. Getting a playable
+result from the upload didn't answer that question.
 
 I traced the downloads, FFmpeg processing, probes, and uploads, then gave Codex
 a trace about six megabytes in size. That was when it started making useful
 progress on the design. The trace exposed the actual network requests, disk
-operations, waits, and work happening sequentially that could happen
-concurrently. A passing test could coexist with an absurd route through the
-system.
+operations, and waits. It also revealed work running sequentially that could
+run concurrently. A passing test could coexist with an absurd route through
+the system.
 
 There was a similar problem after I moved background jobs from River to
 Temporal. Temporal already knew when an RSS import's child jobs had finished,
@@ -77,10 +80,11 @@ was to let Temporal determine completion. Adopting infrastructure only helps if
 the application actually uses its guarantees.
 
 **E2E tests made large changes practical from a single prompt.** I could ask for
-a rearchitecture in one prompt, or a subsystem replacement in one prompt:
-`rclone` to `gofakes3`, SolidStart to Inertia. The tests checked the application's
-behavior through those changes. That confidence meant I could choose a better
-architecture without worrying about losing what already worked.
+a major architectural change, such as moving from SolidStart to Inertia, or
+even swap the build system with a single prompt. The tests checked that the
+application still behaved as expected. That confidence meant I could change
+fundamental parts of the project without worrying about losing what already
+worked.
 
 **The test has to describe what the customer gets.** In the upgrade flow, the
 API correctly rejected an import with `402 Payment Required`. The frontend's
@@ -107,7 +111,7 @@ criterion in advance: I had to use the thing to understand what felt wrong.
 
 That made late feedback expensive. By the time I understood the problem, there
 was already code built around a decision I wanted to change. Sometimes that
-decision reached into the architecture. More generated versions didn't remove
+decision reached into the architecture. Generating more versions didn't remove
 my responsibility to choose one, explain why it was better, and decide when it
 was good enough.
 
@@ -122,15 +126,15 @@ feature. It didn't feel the difference between an interesting afternoon and an
 afternoon that got Listenbox closer to a paying customer. I had to make that
 choice. Blaming the model for all three months would let me off far too easily.
 
-**$100/month of Codex is just not enough to build a SaaS like this.** I need to
-budget for more Codex usage alongside my own time. Getting an implementation
+**A $100 monthly Codex budget wasn't enough for this project.** I need to
+budget for more usage alongside my own time. Getting an implementation
 quickly doesn't mean the whole project is cheap.
 
 **Shipping depends on people and platforms too.** My definition of release in
-the chat was “MRR > 0”: recurring revenue. Working checkout code was one step
-toward that. Apple's approval for HTTP Live Streaming delivery runs on Apple's
-calendar. Finding people who want the product requires work of its own. Those
-dependencies remain even if code generation becomes instantaneous.
+the chat was “MRR > 0”: positive monthly recurring revenue. Working checkout
+code was one step toward that. Approval for HLS delivery to Apple Podcasts
+runs on Apple's calendar. Finding people who want the product requires work of
+its own. Those dependencies remain even if code generation becomes instantaneous.
 
 For the next project, I want to test five changes against one outcome: less
 time getting a complete workflow into a customer's hands.
