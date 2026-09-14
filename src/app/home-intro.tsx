@@ -21,7 +21,7 @@ export const HomeIntro = (props: HomeIntroProps) => {
         {copy().siteTitle}
       </h1>
       <p class="mx-auto mt-5 max-w-[58ch] text-[1.0625rem] leading-6 text-zinc-600 max-sm:max-w-[32ch] max-sm:text-base">
-        {copy().workingOn}{" "}
+        {copy().projectsPrefix}
         <a
           class="text-inherit hover-underline"
           href="https://listenbox.app"
@@ -33,11 +33,11 @@ export const HomeIntro = (props: HomeIntroProps) => {
         {", "}
         <a
           class="text-inherit hover-underline"
-          href="https://arrowbox.co"
+          href="https://strengthmcp.com/"
           rel="noreferrer"
           target="_blank"
         >
-          Arrowbox
+          StrengthMCP
         </a>
         {` ${copy().and} `}
         <a
@@ -48,7 +48,7 @@ export const HomeIntro = (props: HomeIntroProps) => {
         >
           ResponsibleAPI
         </a>
-        {"."}
+        {copy().projectsSuffix}
       </p>
       <div class="mt-6 flex flex-wrap items-center justify-center gap-x-5 gap-y-3 max-sm:gap-x-4">
         <nav aria-label={copy().profileLinksLabel}>

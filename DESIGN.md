@@ -11,7 +11,19 @@ colors:
   rule: "oklch(92% 0.004 286.32)"
   focus-ink: "#18181b"
   date: "#6b7280"
-  cv-link: "oklch(58.8% 0.158 241.966)"
+  cv-link: "oklch(50% 0.134 242.749)"
+  cv-ink: "oklch(27.4% 0.006 286.033)"
+  code-background: "#0d1117"
+  code-foreground: "#e6edf3"
+  code-punctuation: "#C9D1D9"
+  code-comment: "#8B949E"
+  code-identifier: "#79C0FF"
+  code-keyword: "#FF7B72"
+  code-string: "#A5D6FF"
+  code-literal: "#D2A8FF"
+  travel-blue: "#0369a1"
+  travel-ink: "#07111f"
+  travel-muted: "#687383"
 typography:
   display:
     fontFamily: 'ui-serif, Georgia, Cambria, "Times New Roman", Times, serif'
@@ -35,8 +47,25 @@ typography:
     fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", "Noto Sans", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"'
     fontSize: "1.0625rem"
     fontWeight: 400
-    lineHeight: 1.75
-    letterSpacing: "-0.01em"
+    lineHeight: "1.75rem"
+    letterSpacing: "-0.15px"
+  article-title:
+    fontFamily: 'ui-serif, Georgia, Cambria, "Times New Roman", Times, serif'
+    fontSize: "3rem"
+    fontWeight: 400
+    lineHeight: 0.98
+    letterSpacing: "-0.03em"
+  cv-body:
+    fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", "Noto Sans", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"'
+    fontSize: "1rem"
+    fontWeight: 400
+    lineHeight: 1.65
+    letterSpacing: "-0.15px"
+  code:
+    fontFamily: 'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace'
+    fontSize: "0.875em"
+    fontWeight: 400
+    lineHeight: 1.7142857
   title:
     fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", "Noto Sans", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"'
     fontSize: "1.125rem"
@@ -48,13 +77,19 @@ typography:
     fontSize: "0.9375rem"
     fontWeight: 400
     lineHeight: "1.5rem"
-    letterSpacing: "0"
+    letterSpacing: "-0.15px"
   small:
     fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", "Noto Sans", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"'
     fontSize: "0.875rem"
     fontWeight: 400
     lineHeight: "1.25rem"
-    letterSpacing: "0"
+    letterSpacing: "-0.15px"
+  date:
+    fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", "Noto Sans", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"'
+    fontSize: "0.8125rem"
+    fontWeight: 400
+    lineHeight: "1.25rem"
+    letterSpacing: "-0.15px"
   label:
     fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", "Noto Sans", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"'
     fontSize: "0.8125rem"
@@ -62,8 +97,12 @@ typography:
     lineHeight: "1.25rem"
     letterSpacing: "0.05em"
 rounded:
-  none: "0"
+  none: "0px"
   focus: "2px"
+  code: "0.375rem"
+  cv-logo: "0.75rem"
+  cv-logo-print: "0.25rem"
+  travel-tooltip: "0.5rem"
 spacing:
   unit: "0.25rem"
   narrow-gutter: "1.25rem"
@@ -99,6 +138,33 @@ components:
     typography: "{typography.body}"
     rounded: "{rounded.none}"
     padding: "0"
+  cv-contact:
+    backgroundColor: "transparent"
+    textColor: "{colors.cv-link}"
+    rounded: "{rounded.none}"
+    padding: "0"
+  code-block:
+    backgroundColor: "{colors.code-background}"
+    textColor: "{colors.code-foreground}"
+    typography: "{typography.code}"
+    rounded: "{rounded.code}"
+    padding: "0.8571429em 1.1428571em"
+  home-timepiece:
+    backgroundColor: "transparent"
+    textColor: "{colors.heading-ink}"
+    width: "4.5rem"
+    height: "3.5rem"
+  travel-visit:
+    backgroundColor: "transparent"
+    textColor: "#445064"
+    padding: "0.12rem 0"
+  travel-visit-active:
+    backgroundColor: "transparent"
+    textColor: "{colors.travel-blue}"
+    padding: "0.12rem 0"
+  travel-timeline:
+    backgroundColor: "transparent"
+    textColor: "{colors.travel-ink}"
 ---
 
 # Design System: Astrosite

@@ -8,10 +8,11 @@ export interface SiteCopy {
   home: string
   navLabel: string
   profileLinksLabel: string
+  projectsPrefix: string
+  projectsSuffix: string
   recent: string
   siteTitle: string
   switcherLabel: string
-  workingOn: string
   writing: string
 }
 
@@ -24,10 +25,11 @@ export const siteCopy: Record<Locale, SiteCopy> = {
     home: "Home",
     navLabel: "Site navigation",
     profileLinksLabel: "Elsewhere",
+    projectsPrefix: "Building ",
+    projectsSuffix: ".",
     recent: "Recent",
     siteTitle: "Producing software",
     switcherLabel: "Switch language",
-    workingOn: "Working on",
     writing: "Writing",
   },
   ru: {
@@ -38,10 +40,11 @@ export const siteCopy: Record<Locale, SiteCopy> = {
     home: "Главная",
     navLabel: "Навигация по сайту",
     profileLinksLabel: "Ссылки",
+    projectsPrefix: "Создаю ",
+    projectsSuffix: ".",
     recent: "Недавнее",
     siteTitle: "Выпускаю софт",
     switcherLabel: "Сменить язык",
-    workingOn: "Работаю над",
     writing: "Пишу",
   },
   tt: {
@@ -52,10 +55,11 @@ export const siteCopy: Record<Locale, SiteCopy> = {
     home: "Баш бит",
     navLabel: "Сайт навигациясе",
     profileLinksLabel: "Сылтамалар",
+    projectsPrefix: "",
+    projectsSuffix: " булдырам.",
     recent: "Соңгы язмалар",
     siteTitle: "Программалар чыгарам",
     switcherLabel: "Башка телләр",
-    workingOn: "Хәзерге проектлар:",
     writing: "Язганнарым",
   },
 }

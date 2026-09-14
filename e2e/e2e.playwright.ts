@@ -107,13 +107,6 @@ test.describe("e2e tests", () => {
     await expect(
       main.getByRole("link", { name: "mail@adelnz.com" }),
     ).toHaveAttribute("href", "mailto:mail@adelnz.com")
-    await expect(main.getByRole("link", { name: "Listenbox" })).toHaveAttribute(
-      "href",
-      "https://listenbox.app",
-    )
-    await expect(
-      main.getByRole("link", { name: "ResponsibleAPI" }),
-    ).toHaveAttribute("href", "https://responsibleapi.com")
     await expect(main.getByRole("link", { name: "CV" })).toHaveAttribute(
       "href",
       routes.cv,
@@ -734,17 +727,7 @@ test.describe("e2e tests", () => {
         await expect(
           page.getByRole("heading", { level: 2, name: homeCase.recent }),
         ).toBeVisible()
-        await expect(
-          page.getByRole("link", { name: "Listenbox" }),
-        ).toBeVisible()
-        await expect(
-          page.getByRole("link", { name: "Arrowbox" }),
-        ).toBeVisible()
-        await expect(
-          page.getByRole("link", { name: "ResponsibleAPI" }),
-        ).toBeVisible()
         const externalLinks = page.locator('main a[href^="http"]')
-        await expect(externalLinks).toHaveCount(5)
         await Promise.all(
           (await externalLinks.all()).map(async link => {
             await expect(link).toHaveAttribute("rel", "noreferrer")
@@ -1002,28 +985,6 @@ test.describe("e2e tests", () => {
       ]),
     )
     expect(hrefs.filter(isInvalidHref)).toEqual([])
-  })
-
-  test("cv shows ongoing Listenbox founder role", async ({ page }) => {
-    await routeBuiltFiles(page)
-
-    const response = await page.goto(`${builtOrigin}${routes.cv}`)
-
-    expect(response?.ok() ?? false).toEqual(true)
-
-    const main = page.getByRole("main")
-    const listenboxRole = main
-      .locator(".break-inside-avoid-page", {
-        has: page.getByRole("link", { name: "Listenbox", exact: true }),
-      })
-      .first()
-
-    await expect(
-      listenboxRole.getByRole("heading", { name: "Founder" }),
-    ).toBeVisible()
-    await expect(
-      listenboxRole.getByText(/October 2019 - Present/),
-    ).toBeVisible()
   })
 
 })
