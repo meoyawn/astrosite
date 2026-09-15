@@ -6,7 +6,7 @@
   "engines": {
     "node": ">=24"
   },
-  "allowBuilds": {
+  "allowScripts": {
     "esbuild": true,
     "sharp": true,
     "workerd": true
