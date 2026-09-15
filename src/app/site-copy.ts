@@ -40,7 +40,7 @@ export const siteCopy: Record<Locale, SiteCopy> = {
     home: "Главная",
     navLabel: "Навигация по сайту",
     profileLinksLabel: "Ссылки",
-    projectsPrefix: "Создаю ",
+    projectsPrefix: "Делаю ",
     projectsSuffix: ".",
     recent: "Недавнее",
     siteTitle: "Выпускаю софт",
