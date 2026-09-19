@@ -1,187 +1,146 @@
 ---
 title: Vibe coding a SaaS
-description: Rebuilding Listenbox with Codex took three months and produced the best engineering of my life, with fast workflows, deterministic tests, tracing, and reliable CI.
+description: Rebuilding Listenbox with Codex gave me the best engineering of my life, room to experiment, and a few more rounds of fixing than I had planned.
 published_at: 2026-09-08
+updated_at: 2026-09-19
 ---
 
-I spent three busy months rebuilding [Listenbox](https://listenbox.app/) with
-Codex. That was much longer than I expected. It also produced the best
-engineering of my life. Overall, this was a positive experience, even though
-I can't say it made building the SaaS less stressful.
+I spent three busy months rebuilding [Listenbox](https://listenbox.app) with
+Codex. It produced the best engineering of my life. As a solo developer, I had fast workflows,
+deterministic tests, tracing, and the confidence to change almost anything.
+I could ask for a major architectural change in a sentence. Finishing still
+had a way of moving further down the calendar.
 
-Listenbox is an audio and video podcast hosting service with uploads, imports,
-YouTube publishing, billing, teams, and a public API. I was the solo developer,
-using frontier GPT models. This was a substantial new implementation of an
-existing product.
+<blockquote class="twitter-tweet"><p lang="en" dir="ltr">Coding is solved, bugs are not yet solved. Fix incoming</p>&mdash; Boris Cherny (@bcherny) <a href="https://x.com/bcherny/status/2090649326032945591?ref_src=twsrc%5Etfw">August 21, 2026</a></blockquote> <script async src="https://platform.x.com/widgets.js" charset="utf-8"></script>
 
-Coding it by hand might have taken the same three months. Maybe. Writing
-reliable distributed workflows would certainly have taken me more than three
-months by hand, so the comparison also depends on what I would have built and
-which infrastructure I would have used. It's hard to put a confident number on
-the overall time saved.
+Listenbox is an [audio and video podcast hosting service](https://listenbox.app) with uploads, imports,
+YouTube publishing, billing, teams, and a public API. I was rebuilding an
+existing product with frontier GPT models, so there was plenty to keep us busy.
 
 The early progress felt ridiculous. I was showing friends what happened after
 the prompt “this ugly, fix,” and yelling about a dropdown the agent built
-without JavaScript. Then I spent weeks in a loop I described to the group chat
-like this:
+without JavaScript. Being able to point at something, describe what bothered
+me, and get another version to try was a delight.
+
+Eventually my group chat updates became a little less glamorous:
 
 > And now it's working on it again, then another deploy, I test again, and so
 > on every day.
 
-That quote is my own, translated from Russian. The excitement was real. So was
-the daily work of reviewing, debugging, and deciding what to build. As I write
-this, I'm still waiting for approval to deliver video to Apple Podcasts via
-[HTTP Live Streaming (HLS)](https://podcasters.apple.com/support/5593-how-to-publish-video).
-The request has been pending since August 25.
+That's my own message, translated from Russian. The loop lasted weeks. I was
+working hard, and some days it felt like we were fixing something we'd already
+fixed. Meanwhile, I was getting a level of engineering I'd never had before.
 
-The weekend SaaS pitch leaves all that work out of the estimate. Looking back
-through my commits and messages, these are the lessons I want to carry into the
-next project.
-
-**The biggest gain was engineering quality.** I am extremely confident in every
-part of the system because of the deterministic end-to-end testing and end-to-end
-tracing we built alongside it. I've never had this level of confidence in my
-own engineering before.
-
-Local mock servers make external services controllable during tests. The
-YouTube mock can exhaust quota after an exact number of requests, delay an
-operation, or make the next upload fail. I can reproduce those conditions and
-test how the application handles them. The traces show the work happening
-throughout the system, and the tests check that the expected spans are present.
+Alongside the product, we built deterministic end-to-end tests, tracing, and
+local mock servers for external services. I could tell the YouTube mock to
+exhaust its quota after an exact number of requests, delay an operation, or
+make the next upload fail. Then I could reproduce that situation whenever I
+wanted. The traces showed what happened throughout the system, and the tests
+checked that the important spans were present.
 
 Codex also made sure CI was green and the tests weren't flaky. Getting this
 level of testing, tracing, and reliable CI felt like a luxury normally reserved
-for big teams. I had it as a solo developer. That is a much clearer benefit to
-me than any estimate of hours saved.
+for big teams. I had it as a solo developer, and I could use it every time I
+wanted to try something ambitious.
 
-**Traces helped the LLM make the system fast.** I am happy with performance as
-well as correctness and determinism. My workflow is to feed a trace to the LLM
-and ask it to make that path fast. If that requires rearchitecting the path,
-I'm comfortable with that because the end-to-end tests let me verify the
-behavior after the change.
+That confidence made large changes practical. I could ask for a move from
+SolidStart to Inertia, or a different build system, in a single prompt. The
+tests let me check that the application still behaved as expected after
+changing fundamental parts of it.
 
-One media storage design could put close to a thousand records into PostgreSQL
-for a single upload by recording every object in the package. I had to work out
-which objects actually needed individual ownership records. Getting a playable
-result from the upload didn't answer that question.
+Performance became something I could work on the same way. One media storage
+design could put close to a thousand records into PostgreSQL for a single
+upload by recording every object in the package. The result played, but there
+was quite a lot happening backstage. I had to work out which objects actually
+needed individual ownership records.
 
 I traced the downloads, FFmpeg processing, probes, and uploads, then gave Codex
 a trace about six megabytes in size. That was when it started making useful
-progress on the design. The trace exposed the actual network requests, disk
-operations, and waits. It also revealed work running sequentially that could
-run concurrently. A passing test could coexist with an absurd route through
-the system.
+progress on the design. We could see the actual network requests, disk
+operations, and waits, including work running sequentially that could run
+concurrently. Feeding the agent a trace and asking it to make that path fast
+became a useful routine. I was happy with the performance, and the tests let
+me check the behavior after a substantial rewrite.
 
 There was a similar problem after I moved background jobs from River to
 Temporal. Temporal already knew when an RSS import's child jobs had finished,
 but the application added another completion check using UI progress counters.
-Those counters could drift and leave a completed import looking stuck. The fix
-was to let Temporal determine completion. Adopting infrastructure only helps if
-the application actually uses its guarantees.
+Those counters could drift and leave a completed import looking stuck. We
+eventually let Temporal determine completion. It was already doing the job;
+we'd given it an unnecessary assistant.
 
-**E2E tests made large changes practical from a single prompt.** I could ask for
-a major architectural change, such as moving from SolidStart to Inertia, or
-even swap the build system with a single prompt. The tests checked that the
-application still behaved as expected. That confidence meant I could change
-fundamental parts of the project without worrying about losing what already
-worked.
-
-**The test has to describe what the customer gets.** In the upgrade flow, the
-API correctly rejected an import with `402 Payment Required`. The frontend's
-API client turned that response into a generic `500`. The backend rule worked;
-the customer still needed an explanation and a link to an eligible plan.
+Getting to that simpler design took repeated attempts. So did working out what
+the tests needed to prove. In the upgrade flow, the API correctly rejected an
+import with `402 Payment Required`, but the frontend turned it into a generic
+`500`. The customer needed an explanation and a link to an eligible plan. We
+had to follow the result all the way to the person using it.
 
 “Import works” also becomes much more specific when somebody cancels halfway
 through, an upload succeeds but its response gets lost, or a feed is deleted
 and recreated while old cleanup is running. These cases occupied a large part
-of the work. A test that merely confirms a successful import leaves the
-ownership, retry, and cancellation rules undecided.
+of the work. I still had to decide what should happen, even when writing the
+implementation was quick.
 
-Even the evidence needs checking. Asking the agent to trace everything could
-leave a stage missing, so I needed assertions that the important spans existed.
-The browser test environment also once shared frontend output directories with
-production builds, allowing a later deploy to pick up test assets. Running tests
-is useful only when their assertions and environment support the conclusion
-I'm drawing from them.
+One early cancellation test didn't reliably establish that there was work to
+cancel. Later versions checked that precondition and verified that the API
+actually stopped the child workflows. Each discovery gave us a better test,
+although I would happily have skipped a few of the discoveries.
 
-**Product judgment still takes human time.** I could point the agent at
-something I disliked and get another implementation quickly. I could also
-spend days iterating before I was satisfied. Often I couldn't express the
-criterion in advance: I had to use the thing to understand what felt wrong.
+The machinery around the tests had its own adventures. The browser test
+environment once shared frontend output directories with production builds,
+allowing a later deploy to pick up test assets. Even the setup that gave me
+confidence needed some attention.
 
-That made late feedback expensive. By the time I understood the problem, there
-was already code built around a decision I wanted to change. Sometimes that
-decision reached into the architecture. Generating more versions didn't remove
-my responsibility to choose one, explain why it was better, and decide when it
-was good enough.
+On September 19, I looked back at the parts of the system we kept changing.
+The familiar names came up: job lifecycles, media ownership and cleanup, and
+the development and test setup. Our Temporal lifecycle work stretched from
+August 8 to September 1. That helped explain where the weeks had gone. Some
+of my confidence now came from tests we'd learned to write the hard way.
 
-**Cheap implementation makes scope creep more tempting.** I expanded the
-product, changed architectural decisions, and got distracted by tooling. I even
-built a [static site generator](/writing/another-static-site-generator/) along
-the way. Some of those tools were useful. They still consumed time that could
-have gone toward a smaller first release.
+I was also discovering what I wanted the product to be. Often I couldn't
+describe a better interface in advance; I had to use it to understand what
+felt wrong. Being able to try another version quickly helped enormously. I
+could explore an idea instead of spending the afternoon wondering whether it
+was worth implementing.
 
-The agent was equally willing to help with a new tool, a redesign, or a missing
-feature. It didn't feel the difference between an interesting afternoon and an
-afternoon that got Listenbox closer to a paying customer. I had to make that
-choice. Blaming the model for all three months would let me off far too easily.
+Sometimes I spent days on those iterations. By the time I understood the
+problem, there could already be backend code built around a decision I wanted
+to change. The ability to change it was wonderful. Choosing a version and
+calling it finished was still my job.
 
-**A $100 monthly Codex budget wasn't enough for this project.** I need to
-budget for more usage alongside my own time. Getting an implementation
-quickly doesn't mean the whole project is cheap.
+And with so many things suddenly practical, I found plenty more things to
+build. I expanded the product, changed architectural decisions, and even wrote
+a static site generator along the way. Some of those tools were useful. They
+also help explain why this wasn't a weekend project. The agent was equally
+happy to help with a feature, a redesign, or a detour. I supplied a few of the
+detours myself.
 
-**Shipping depends on people and platforms too.** My definition of release in
-the chat was “MRR > 0”: positive monthly recurring revenue. Working checkout
-code was one step toward that. Approval for HLS delivery to Apple Podcasts
-runs on Apple's calendar. Finding people who want the product requires work of
-its own. Those dependencies remain even if code generation becomes instantaneous.
+Coding it by hand might have taken the same three months. Maybe. Writing
+reliable distributed workflows would certainly have taken me more than three
+months by hand. I also wouldn't necessarily have attempted the same things.
+That makes the hours-saved calculation difficult. The quality of what I ended
+up with is much easier to appreciate. A $100 monthly Codex budget wasn't enough
+for this project, so next time I'll budget for more usage as well as my time.
 
-For the next project, I want to test five changes against one outcome: less
-time getting a complete workflow into a customer's hands.
+When I first wrote this on September 8, I was still waiting for approval to
+deliver video to Apple Podcasts via HTTP Live Streaming (HLS). The request had been pending
+since August 25. Apple, understandably, hadn't joined my prompting session.
+There were still platform approvals to wait for and prospective customers to
+talk to.
 
-1. **Deploy one complete flow immediately, with tracing.** Put a small upload
-   through the actual VPS, database, buckets, and workers. Trace it from the
-   browser through background processing to the playable result, and assert
-   that the important stages are present. Inspect request counts, disk writes,
-   waits, and elapsed time while the flow is still small. The result I want is
-   fewer architectural surprises after several features depend on the same
-   pipeline.
+Next time, I'll start with a real person on a call or in an email thread:
+someone with a goal and a budget for achieving it. I want us to have a clear
+picture of the outcome they need. A SaaS has an opinion about how to get
+there, and we can work out that process together. Their desired outcome gives
+the whole project its direction.
 
-2. **Agree on the outcome and ownership before generating the feature.** For
-   an import, write down what success, partial failure, cancellation, and retry
-   mean to the user. Decide which system owns completion and which objects
-   cleanup may delete. Have the agent inspect the existing contracts and tests
-   before proposing another mechanism. Verify the outcome through the full
-   application, including the error message or recovery action the user sees.
-   I want fixes to close a concrete failure instead of adding another layer
-   around it.
+Then I want to keep moving toward it, letting that outcome guide every
+feature, rewrite, and afternoon of work. The traces, production setup, and
+end-to-end tests help me deliver it reliably. They earn their place by helping
+that person get what they came for.
 
-3. **Make uncertain product decisions with something small I can use.** Try a
-   rough interactive flow before asking for the whole implementation. When it
-   feels wrong, identify the action or decision that caused the friction and
-   turn that discovery into a requirement. I won't always know what I want
-   beforehand, but I can try to discover it before it spreads through the
-   backend. The test is whether fewer design iterations force architectural
-   changes.
-
-4. **Choose one path to a paying customer and hold the scope there.** Pick the
-   smallest complete publishing workflow somebody would pay for. Keep new
-   features and tooling ideas outside that release unless they remove an
-   observed blocker. Review progress by whether that customer can get further
-   through the workflow. An impressive new tool shouldn't count as progress
-   toward release merely because it was easy to build.
-
-5. **Start external dependencies early and budget my own attention.** Apply
-   for platform approvals as soon as the required flow is ready to review, and
-   find prospective users while development continues. Include review,
-   debugging, design iteration, and waiting in the estimate. Track where my
-   days go; repeated visits to the same feature should prompt a closer look at
-   its requirements or design.
-
-I would absolutely use Codex again. It helped me build a system I trust more
-than anything I've engineered before, with performance I'm happy with and the
-confidence to change its architecture. The surprise was that getting there
-still took three months. Next time I want to keep that standard of performance,
-testing, tracing, and reliable CI while giving it fewer things to build and
-making product decisions earlier. Whether that gets me to a paying customer
-sooner is something I still need to find out.
+I would absolutely use Codex again. I'm delighted to have this much engineering
+within reach, and I want to put it behind a customer whose goal I understand.
+My definition of release in the chat was “MRR > 0”: someone paying each month
+for the outcome the product helps them achieve. That's where I want this
+story to start next time.
