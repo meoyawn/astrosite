@@ -122,12 +122,6 @@ That makes the hours-saved calculation difficult. The quality of what I ended
 up with is much easier to appreciate. A $100 monthly Codex budget wasn't enough
 for this project, so next time I'll budget for more usage as well as my time.
 
-When I first wrote this on September 8, I was still waiting for approval to
-deliver video to Apple Podcasts via HTTP Live Streaming (HLS). The request had been pending
-since August 25. Apple, understandably, hadn't joined my prompting session.
-There were still platform approvals to wait for and prospective customers to
-talk to.
-
 Next time, I'll start with a real person on a call or in an email thread:
 someone with a goal and a budget for achieving it. I want us to have a clear
 picture of the outcome they need. A SaaS has an opinion about how to get
