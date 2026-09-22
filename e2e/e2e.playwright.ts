@@ -84,25 +84,22 @@ test.describe("e2e tests", () => {
     })
   })
 
-  test("consulting page presents business consulting details", async ({
+  test("work together page invites contact and presents real work", async ({
     page,
   }) => {
     await routeBuiltFiles(page)
 
     expect(
-      await routeExists(routeFileName(routes.consulting)),
-      `Expected ${routes.consulting} to be emitted as static HTML.`,
+      await routeExists(routeFileName(routes.workTogether)),
+      `Expected ${routes.workTogether} to be emitted as static HTML.`,
     ).toEqual(true)
 
-    const response = await page.goto(`${builtOrigin}${routes.consulting}`)
+    const response = await page.goto(`${builtOrigin}${routes.workTogether}`)
 
     expect(response?.ok() ?? false).toEqual(true)
     const main = page.getByRole("main")
 
-    const consultingHeading = main.getByRole("heading", {
-      name: /consulting/i,
-    })
-    await expect(consultingHeading).toBeVisible()
+    await expect(main.getByRole("heading", { level: 1 })).toBeVisible()
     await expect(main.locator("h2 a, h3 a, h4 a, h5 a, h6 a")).toHaveCount(0)
     await expect(
       main.getByRole("link", { name: "mail@adelnz.com" }),
@@ -639,16 +636,16 @@ test.describe("e2e tests", () => {
     )
   })
 
-  test("tatar consulting page sets html language", async ({ page }) => {
+  test("tatar work together page sets html language", async ({ page }) => {
     await routeBuiltFiles(page)
 
     expect(
-      await routeExists(routeFileName(localizedRoute("tt", "consulting"))),
-      `Expected ${localizedRoute("tt", "consulting")} to be emitted as static HTML.`,
+      await routeExists(routeFileName(localizedRoute("tt", "workTogether"))),
+      `Expected ${localizedRoute("tt", "workTogether")} to be emitted as static HTML.`,
     ).toEqual(true)
 
     const response = await page.goto(
-      `${builtOrigin}${localizedRoute("tt", "consulting")}`,
+      `${builtOrigin}${localizedRoute("tt", "workTogether")}`,
     )
 
     expect(response?.ok() ?? false).toEqual(true)
@@ -741,22 +738,22 @@ test.describe("e2e tests", () => {
     )
   })
 
-  test("shared localized shell links home, consulting, and cv", async ({
+  test("shared localized shell links home, work together, and cv", async ({
     browser,
   }) => {
     const navCases = [
       {
-        pages: [routes.consulting, routes.cv],
+        pages: [routes.workTogether, routes.cv],
         navLabel: "Site navigation",
         links: {
           home: { name: "Producing software", href: routes.home },
-          consulting: { name: "Consulting", href: routes.consulting },
+          workTogether: { name: "Work together", href: routes.workTogether },
           cv: { name: "CV", href: routes.cv },
         },
       },
       {
         pages: [
-          localizedRoute("ru", "consulting"),
+          localizedRoute("ru", "workTogether"),
           localizedRoute("ru", "cv"),
         ],
         navLabel: "Навигация по сайту",
@@ -765,16 +762,16 @@ test.describe("e2e tests", () => {
             name: "Выпускаю софт",
             href: localizedRoute("ru", "home"),
           },
-          consulting: {
-            name: "Консалтинг",
-            href: localizedRoute("ru", "consulting"),
+          workTogether: {
+            name: "Поработаем вместе",
+            href: localizedRoute("ru", "workTogether"),
           },
           cv: { name: "Резюме", href: localizedRoute("ru", "cv") },
         },
       },
       {
         pages: [
-          localizedRoute("tt", "consulting"),
+          localizedRoute("tt", "workTogether"),
           localizedRoute("tt", "cv"),
         ],
         navLabel: "Сайт навигациясе",
@@ -783,9 +780,9 @@ test.describe("e2e tests", () => {
             name: "Программалар чыгарам",
             href: localizedRoute("tt", "home"),
           },
-          consulting: {
-            name: "Консалтинг",
-            href: localizedRoute("tt", "consulting"),
+          workTogether: {
+            name: "Бергә эшлик",
+            href: localizedRoute("tt", "workTogether"),
           },
           cv: { name: "Резюме", href: localizedRoute("tt", "cv") },
         },
@@ -812,19 +809,19 @@ test.describe("e2e tests", () => {
             nav.getByRole("link", { name: navCase.links.home.name }),
           ).toHaveAttribute("href", navCase.links.home.href)
           await expect(
-            nav.getByRole("link", { name: navCase.links.consulting.name }),
-          ).toHaveAttribute("href", navCase.links.consulting.href)
+            nav.getByRole("link", { name: navCase.links.workTogether.name }),
+          ).toHaveAttribute("href", navCase.links.workTogether.href)
           await expect(
             nav.getByRole("link", { name: navCase.links.cv.name }),
           ).toHaveAttribute("href", navCase.links.cv.href)
 
-          const activeLinkKey = pagePath.endsWith(routes.consulting)
-            ? "consulting"
+          const activeLinkKey = pagePath.endsWith(routes.workTogether)
+            ? "workTogether"
             : "cv"
           const activeLinkName = navCase.links[activeLinkKey].name
           const inactiveLinkNames = [
             navCase.links.home.name,
-            navCase.links.consulting.name,
+            navCase.links.workTogether.name,
             navCase.links.cv.name,
           ].filter(linkName => linkName !== activeLinkName)
 
@@ -843,35 +840,35 @@ test.describe("e2e tests", () => {
     )
   })
 
-  test("locale switcher links use trailing-slash consulting routes", async ({
+  test("locale switcher links use trailing-slash work together routes", async ({
     browser,
   }) => {
     const localeSwitcherCases = [
       {
-        pagePath: routes.consulting,
+        pagePath: routes.workTogether,
         navLabel: "Switch language",
         links: {
-          en: { name: "EN", href: localizedRoute("en", "consulting") },
-          ru: { name: "RU", href: localizedRoute("ru", "consulting") },
-          tt: { name: "TT", href: localizedRoute("tt", "consulting") },
+          en: { name: "EN", href: localizedRoute("en", "workTogether") },
+          ru: { name: "RU", href: localizedRoute("ru", "workTogether") },
+          tt: { name: "TT", href: localizedRoute("tt", "workTogether") },
         },
       },
       {
-        pagePath: localizedRoute("ru", "consulting"),
+        pagePath: localizedRoute("ru", "workTogether"),
         navLabel: "Сменить язык",
         links: {
-          en: { name: "EN", href: localizedRoute("en", "consulting") },
-          ru: { name: "RU", href: localizedRoute("ru", "consulting") },
-          tt: { name: "TT", href: localizedRoute("tt", "consulting") },
+          en: { name: "EN", href: localizedRoute("en", "workTogether") },
+          ru: { name: "RU", href: localizedRoute("ru", "workTogether") },
+          tt: { name: "TT", href: localizedRoute("tt", "workTogether") },
         },
       },
       {
-        pagePath: localizedRoute("tt", "consulting"),
+        pagePath: localizedRoute("tt", "workTogether"),
         navLabel: "Башка телләр",
         links: {
-          en: { name: "EN", href: localizedRoute("en", "consulting") },
-          ru: { name: "RU", href: localizedRoute("ru", "consulting") },
-          tt: { name: "TT", href: localizedRoute("tt", "consulting") },
+          en: { name: "EN", href: localizedRoute("en", "workTogether") },
+          ru: { name: "RU", href: localizedRoute("ru", "workTogether") },
+          tt: { name: "TT", href: localizedRoute("tt", "workTogether") },
         },
       },
     ]

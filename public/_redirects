@@ -1,4 +1,16 @@
 /travels /travel/ 301
+/consulting /work-together/ 301
+/consulting/ /work-together/ 301
+/consulting/index.html /work-together/ 301
+/consulting/index.md /work-together/index.md 301
+/ru/consulting /ru/work-together/ 301
+/ru/consulting/ /ru/work-together/ 301
+/ru/consulting/index.html /ru/work-together/ 301
+/ru/consulting/index.md /ru/work-together/index.md 301
+/tt/consulting /tt/work-together/ 301
+/tt/consulting/ /tt/work-together/ 301
+/tt/consulting/index.html /tt/work-together/ 301
+/tt/consulting/index.md /tt/work-together/index.md 301
 /writing/ripgrep-is-still-king /writing/regex-search-is-still-king/ 301
 /writing/ripgrep-is-still-king/ /writing/regex-search-is-still-king/ 301
 /writing/ripgrep-is-still-king/index.md /writing/regex-search-is-still-king/index.md 301

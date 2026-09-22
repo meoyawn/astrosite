@@ -10,7 +10,7 @@ export interface SiteNavProps {
   currentPath: NavRouteName | undefined
 }
 
-const shellRouteNames = ["consulting", "cv"] as const
+const shellRouteNames = ["workTogether", "cv"] as const
 
 export const SiteNav = (props: SiteNavProps) => {
   const copy = createMemo(() => siteCopy[props.currentLocale])

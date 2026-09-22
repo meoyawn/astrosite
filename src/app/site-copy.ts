@@ -2,7 +2,7 @@ import type { Locale } from "./i18n.ts"
 
 export interface SiteCopy {
   and: string
-  consulting: string
+  workTogether: string
   cv: string
   email: string
   home: string
@@ -19,7 +19,7 @@ export interface SiteCopy {
 export const siteCopy: Record<Locale, SiteCopy> = {
   en: {
     and: "and",
-    consulting: "Consulting",
+    workTogether: "Work together",
     cv: "CV",
     email: "Email",
     home: "Home",
@@ -34,7 +34,7 @@ export const siteCopy: Record<Locale, SiteCopy> = {
   },
   ru: {
     and: "и",
-    consulting: "Консалтинг",
+    workTogether: "Поработаем вместе",
     cv: "Резюме",
     email: "Почта",
     home: "Главная",
@@ -49,7 +49,7 @@ export const siteCopy: Record<Locale, SiteCopy> = {
   },
   tt: {
     and: "һәм",
-    consulting: "Консалтинг",
+    workTogether: "Бергә эшлик",
     cv: "Резюме",
     email: "Почта",
     home: "Баш бит",

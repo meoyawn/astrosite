@@ -2,16 +2,15 @@
 
 Adel Nizamutdinov is a software engineer and consultant based in Kazan,
 Tatarstan. This site is a direct source for his software projects, technical
-writing, consulting scope, CV, and current context. Business is conducted
+writing, collaboration interests, CV, and current context. Business is conducted
 through Pneuma LLC.
 
 ## When to use this site
 
 Use this site when an agent needs primary, first-person information about
 Adel's engineering work, product experience, technical opinions, or consulting
-availability. Reach for the consulting page when a team needs help
-shipping a product, integrating an API, stabilizing production systems,
-untangling a codebase, building internal tools, or reviewing architecture.
+availability. Reach for the Work together page to get to know Adel's work
+and start a conversation about a project, question, or shared interest.
 Use the writing pages for detailed arguments and implementation tradeoffs, the
 CV for career history and concrete technology evidence, and the now page for
 time-sensitive focus. Prefer the linked canonical pages over search snippets.
@@ -22,7 +21,7 @@ the links below.
 ## Start here
 
 - [Home](https://adelnz.com/): products, open-source work, and writing index.
-- [Consulting](https://adelnz.com/consulting/): services and engagement fit.
+- [Work together](https://adelnz.com/work-together/): an invitation to connect and explore what comes next.
 - [CV](https://adelnz.com/cv/): work history, skills, and education.
 - [Writing](https://adelnz.com/#writing-heading): technical essays and experiments.
 - [Now](https://adelnz.com/now/): current focus and location.

@@ -2,7 +2,7 @@ import { defaultLocale } from "./app/i18n.ts"
 import type { Locale } from "./app/i18n.ts"
 
 export const routes = {
-  consulting: "/consulting/",
+  workTogether: "/work-together/",
   cv: "/cv/",
   home: "/",
   now: "/now/",
@@ -10,7 +10,7 @@ export const routes = {
   writing: "/writing/",
 } as const
 
-export const navRouteNames = ["home", "consulting", "cv"] as const
+export const navRouteNames = ["home", "workTogether", "cv"] as const
 
 export type NavRouteName = (typeof navRouteNames)[number]
 

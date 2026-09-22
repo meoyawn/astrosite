@@ -12,8 +12,8 @@ interface MarkdownFrontmatter extends Record<string, unknown> {
 
 const MarkdownRoot = (props: PageLayoutProps<MarkdownFrontmatter>) => {
   const currentPath = createMemo(() =>
-    props.route.path.split("/").filter(Boolean).at(-1) === "consulting"
-      ? "consulting"
+    props.route.path.split("/").filter(Boolean).at(-1) === "work-together"
+      ? "workTogether"
       : undefined,
   )
 
