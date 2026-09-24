@@ -620,7 +620,7 @@ test.describe("e2e tests", () => {
     await routeBuiltFiles(page)
 
     const response = await page.goto(
-      `${builtOrigin}${writingRoute("how-to-openapi")}`,
+      `${builtOrigin}${writingRoute("how-to-http-json")}`,
     )
 
     expect(response?.ok() ?? false).toEqual(true)

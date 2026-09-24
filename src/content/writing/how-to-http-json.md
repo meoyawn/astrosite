@@ -1,5 +1,5 @@
 ---
-title: How to OpenAPI
+title: How to HTTP + JSON
 description:
   Author contracts in TypeScript, then generate focused Go and TypeScript code.
 published_at: 2026-08-15
