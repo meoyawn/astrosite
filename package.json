@@ -6,11 +6,6 @@
   "engines": {
     "node": ">=24"
   },
-  "allowScripts": {
-    "esbuild": true,
-    "sharp": true,
-    "workerd": true
-  },
   "dependencies": {
     "@deck.gl/core": "^9.3.10",
     "@deck.gl/layers": "^9.3.10",
@@ -65,8 +60,8 @@
   },
   "devEngines": {
     "packageManager": {
-      "name": "nub",
-      "version": "^0.4.5",
+      "name": "aube",
+      "version": "2.5.1",
       "onFail": "warn"
     }
   }

@@ -6,8 +6,8 @@
   "lsp": {
     "oxfmt": {
       "binary": {
-        "path": "nubx",
-        "arguments": ["oxfmt", "--lsp"]
+        "path": "aube",
+        "arguments": ["exec", "oxfmt", "--lsp"]
       },
       "initialization_options": {
         "settings": {
@@ -40,8 +40,8 @@
        */
       "formatter": {
         "external": {
-          "command": "nubx",
-          "arguments": ["oxfmt", "--stdin-filepath", "{buffer_path}"]
+          "command": "aube",
+          "arguments": ["exec", "oxfmt", "--stdin-filepath", "{buffer_path}"]
         }
       }
     },

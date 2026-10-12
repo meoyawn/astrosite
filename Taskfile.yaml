@@ -3,10 +3,11 @@ version: "3"
 tasks:
   lint:
     run: once
-    cmd: nubx oxlint .
+    cmd: aube exec oxlint .
     sources:
       - .oxlintrc.jsonc
-      - nub.lock
+      - aube-lock.yaml
+      - aube-workspace.yaml
       - "*.ts"
       - e2e/**/*.ts
       - scripts/**/*.ts
@@ -14,13 +15,14 @@ tasks:
       - tooling/**/*.ts
 
   lint:fix:
-    cmd: nubx oxlint . --fix
+    cmd: aube exec oxlint . --fix
 
   typecheck:
     run: once
-    cmd: nubx tsc -p tsconfig.json
+    cmd: aube exec tsc -p tsconfig.json
     sources:
-      - nub.lock
+      - aube-lock.yaml
+      - aube-workspace.yaml
       - "*.ts"
       - e2e/**/*.ts
       - scripts/**/*.ts
@@ -28,7 +30,7 @@ tasks:
       - tooling/**/*.ts
 
   dev:
-    cmd: nubx vite --config vite.config.ts
+    cmd: aube exec vite --config vite.config.ts
 
   favicon:png:
     cmd: pkgx rsvg-convert --width 512 --height 512 --format png --output src/assets/favicon.png src/assets/favicon.svg
@@ -39,10 +41,11 @@ tasks:
 
   build:
     run: once
-    cmd: nubx vite build --config vite.config.ts
+    cmd: aube exec vite build --config vite.config.ts
     sources:
       - package.json
-      - nub.lock
+      - aube-lock.yaml
+      - aube-workspace.yaml
       - vite.config.ts
       - src/**/*
       - public/**/*
@@ -54,11 +57,12 @@ tasks:
     deps:
       - build
       - playwright:install
-    cmd: nubx playwright test
+    cmd: aube exec playwright test
     sources:
       - Taskfile.yaml
       - playwright.config.ts
-      - nub.lock
+      - aube-lock.yaml
+      - aube-workspace.yaml
       - dist/**/*
       - e2e/**/*
 
@@ -69,27 +73,30 @@ tasks:
     env:
       SITE_URL: http://127.0.0.1:4321
     cmd: >-
-      nub scripts/with-dev-server.ts
-      nubx playwright test
+      aube node scripts/with-dev-server.ts
+      aube exec playwright test
     sources:
       - Taskfile.yaml
       - playwright.config.ts
-      - nub.lock
+      - aube-lock.yaml
+      - aube-workspace.yaml
       - e2e/**/*
       - scripts/with-dev-server.ts
       - src/**/*
 
   playwright:install:
     run: once
-    cmd: nubx playwright install chromium
+    cmd: aube exec playwright install chromium
     sources:
-      - nub.lock
+      - aube-lock.yaml
+      - aube-workspace.yaml
 
   test:unit:
     run: once
-    cmd: nubx vitest run
+    cmd: aube exec vitest run
     sources:
-      - nub.lock
+      - aube-lock.yaml
+      - aube-workspace.yaml
       - "src/**/*.ts"
       - tooling/**/*.test.ts
 
@@ -109,15 +116,16 @@ tasks:
   check:
     run: once
     cmds:
-      - nub install
+      - aube install
       - task: check-impl
 
   deploy:
     deps:
       - build
       - check
-    cmd: nubx wrangler pages deploy dist/ --project-name adelnz --commit-dirty=true
+    cmd: aube exec wrangler pages deploy dist/ --project-name adelnz --commit-dirty=true
     sources:
-      - nub.lock
+      - aube-lock.yaml
+      - aube-workspace.yaml
       - Taskfile.yaml
       - dist/**/*

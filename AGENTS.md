@@ -81,8 +81,9 @@
 
 ## CLI tools
 
-- never call `node`, call `nub` instead
-- never call `npx`, call `nubx` instead
+- never call `node`, call `aube node` instead
+- never call `npx`, call `aube exec` for installed tools or `aube dlx` for
+  one-off packages instead
 - never run code formatting unless explicitly asked
 - never call `vitest` directly
 - `rg`, `ast-grep`, `jq` are available for calling

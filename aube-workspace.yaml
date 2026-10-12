@@ -1,0 +1,16 @@
+allowBuilds:
+  esbuild: true
+  sharp: true
+  workerd: true
+
+minimumReleaseAgeExclude:
+  - "@kobalte/core"
+  - maplibre-gl
+  - oxfmt
+  - "@oxfmt/*"
+  - oxlint
+  - "@oxlint/*"
+  - oxlint-tailwindcss
+  - wrangler
+  - miniflare
+  - solid-static
