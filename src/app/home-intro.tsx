@@ -30,7 +30,7 @@ export const HomeIntro = (props: HomeIntroProps) => {
         >
           Listenbox
         </a>
-        {", "}
+        {` ${copy().and} `}
         <a
           class="text-inherit hover-underline"
           href="https://strengthmcp.com/"
@@ -38,15 +38,6 @@ export const HomeIntro = (props: HomeIntroProps) => {
           target="_blank"
         >
           StrengthMCP
-        </a>
-        {` ${copy().and} `}
-        <a
-          class="text-inherit hover-underline"
-          href="https://responsibleapi.com"
-          rel="noreferrer"
-          target="_blank"
-        >
-          ResponsibleAPI
         </a>
         {copy().projectsSuffix}
       </p>
