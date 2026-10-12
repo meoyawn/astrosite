@@ -31,17 +31,13 @@ experience:
     summaryMD: |
       Listenbox подкаст-хостингын тышкы финанслаусыз нигезләдем һәм алып барам; язылулардан айлык керемне $3K-га җиткердем.
 
-      - Listenbox-ны Go һәм TypeScript белән үстерәм һәм эшләтеп торам
+      - Listenbox-ны Go, TypeScript һәм Rust белән үстерәм һәм эшләтеп торам
       - Медиа йөкләү, импортлау һәм бастыруны, биллингны, командаларны һәм ачык API-ны ясадым
       - Temporal аша медианы эшкәртүне оештырдым: кабатлап башкару, гамәлдән баш тарту һәм чистарту
       - Идарә ителә торган сервис моклары һәм OpenTelemetry трассировкаларын тикшерүләр белән детерминирланган E2E-тестлар ясадым
       - Terraform һәм Ansible белән деплойны һәм инфраструктура белән идарә итүне автоматлаштырдым
-      - Production-дагы проблемаларны табу, хезмәт күрсәтү, тотрыклылык, клиентларга ярдәм, SEO, сатулар һәм маркетинг өчен җаваплы булдым
-
-      Башка проектлар:
-
-      - [StrengthMCP](https://strengthmcp.com/) сервисын ясадым: ул Model Context Protocol (MCP) аша ЯИ ярдәмчеләрен күнегү программалары, күнегүләрне теркәү һәм күнегүләр тарихы белән тоташтыра
-      - [ResponsibleAPI](https://github.com/responsibleapi/responsible) — TypeScript нигезендәге DSL һәм OpenAPI 3+ форматына компилятор ясадым
+      - Гамәлдәге сервисны эшләтеп тору, хаталарны табып төзәтү һәм ышанычлы эшләвен тәэмин итү өчен җаваплы булдым
+      - Клиентларга ярдәм, SEO, сатулар һәм маркетинг белән шөгыльләндем; потенциаль клиентлар белән беренче элемтә урнаштыру кораллары да булган CRM-ны MCP-сервер рәвешендә ясадым
 
   - title: Өлкән Android программисты
     org:
@@ -165,10 +161,10 @@ awards:
     date: 2011-10-01
 
 skills:
-  - Телләр - Go, TypeScript, Kotlin, Java, Python
-  - Backend һәм мәгълүмат - PostgreSQL, SQLite, Temporal, Node.js, API проектлау
+  - Телләр - Go, TypeScript, Kotlin, Java, Rust, Python
+  - Backend һәм мәгълүмат - PostgreSQL, SQLite, Temporal, Node.js, OpenAPI
   - Медиа - FFmpeg, HLS
   - Чыгару һәм эксплуатация - Ansible, CI/CD, Linux, OpenTelemetry, Terraform
-  - Frontend һәм mobile - React, SolidJS, Android
-  - Продукт инженериясе - SaaS, продукт ясау, customer discovery, SEO
-  - Клиентлар белән эш - ярдәм, сатулар, маркетинг
+  - Frontend һәм mobile - React, SolidJS, Android, GPUI.rs
+  - Продукт инженериясе - SaaS, продукт ясау, customer discovery, MCP, CLI
+  - Клиентлар белән эш - ярдәм, сатулар, маркетинг, SEO

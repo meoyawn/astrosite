@@ -31,17 +31,13 @@ experience:
     summaryMD: |
       Founded and run Listenbox, a bootstrapped podcast hosting SaaS that reached $3K in monthly recurring revenue.
 
-      - Develop and maintain Listenbox using Go and TypeScript
+      - Develop and maintain Listenbox using Go, TypeScript, and Rust
       - Delivered media uploads, imports, publishing, billing, teams, and a public API
       - Orchestrated media processing with Temporal, including retries, cancellation, and cleanup
       - Built deterministic E2E tests with controllable service mocks and OpenTelemetry trace assertions
       - Automated deployments and infrastructure management with Terraform and Ansible
-      - Owned production debugging, maintenance, reliability, customer support, SEO, sales, and marketing
-
-      Other projects:
-
-      - Built [StrengthMCP](https://strengthmcp.com/), connecting AI assistants to training programs, workout logging, and training history via the Model Context Protocol (MCP)
-      - Created [ResponsibleAPI](https://github.com/responsibleapi/responsible), a TypeScript DSL and compiler targeting OpenAPI 3+
+      - Owned production maintenance, debugging, and reliability
+      - Handled customer support, SEO, sales, and marketing; built a CRM as an MCP server, with cold outreach tools
 
   - title: Senior Android Developer
     org:
@@ -169,10 +165,10 @@ awards:
     date: 2011-10-01
 
 skills:
-  - Languages - Go, TypeScript, Kotlin, Java, Python
-  - Backend and data - PostgreSQL, SQLite, Temporal, Node.js, API design
+  - Languages - Go, TypeScript, Kotlin, Java, Rust, Python
+  - Backend and data - PostgreSQL, SQLite, Temporal, Node.js, OpenAPI
   - Media - FFmpeg, HLS
   - Delivery and operations - Ansible, CI/CD, Linux, OpenTelemetry, Terraform
-  - Frontend and mobile - React, SolidJS, Android
-  - Product engineering - SaaS, product development, customer discovery, SEO
-  - Customer work - support, sales, marketing
+  - Frontend and mobile - React, SolidJS, Android, GPUI.rs
+  - Product engineering - SaaS, product development, customer discovery, MCP, CLI
+  - Customer work - support, sales, marketing, SEO
