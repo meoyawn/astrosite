@@ -35,6 +35,7 @@ experience:
       - Delivered media uploads, imports, publishing, billing, teams, and a public API
       - Orchestrated media processing with Temporal, including retries, cancellation, and cleanup
       - Built deterministic E2E tests with controllable service mocks and OpenTelemetry trace assertions
+      - Built an [eval harness](/writing/regex-search-is-still-king/) to compare coding-agent search tools, measuring answer accuracy, token usage, cost, and runtime.
       - Automated deployments and infrastructure management with Terraform and Ansible
       - Owned production maintenance, debugging, and reliability
       - Handled customer support, SEO, sales, and marketing; built a CRM as an MCP server, with cold outreach tools
