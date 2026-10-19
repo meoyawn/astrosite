@@ -513,6 +513,36 @@ test.describe("e2e tests", () => {
     await expect(metadataTimes.first()).toHaveText(frontmatter.publishedAtText)
   })
 
+  test("article screenshots load as responsive assets at the existing route", async ({
+    page,
+  }) => {
+    await routeBuiltFiles(page)
+    await page.setViewportSize({ height: 844, width: 390 })
+
+    const response = await page.goto(
+      `${builtOrigin}${writingRoute("a-self-writing-agent-harness-part-one-choosing-a-language")}`,
+    )
+
+    expect(response?.ok() ?? false).toEqual(true)
+    const screenshot = page.getByRole("img", { name: /ChatGPT process group/ })
+
+    await screenshot.scrollIntoViewIfNeeded()
+    await expect(screenshot).toHaveAttribute("src", /\/(assets|@solid-static\/images)\/[^/]+\.webp$/)
+    await expect(screenshot).toHaveAttribute("srcset", /\S+ \d+w, \S+ \d+w/)
+    await expect.poll(() => screenshot.evaluate(image =>
+      image instanceof HTMLImageElement && image.complete && image.naturalWidth > 0,
+    )).toEqual(true)
+
+    const bounds = await screenshot.boundingBox()
+    expect(bounds).not.toEqual(null)
+    if (bounds === null) {
+      throw new Error("Expected the article screenshot to have visible dimensions.")
+    }
+
+    expect(bounds.x).toBeGreaterThanOrEqual(0)
+    expect(bounds.x + bounds.width).toBeLessThanOrEqual(390)
+  })
+
   test("npm install article headings link to fragments and scroll there", async ({
     page,
   }) => {

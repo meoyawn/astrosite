@@ -23,7 +23,7 @@
     "remark-parse": "^11.0.0",
     "remark-rehype": "^11.1.2",
     "solid-js": "^1.9.15",
-    "solid-static": "0.3.16",
+    "solid-static": "git+https://github.com/meoyawn/solid-static.git#4534465c423bc9a0409b9364f0545a39c4407044",
     "topojson-client": "^3.1.0",
     "unified": "11.0.5",
     "valibot": "^1.4.2",

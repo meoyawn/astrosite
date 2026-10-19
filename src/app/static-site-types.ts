@@ -20,6 +20,7 @@ export const parseWritingEntry = (
   return {
     body: entry.body,
     data: parseWritingData(entry.data, entry.id),
+    filePath: entry.filePath,
     id: entry.id,
     rendered: entry.rendered,
   }

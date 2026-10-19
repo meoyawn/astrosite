@@ -3,7 +3,7 @@ title: "A Self-writing Agent Harness, Part One: Choosing a Language"
 description:
   Hot reload led me through Dart, .NET, and JavaScript. Packaging and measuring
   code execution brought me back to Flutter, with QuickJS inside the process.
-updated_at: 2026-10-19
+updated_at: 2026-10-20
 published_at: 2026-10-19
 ---
 
@@ -202,6 +202,56 @@ the complete result about 2.5 times faster. The Dart prototype spent roughly
 concrete. For code mode that mostly composes tool calls, QuickJS looked like
 the more attractive starting point. I'd still need to measure actual agent
 programs, including bridge calls and I/O.
+
+The memory tradeoff wasn't abstract. In this screenshot from my desktop, the
+ChatGPT process group is using 7.48 GB of RAM and 1,262 threads. Many of its
+child `node` processes are using around 80 MB each.
+
+![Process monitor showing the ChatGPT process group using 7.48 GB of RAM and 1,262 threads, with numerous child Node.js processes.](./codex-memory-usage.png)
+
+That's a snapshot of a complete desktop application, not a comparison of
+JavaScript engines. It doesn't tell me how much memory its code execution
+accounts for. But it does help explain why I wanted a small embedded
+interpreter: I didn't want every tool program to need another runtime process.
+The QuickJS measurements gave me a concrete reason to pursue that design.
+
+Then I checked the installed Codex CLI itself. Version 0.163.0 on macOS ARM64
+was almost 250 MB for the executable alone. That startled me. By then, I'd
+started a larger, still partial Dart CLI using this design. Its AOT executable,
+with the native payload bundled inside it, was 12.86 MB.
+
+I measured thirty warm `--version` launches of each, after three warmups,
+alternating their order. These sizes use decimal MB, unlike the MiB in the
+earlier prototype comparison.
+
+| Property | Codex CLI 0.163.0 | Partial Dart AOT CLI |
+| --- | ---: | ---: |
+| Executable size | 249.95 MB | 12.86 MB |
+| Warm startup, median | 12.03 ms | 18.94 ms |
+| Warm startup, P95 | 12.61 ms | 21.97 ms |
+| Peak resident memory, median | 20.22 MB | 15.29 MB |
+| Peak physical footprint, median | 9.00 MB | 5.15 MB |
+
+The physical-footprint figures came from five separate runs per executable.
+The first Dart launch with an empty native cache took 181 ms, peaked at
+64.47 MB of resident memory, and created a 10.07 MB cache. That was a fresh
+native cache, not a cold operating-system cache. Once the cache existed,
+Codex was faster to print its version; my executable was much smaller.
+
+I don't yet know what accounts for Codex's executable size. I haven't
+established whether it bundles Node.js, or how much any particular dependency
+contributes. QuickJS's own [size example](https://bellard.org/quickjs/) is
+367 KiB of x86 code for a simple hello-world program. That isn't the size of
+my ARM64 FJS bundle, but it helped reset my expectations for what embedding a
+JavaScript engine has to cost. My actual FJS library was 7.44 MB before
+compression; its compressed payload was already part of that 12.86 MB
+executable.
+
+My CLI was still partial, and printing a version doesn't exercise a running
+agent session. Neither this table nor the desktop screenshot establishes a
+like-for-like agent comparison. Still, almost 250 MB was hard to shrug off.
+I had started by wondering which language could change its own running code;
+now I was also wondering how much machinery I actually needed to ship.
 
 That brought me back to Flutter with a different architecture in mind. I could
 have a desktop app whose Dart agentic loop runs inside the app process, with
