@@ -4,6 +4,7 @@ description:
   I wanted a long-running agent to improve its own harness. Testing Dart, .NET,
   and JavaScript made the language choice harder.
 updated_at: 2026-10-19
+published_at: 2026-10-19
 ---
 
 I started with a few requirements for my own agent harness. It should support
