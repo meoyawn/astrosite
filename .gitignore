@@ -28,6 +28,7 @@ public/cv.json
 coverage/
 
 *.png
+!src/content/**/*.png
 
 test-results/
 playwright-report/
