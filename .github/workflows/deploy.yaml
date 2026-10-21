@@ -58,7 +58,7 @@ jobs:
       - name: Verify production JavaScript islands
         id: production-e2e
         run: >-
-          aube exec playwright test e2e/e2e.playwright.ts
+          aube exec playwright test e2e/e2e.playwright.ts e2e/travel.playwright.ts
           --grep 'home timepiece island|travel stay clicks update the timeline fragment'
           --retries=3
         env:

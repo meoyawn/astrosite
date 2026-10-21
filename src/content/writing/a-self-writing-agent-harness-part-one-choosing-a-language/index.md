@@ -3,7 +3,7 @@ title: "A Self-writing Agent Harness, Part One: Choosing a Language"
 description:
   Hot reload led me through Dart, .NET, and JavaScript. Packaging and measuring
   code execution brought me back to Flutter, with QuickJS inside the process.
-updated_at: 2026-10-20
+updated_at: 2026-10-21
 published_at: 2026-10-19
 ---
 
@@ -29,6 +29,8 @@ saved state and preserving a running program. A conversation log doesn't
 recreate an open stream or a procedure halfway through its work.
 
 <iframe class="aspect-video h-auto w-full" width="560" height="315" src="https://www.youtube-nocookie.com/embed/HDdbU10r7Js?start=3009" title="Armin Ronacher on changing running applications while preserving state" loading="lazy" allow="encrypted-media; picture-in-picture; fullscreen" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+
+## Looking for live updates
 
 I initially expected BEAM to settle the question. Erlang was built for upgrading
 running systems. Its
@@ -58,6 +60,8 @@ doesn't require manually versioning the application. Its normal
 [HMR API](https://vite.dev/guide/api-hmr) provides acceptance and disposal
 hooks. Still, a function already handed to another part of the program can keep
 executing its old implementation.
+
+## What actually changed after a reload
 
 I tested that directly with small procedural servers: free functions, dictionary
 state, registered callbacks, a suspended async procedure, and live WebSocket and
@@ -89,6 +93,8 @@ There were less pleasant findings too. Our .NET watch setup restarted or
 suspended reloading on unsupported edits. Dart 3.13.5 hit a reproducible VM
 crash during a structural edit. Cleanup needed explicit attention in every
 runtime: timing out a wait didn't stop the underlying work.
+
+## Code mode and the AOT problem
 
 Code mode brought me back to another prerequisite: running programs written by
 the agent, with a chosen tool API. JavaScript has direct options such as Node's
@@ -132,6 +138,8 @@ delegate scripts to a separate JIT process, but I'd then have another runtime
 and a process boundary to package and manage. Roslyn scripting doesn't give
 .NET an AOT advantage over Dart.
 
+## Getting code execution into the host process
+
 So I tried packaging Dart directly. The first proof was an AOT CLI with a
 compressed JIT runtime embedded in its executable. It accepted a Dart
 expression, extracted the runtime, and ran the expression in a child process.
@@ -165,6 +173,8 @@ microtask futures, and compilation and runtime errors. Same-process Dart
 execution was possible; my first implementation simply hadn't gone far enough.
 The embedding still depended on private scheduling hooks and only established
 one evaluation per CLI launch on macOS ARM64.
+
+## Measuring Dart JIT against QuickJS
 
 Now I could compare two complete pipelines. Both hosts were Dart 3.13.5 AOT
 executables; the JavaScript version used FJS 3.3.2. Each shipped as one file
@@ -202,6 +212,8 @@ the complete result about 2.5 times faster. The Dart prototype spent roughly
 concrete. For code mode that mostly composes tool calls, QuickJS looked like
 the more attractive starting point. I'd still need to measure actual agent
 programs, including bridge calls and I/O.
+
+## How much machinery am I shipping?
 
 The memory tradeoff wasn't abstract. In this screenshot from my desktop, the
 ChatGPT process group is using 7.48 GB of RAM and 1,262 threads. Many of its
@@ -253,6 +265,8 @@ like-for-like agent comparison. Still, almost 250 MB was hard to shrug off.
 I had started by wondering which language could change its own running code;
 now I was also wondering how much machinery I actually needed to ship.
 
+## Coming back to Flutter
+
 That brought me back to Flutter with a different architecture in mind. I could
 have a desktop app whose Dart agentic loop runs inside the app process, with
 QuickJS in that same process for agent-written tool programs. JavaScript could
@@ -291,3 +305,10 @@ That gives me a way to keep Flutter's live development experience and my
 preference for AOT deployment, with a small interpreter for dynamic programs.
 The next question is whether that combination holds up while an agent changes
 its own tools over a long run.
+
+## Still amazed by Go and Dart
+
+One thing I still can't get over: Google absolutely nailed both Go and Dart.
+The engineering, the developer experience—it's insane. I've spent my whole
+life avoiding both languages, and it turns out they're excellent to work with.
+I don't know, man. After all these experiments, I'm still amazed.

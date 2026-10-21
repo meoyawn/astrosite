@@ -22,6 +22,8 @@ if (htmlTargets.length === 0) {
 }
 
 test.describe("emitted HTML", () => {
+  test.use({ javaScriptEnabled: false })
+
   for (const target of htmlTargets) {
     test.describe(target.fileName, () => {
       test("has matching HTML and social metadata", async ({ page }) => {
