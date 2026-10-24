@@ -2,6 +2,7 @@
 title: Vibe coding a SaaS
 description: Three months rebuilding Listenbox with Codex brought exhilarating progress, stubborn bugs, and the best engineering of my life. Finishing was another skill.
 updated_at: 2026-09-19
+published_at: 2026-09-08
 ---
 
 Early in rebuilding [Listenbox](https://listenbox.app) with Codex, I was

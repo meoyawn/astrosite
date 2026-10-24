@@ -33,6 +33,7 @@ experience:
 
       - Develop and maintain Listenbox using Go, TypeScript, and Rust
       - Delivered media uploads, imports, publishing, billing, teams, and a public API
+      - Delivered published podcast episodes to listeners through a CDN backed by S3-compatible object storage
       - Orchestrated media processing with Temporal, including retries, cancellation, and cleanup
       - Built deterministic E2E tests with controllable service mocks and OpenTelemetry trace assertions
       - Built an [eval harness](/writing/regex-search-is-still-king/) to compare coding-agent search tools, measuring answer accuracy, token usage, cost, and runtime.
