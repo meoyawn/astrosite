@@ -1,6 +1,6 @@
 ---
 title: "A Self-writing Agent Harness, Part One: Choosing a Language"
-description:
+description: >-
   Stateful hot reload, agent-accessible runtime diagnostics, and lean native AOT
   releases: three requirements that brought me back to Flutter and QuickJS.
 updated_at: 2026-10-27
