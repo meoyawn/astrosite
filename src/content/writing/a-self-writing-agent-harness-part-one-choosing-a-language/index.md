@@ -1,9 +1,9 @@
 ---
 title: "A Self-writing Agent Harness, Part One: Choosing a Language"
 description:
-  Hot reload led me through Dart, .NET, and JavaScript. Packaging and measuring
-  code execution brought me back to Flutter, with QuickJS inside the process.
-updated_at: 2026-10-21
+  Stateful hot reload, agent-accessible runtime diagnostics, and lean native AOT
+  releases: three requirements that brought me back to Flutter and QuickJS.
+updated_at: 2026-10-27
 published_at: 2026-10-19
 ---
 
@@ -30,6 +30,37 @@ recreate an open stream or a procedure halfway through its work.
 
 <iframe class="aspect-video h-auto w-full" width="560" height="315" src="https://www.youtube-nocookie.com/embed/HDdbU10r7Js?start=3009" title="Armin Ronacher on changing running applications while preserving state" loading="lazy" allow="encrypted-media; picture-in-picture; fullscreen" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 
+## Three pillars, at different points in the cycle
+
+Hot reload was only the first requirement. What I actually wanted was a runtime
+that took all three parts of the development and release cycle seriously:
+
+1. **Change the running program.** Stateful hot reload during development,
+   without throwing away the conversation, connections, and pending work every
+   time the agent edits a tool. A file watcher that restarts the process isn't
+   the same thing.
+2. **Inspect the running program.** Excellent official CLI tools or an MCP
+   server, so the agent can investigate what it just changed: start and stop
+   a performance recording, collect CPU profiles and timeline traces, capture
+   a heap, and follow retained objects when memory keeps growing. For a GUI,
+   that should extend to the actual widget and accessibility structure, not
+   just a screenshot. These need to be callable tools, not a workflow that
+   depends on me clicking through an IDE.
+3. **Ship a lean native binary.** Ahead-of-time compilation for release, without
+   carrying the development compiler and JIT into every deployment. The GC and
+   whatever runtime support the application needs can stay. AOT doesn't mean
+   there is no runtime; it means I don't need a compiler on the user's machine
+   to execute the host application.
+
+These are three stages, not three things I expect one production process to do
+at once. Develop with hot reload. Find a regression or a leak and inspect the
+live process. Then build and measure the AOT release. I don't need the shipped
+AOT binary to hot reload its own native code.
+
+That combination matters more to me than winning a language benchmark. An
+agent that can edit a function but can't inspect its consequences has only
+half a development loop.
+
 ## Looking for live updates
 
 I initially expected BEAM to settle the question. Erlang was built for upgrading
@@ -45,7 +76,22 @@ central to their environments. I set them aside because I wanted a more
 mainstream application ecosystem. That was a project preference, not a benchmark
 result. Go lacked the first-party live-patching workflow I wanted;
 Rust/Subsecond brought compilation and data-layout constraints back into the
-decision. I excluded the JVM on personal preference.
+decision.
+
+The JVM does have live updates. Standard
+[HotSwap](https://docs.oracle.com/en/java/javase/25/docs/api/jdk.jdi/com/sun/jdi/VirtualMachine.html#redefineClasses(java.util.Map))
+can replace method bodies without rebuilding the application's state. Active
+stack frames finish the old method; subsequent calls use the replacement.
+Ordinary HotSpot HotSwap is more restrictive about structural changes, such as
+adding fields or methods, than that description might suggest. That is a real
+reload workflow, with boundaries to test rather than a reason to dismiss the
+whole platform.
+
+AOT is coming to the standard JVM too: Project Leyden's
+[ahead-of-time code compilation](https://openjdk.org/jeps/544) is targeted for
+[JDK 28 in March 2027](https://www.jcp.org/en/jsr/detail?id=403). It caches native
+code from a training run while retaining the JIT. That is useful progress, but
+it is a different deployment model from the lean, no-JIT release binary I want.
 
 Then JavaScript complicated things. Vite makes editing applications feel
 effortless, so why assume server code couldn't get the same treatment? Node's
@@ -94,6 +140,46 @@ suspended reloading on unsupported edits. Dart 3.13.5 hit a reproducible VM
 crash during a structural edit. Cleanup needed explicit attention in every
 runtime: timing out a wait didn't stop the underlying work.
 
+## Inspecting the process I just changed
+
+The second pillar is just as important as hot reload. If an edit makes a tool
+slow or leaves objects alive, I want the agent to examine the running process
+without restarting away the evidence.
+
+Flutter is unusually appealing here. The official
+[Dart and Flutter MCP server](https://github.com/dart-lang/ai/blob/main/pkgs/dart_mcp_server/README.md)
+exposes hot reload, runtime errors, widget inspection, and a bridge into the
+VM Service. [DevTools](https://docs.flutter.dev/tools/devtools) and the underlying
+[VM Service](https://github.com/dart-lang/sdk/blob/main/runtime/vm/service/service.md)
+provide CPU profiles, timeline traces, heap snapshots, and retaining paths.
+Flutter also exposes its
+[semantics tree](https://docs.flutter.dev/testing/code-debugging) for inspecting
+accessibility. I want
+the agent to reason about the application as a running system, including its
+UI, rather than guessing from source code and screenshots.
+
+The interfaces still differ: widget inspection, semantics dumps, and streamed
+heap snapshots need different handling. An agent needs adapters for those raw
+APIs; the MCP isn't yet a turnkey interface to every DevTools feature. But the
+runtime evidence is there.
+
+.NET belongs in this comparison too. An application launched by
+[`dotnet watch`](https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-watch)
+is still a live .NET process. The
+[official diagnostic tools](https://learn.microsoft.com/en-us/dotnet/core/diagnostics/)
+can attach to the application's PID: `dotnet-trace` for recordings,
+`dotnet-gcdump` for a managed heap graph, and `dotnet-dump` for a process dump
+and analysis. I don't have to stop using hot reload to collect that evidence.
+These are companion CLIs, not profiling commands built into `dotnet watch`.
+
+There are practical limits: target the app, not the watcher; an unsupported
+edit can restart it and change its PID. Heap collection can trigger a GC and
+pause execution. And a profile of the development process helps explain a
+regression, but doesn't replace measuring the release build. Still, .NET has
+both the live-editing and live-inspection sides of the loop. Flutter's
+integrated UI tooling is a reason for my preference, not evidence that .NET
+can't diagnose a running application.
+
 ## Code mode and the AOT problem
 
 Code mode brought me back to another prerequisite: running programs written by
@@ -111,8 +197,8 @@ can run a script file in a separate isolate. Those are different execution
 paths. At this point, I'd tested live edits but still hadn't proved how I'd
 ship code mode.
 
-Deployment exposed another assumption. I preferred ahead-of-time (AOT)
-compilation and had been treating it as the eventual deployment path. Native
+Deployment exposed another assumption. Native AOT was a requirement for the
+host, not a packaging detail to figure out later. Native
 desktop apps can use just-in-time (JIT) compilation; my Flutter debug app
 already does. But standard Flutter
 [release builds use AOT](https://docs.flutter.dev/testing/build-modes).
@@ -123,7 +209,7 @@ There was also a compiler to account for. Flutter currently
 For this Dart design, I'd need to package JIT plus expression compilation for
 both desktop and VPS. On macOS, JIT also needs the appropriate
 [signing entitlement](https://docs.flutter.dev/add-to-app/macos/project-setup).
-That moved Dart down my list. I still preferred AOT over JIT, and now the
+That moved Dart down my list. I wanted an AOT host, and now the
 dynamic Dart path needed both a runtime and a compiler packaged alongside the
 app. The development experience alone hadn't answered the deployment question.
 
@@ -137,6 +223,23 @@ so it doesn't give me a JIT-free deployment either. A Native AOT host could
 delegate scripts to a separate JIT process, but I'd then have another runtime
 and a process boundary to package and manage. Roslyn scripting doesn't give
 .NET an AOT advantage over Dart.
+
+TypeScript's release story is changing too. Bun has an experimental
+[native-AOT pull request](https://github.com/oven-sh/bun/pull/45631) that compiles
+JavaScript and TypeScript to machine code without a JIT, with Claude Code
+already used as a test case. This is the new AOT work, not simply bundling a
+runtime into a single executable. The
+[engine work](https://github.com/oven-sh/WebKit/pull/757) has merged; the Bun
+integration is still unmerged as I write this. I expect TypeScript AOT to become
+a practical option in late 2026 or early 2027, but that is my expectation, not
+an announced release date.
+
+That could change this comparison considerably. It still ships Bun's runtime,
+and dynamically generated code takes an interpreted path. For this harness,
+that distinction is useful: a native-compiled host and an interpreter for
+agent-written programs is close to the architecture I was arriving at anyway.
+The experimental implementation and its compatibility limits need testing;
+the existence of AOT doesn't by itself settle reload semantics or packaging.
 
 ## Getting code execution into the host process
 
@@ -301,8 +404,11 @@ Flutter with a Dart harness and QuickJS code mode is now the direction I want
 to explore. .NET reached further into closures and suspended procedures in
 the reload probes, and Vite remains a credible option. But the harness and its
 tool programs can use different languages, as I'd allowed at the beginning.
-That gives me a way to keep Flutter's live development experience and my
-preference for AOT deployment, with a small interpreter for dynamic programs.
+That gives me a way to keep all three pillars: Flutter's live development
+experience, runtime inspection the agent can use, and native AOT deployment,
+with a small interpreter for dynamic programs. The UI ecosystem is also a
+product choice: .NET has cross-platform frameworks, but Flutter is the stack
+I want to build on.
 The next question is whether that combination holds up while an agent changes
 its own tools over a long run.
 
