@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="610" viewBox="0 0 1000 610" role="img" aria-labelledby="title desc">
+  <title id="title">Can you debug yourself?</title>
+  <desc id="desc">An illustrative Codex-style conversation. The user asks an agent to debug itself. The agent explains that it can inspect its own running Dart process, profile CPU work, inspect retained objects, and hot reload a fix while keeping the same conversation.</desc>
+  <rect width="1000" height="610" fill="#fff"/>
+  <g font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif" font-size="28" fill="#202123">
+    <rect x="529" y="28" width="431" height="84" rx="34" fill="#f4f4f4"/>
+    <text x="557" y="80">Can you debug yourself?</text>
+
+    <text x="40" y="182" font-size="25" fill="#8e8e93">Inspecting my running process</text>
+    <path d="m397 165 8 8-8 8" fill="none" stroke="#8e8e93" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M40 204H960" stroke="#e5e5e5" stroke-width="1"/>
+
+    <text x="40" y="259">Yes. I can look into the process I’m running in.</text>
+    <text x="40" y="302">The Dart MCP gives me access to</text>
+    <rect x="464" y="278" width="166" height="34" rx="9" fill="#ededed"/>
+    <text x="472" y="302" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="25">vm_service</text>
+    <text x="634" y="302">, so I can:</text>
+
+    <g fill="#202123"><circle cx="55" cy="347" r="3"/><circle cx="55" cy="390" r="3"/><circle cx="55" cy="433" r="3"/></g>
+    <text x="78" y="355">Profile the work I’m doing.</text>
+    <text x="78" y="398">Find objects I’m keeping alive.</text>
+    <text x="78" y="441">Inspect the UI I’m drawing.</text>
+
+    <text x="40" y="498">Then hot reload the fix.</text>
+    <text x="40" y="539" font-weight="600">Same process. Same conversation.</text>
+
+    <g fill="none" stroke="#929292" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="43" y="574" width="14" height="16" rx="3"/>
+      <path d="M48 574v-3a3 3 0 0 1 3-3h9a3 3 0 0 1 3 3v10a3 3 0 0 1-3 3h-3"/>
+    </g>
+    <g fill="#929292"><circle cx="84" cy="580" r="1.8"/><circle cx="92" cy="580" r="1.8"/><circle cx="100" cy="580" r="1.8"/></g>
+  </g>
+</svg>

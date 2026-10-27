@@ -7,6 +7,8 @@ updated_at: 2026-10-27
 published_at: 2026-10-19
 ---
 
+![Illustrative Codex-style conversation: “Can you debug yourself?” The agent describes profiling its own running Dart process, finding retained objects, inspecting its UI, and hot reloading a fix. Same process, same conversation.](./looking-into-itself.svg)
+
 I'm building an AI agent that can modify its own implementation to get better
 at whatever its human operator wants it to do. I might want it to complete
 more tasks, spend fewer tokens, run faster, or gain a capability it needs for a
