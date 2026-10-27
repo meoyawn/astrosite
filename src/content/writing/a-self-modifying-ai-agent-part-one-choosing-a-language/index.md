@@ -1,24 +1,56 @@
 ---
-title: "A Self-writing Agent Harness, Part One: Choosing a Language"
+title: "A Self-modifying AI Agent, Part One: Choosing a Language"
 description: >-
-  Choosing between Dart and .NET for a self-writing agent harness: hot reload,
-  runtime inspection, native AOT, and the GUI that makes Flutter compelling.
+  Choosing between Dart and .NET for an AI agent that modifies itself to pursue
+  its operator's goals: better task completion, lower token use, or faster work.
 updated_at: 2026-10-27
 published_at: 2026-10-19
 ---
 
-I'm choosing a language for my own agent harness. I want it to run for a long
-time, on my desktop and on a VPS, and improve itself while it works. If the
-agent finds a bug in a tool, it should be able to fix the code and use the fix
-without throwing away its conversation, open connections, and pending work.
+I'm building an AI agent that can modify its own implementation to get better
+at whatever its human operator wants it to do. I might want it to complete
+more tasks, spend fewer tokens, run faster, or gain a capability it needs for a
+new kind of work. The goal comes from me. The agent should be able to change
+how it works in pursuit of that goal.
 
-![Illustrative Codex-style conversation: “Can you debug yourself?” The agent describes profiling its own running Dart process, finding retained objects, inspecting its UI, and hot reloading a fix. Same process, same conversation.](./looking-into-itself.svg)
+By its implementation, I mean the software around the model: the agent loop,
+context handling, tool orchestration, and the application I interact with.
+I want that source code to be part of the agent's workspace. It should be able
+to inspect its behavior, make a change, try it, and measure whether the change
+helped. Fixing a bug is one possible use of that ability.
 
-I also want a GUI. That's an opinion about the product I want to build: a
-harness should be an application I can see into and interact with, rather than
-something I can only operate through a terminal. A headless deployment still
-matters, but the desktop application isn't an optional wrapper I'll add later.
-Its UI framework belongs in the language decision.
+This first part is about choosing a language for that agent. I want it to run
+for a long time, on my desktop and on a VPS. While it experiments with its own
+implementation, I want it to preserve its conversation, open connections, and
+pending work. Changing how it works should fit into the work it is already
+doing.
+
+## The goal drives the change
+
+Suppose I ask the agent to spend fewer tokens on a recurring task. It could
+look at which context it sends to the model, how much tool output it carries
+forward, or how it groups work into model calls. It could then change that
+part of its implementation and compare the next runs. Lower token use only
+helps if the result still meets the task's requirements.
+
+If I care about task completion, the useful change might instead be in how it
+breaks down work, checks its results, or recovers from an unsuccessful attempt.
+That change might spend more tokens. If I care about latency, it might change
+how independent operations run concurrently. Nothing has to be broken for
+any of these changes to be worth making.
+
+The loop I want is: understand the objective, observe the current behavior,
+choose a change, edit the implementation, and evaluate the result. Then keep,
+revise, or revert the change. The operator supplies the objective and the
+constraints; the agent needs room to experiment with how it meets them.
+Choosing useful evaluations is part of this project too. A runtime accepting
+an edit doesn't tell me whether the agent became better at its task.
+
+I also want a GUI where I can give the agent direction, see what it is changing,
+and inspect the results. That's an opinion about the product I want to build:
+the agent should be an application I can see into and interact with. A headless
+deployment still matters, but the desktop application isn't an optional
+wrapper I'll add later. Its UI framework belongs in the language decision.
 
 That has left me with two strongest contenders: Dart and C# on .NET. Both offer
 a serious live-development workflow, official runtime diagnostics, and native
@@ -26,27 +58,32 @@ AOT deployment. .NET did better than I expected in my reload experiments. Dart
 has Flutter, which brings the UI and the development loop together in a way I
 find especially appealing.
 
-The difficult part was working out how those strengths fit a self-writing
-harness. I want ordinary procedures, plain data, mainstream libraries, and as
+The difficult part was working out how those strengths fit a self-modifying
+AI agent. I want ordinary procedures, plain data, mainstream libraries, and as
 little custom reload machinery as possible. I also want code mode: the agent
-writes programs that compose tool calls. Choosing a language for the harness
-doesn't necessarily mean choosing that same language for every program it runs.
+writes programs that compose tool calls. Choosing a language for the agent's
+implementation doesn't necessarily mean choosing that same language for every
+program it runs.
 
 ## Three things the runtime has to do
 
-The requirements become clearer when I follow the development cycle.
+The language decision is about making that loop practical. I need to apply a
+change, observe its effects, and eventually ship the resulting application.
 
-First, **change the running program**. I want stateful hot reload during
-development, preserving the session while the agent edits its implementation.
+First, **change the running program**. I want stateful hot reload while the
+agent experiments with its implementation. It should be able to change how it
+selects context or schedules work and use that change in the same session.
 A watcher that restarts the process after every save loses too much of the
-thing I'm trying to develop.
+ongoing work.
 
-Second, **inspect the running program**. After an edit, the agent needs to find
-out what happened. That means excellent official CLI tools or an MCP: start
-and stop performance recordings, collect CPU profiles and timeline traces,
-capture a heap, and follow objects that remain alive. For the GUI, I want
-access to its widget and accessibility structure as well. These operations
-need to be callable by the agent, without waiting for me to click through an IDE.
+Second, **inspect the running program**. The agent needs evidence to choose a
+change and understand its effects. Task outcomes, token counts, and timings
+need application-level measurement. For the runtime side, I want excellent
+official CLI tools or an MCP: start and stop performance recordings, collect
+CPU profiles and timeline traces, capture a heap, and follow objects that
+remain alive. For the GUI, I want access to its widget and accessibility
+structure as well. These operations need to be callable by the agent, without
+waiting for me to click through an IDE.
 
 Third, **ship a lean native binary**. Once the application is ready, I want
 native ahead-of-time compilation, without packaging the development compiler
@@ -54,10 +91,12 @@ and JIT with every release. The GC and necessary runtime support can stay.
 AOT still has a runtime; the important part is that executing the host doesn't
 require shipping a compiler.
 
-These requirements belong to different stages. Develop with hot reload,
-investigate regressions in the live process, then build and measure the AOT
-release. I don't expect the shipped native binary to hot reload itself. I want
-one language ecosystem that takes the whole cycle seriously.
+These requirements belong to different stages. The live self-modification
+loop would run in a development runtime, where the agent can edit, reload,
+and inspect itself. Shipping an accepted change in the native host still
+means rebuilding and deploying it, then measuring the AOT release. I don't
+expect the shipped native binary to hot reload itself. I want one language
+ecosystem that takes the whole cycle seriously.
 
 [Armin Ronacher's discussion of changing running applications](https://www.youtube.com/watch?v=HDdbU10r7Js&t=3009s)
 helped sharpen the first requirement. Restoring saved state and preserving a
@@ -122,6 +161,10 @@ connections. The versions were Dart 3.13.5, .NET SDK 10.0.402, and Node 26.12.0
 with Vite 8.2.2. The Vite server used an ordinary HMR acceptance callback,
 without an application-level versioning protocol.
 
+These probes test the mechanics a self-modifying AI agent would depend on. If it
+changes a scheduling function or a context-selection callback, I need to know
+when that change takes effect and which work continues under the old code.
+
 | After editing the source                      | Dart VM   | .NET / C#                         | Node + Vite  |
 | --------------------------------------------- | --------- | --------------------------------- | ------------ |
 | Previously registered named function callback | Updated   | Updated                           | Old function |
@@ -145,13 +188,17 @@ There were failures too. The .NET watch setup restarted or suspended reloading
 on unsupported edits. Dart 3.13.5 hit a reproducible VM crash during a
 structural edit. Every runtime needed explicit cleanup: timing out a wait
 didn't stop the underlying work. These probes established useful development
-behavior, with limits. They said nothing yet about AOT releases.
+behavior, with limits. They said nothing yet about AOT releases or whether an
+agent's edits would improve task completion or token use.
 
 ## Giving the agent eyes into that process
 
-A successful reload only tells me the edit was accepted. If the tool becomes
-slow or starts retaining objects, the agent needs evidence from the process
-that is still running.
+A successful reload only tells me the edit was accepted. To decide whether a
+change helped, the agent needs feedback tied to the operator's objective.
+For task completion, that means evaluating the work it produced. For token
+use, it means comparing consumption while checking the quality of the result.
+Runtime inspection adds evidence about how the implementation does that work:
+where time goes, what runs concurrently, and what stays in memory.
 
 Dart and Flutter offer an unusually coherent foundation here. The official
 [MCP server](https://github.com/dart-lang/ai/blob/main/pkgs/dart_mcp_server/README.md)
@@ -182,6 +229,10 @@ can trigger a GC and pause execution. Development profiles also need to be
 followed by measurements of the actual release build. Within those boundaries,
 both contenders give the agent a useful edit-and-inspect loop.
 
+That is the runtime part of the feedback I want. The application still needs
+to connect each change to task results, model usage, and elapsed time so the
+agent can judge it against the actual objective.
+
 ## The GUI is part of the choice
 
 This is where Flutter starts to tip the decision for me. I like declaring a
@@ -203,7 +254,7 @@ function of state; it doesn't require writing XML.
 Maybe an agent makes the syntax distinction less important anyway. My
 preference is about the whole path: Flutter puts code-first UI, stateful
 reload, widget inspection, and native release builds together as its normal
-workflow. That's a practical advantage for the GUI harness I want to build,
+workflow. That's a practical advantage for the agent application I want to build,
 not proof that .NET lacks a capable cross-platform UI ecosystem. .NET remains
 a serious contender, especially after what it managed in the reload probes.
 
@@ -212,10 +263,12 @@ share: how does an AOT application execute programs written after it ships?
 
 ## A compiled host still needs code mode
 
-Development hot reload and agent-written tool programs serve different
-purposes. Hot reload helps develop the harness. Code mode lets the agent
-compose tools into a new program during an ordinary session, including in a
-release build.
+Changing its own implementation and writing a program to do a task are two
+abilities I want the agent to have. Hot reload lets it experiment with changes
+to the running harness in a development runtime. Code mode lets it compose
+tools into a new program during an ordinary session, including in a release
+build. A tool program can help it do work or carry out an experiment; executing
+that program doesn't by itself change the agent's implementation.
 
 JavaScript has direct options such as Node's
 [`vm.Script`](https://nodejs.org/api/vm.html). C# has Microsoft's
@@ -357,6 +410,8 @@ A partial CLI printing its version isn't a like-for-like agent comparison.
 These measurements gave me a packaging direction, not a claim that I'd built
 a smaller equivalent of Codex. They also made the third requirement concrete:
 I wanted to know what each runtime feature would cost the application I ship.
+They don't measure task completion or token efficiency. Those need to be
+evaluated with the agent doing the work its operator cares about.
 
 ## Where this leaves me
 
@@ -365,17 +420,19 @@ and suspended procedures in my reload probes, has excellent diagnostic CLIs,
 and can ship native AOT applications. The issue wasn't finding a reason to
 rule it out. It was choosing the development and UI stack I want to live in.
 
-For this harness, I'm leaning toward Dart with Flutter, and QuickJS for code mode.
-Dart owns the conversation, connections, tools, and UI state. JavaScript
+For this agent, I'm leaning toward Dart with Flutter, and QuickJS for code
+mode. Dart owns the agent loop, conversation, connections, tools, and UI state.
+That is the implementation I want the agent to be able to modify. JavaScript
 programs compose tool calls through an explicit asynchronous bridge. The
 headless Dart loop can run on a VPS too, although Linux packaging still needs
 its own proof.
 
-That gives each stage a clear job. During development, Flutter's debug runtime
-supports stateful hot reload and live inspection of the UI and harness. I can
-investigate retained objects or slow work before rebuilding, then measure the
-native AOT release separately. The release keeps an interpreter for agent-written
-programs without carrying a Dart compiler and JIT solely for code mode.
+That gives each stage a clear job. In Flutter's debug runtime, the agent could
+change its implementation, reload it, inspect what happened, and evaluate the
+next run against the operator's goal. Once a change is worth shipping, the
+native AOT release needs its own measurements. The release keeps an interpreter
+for agent-written programs without carrying a Dart compiler and JIT solely
+for code mode.
 
 There are boundaries I still need to design. Updating the compiled Dart host
 in production is a deployment decision. Replacing JavaScript code needs a
@@ -390,6 +447,10 @@ stack. Someone who prefers a .NET UI framework could reasonably make the other
 choice. TypeScript's new AOT work may give me another strong option soon.
 
 Right now, Dart gets me closest to the application I want with the least
-custom machinery. The next test is whether that combination holds up over a
-long run while an agent changes its own tools. That's the part a language
-comparison can't answer for me.
+custom machinery. The next test is to give the agent a concrete objective and
+let it work on its own implementation: complete more of a set of tasks, reduce
+the tokens needed to reach an acceptable result, or finish the work sooner.
+I want to see whether it can make changes, evaluate them, and retain the ones
+that help over a long run. The language experiments establish some of the
+mechanics. Whether the agent can use them to achieve the operator's goal is
+the question this project is trying to answer.

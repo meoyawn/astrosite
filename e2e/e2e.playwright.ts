@@ -238,14 +238,14 @@ test.describe("e2e tests", () => {
     await expect(metadataTimes.first()).toHaveText(frontmatter.publishedAtText)
   })
 
-  test("article screenshots load as responsive assets at the existing route", async ({
+  test("article screenshots load as responsive assets", async ({
     page,
   }) => {
     await routeBuiltFiles(page)
     await page.setViewportSize({ height: 844, width: 390 })
 
     const response = await page.goto(
-      `${builtOrigin}${writingRoute("a-self-writing-agent-harness-part-one-choosing-a-language")}`,
+      `${builtOrigin}${writingRoute("a-self-modifying-ai-agent-part-one-choosing-a-language")}`,
     )
 
     expect(response?.ok() ?? false).toEqual(true)
