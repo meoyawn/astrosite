@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="760" viewBox="0 0 1000 760" role="img" aria-labelledby="title desc">
+  <title id="title">Can you debug yourself?</title>
+  <desc id="desc">An illustrative conversation with an agent inside a running Dart process. The agent inspects its own runtime through MCP, edits its code, and hot reloads while keeping the same session alive.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto-start-reverse"><path d="M1 1 6 4 1 7" fill="none" stroke="#70dbcc" stroke-width="1.5" stroke-linejoin="round"/></marker>
+  </defs>
+  <rect width="1000" height="760" rx="16" fill="#f2f7f8"/>
+  <g font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif">
+    <circle cx="101" cy="108" r="14" fill="none" stroke="#233b45" stroke-width="3"/><path d="M77 151v-7a24 24 0 0 1 48 0v7" fill="none" stroke="#233b45" stroke-width="3"/>
+    <rect x="158" y="54" width="782" height="110" rx="20" fill="#fff"/>
+    <path d="m158 121-18 22h28" fill="#fff"/>
+    <text x="190" y="99" font-size="23" fill="#52666e">YOU</text>
+    <text x="190" y="139" font-size="35" font-weight="550" letter-spacing="-.7" fill="#142f39">Can you debug yourself?</text>
+
+    <rect x="60" y="207" width="880" height="493" rx="20" fill="#102d37"/>
+    <circle cx="95" cy="246" r="6" fill="#70dbcc"/>
+    <text x="115" y="254" font-size="24" fill="#c5dadf">Dart process</text>
+    <text x="905" y="254" text-anchor="end" font-size="23" fill="#91b4bd">running</text>
+    <path d="M60 279h880" stroke="#31505a"/>
+
+    <path d="M91 317h35v29H91zm9-8v8m17-8v8m-27 38h36" fill="none" stroke="#70dbcc" stroke-width="2.5" stroke-linecap="round"/>
+    <circle cx="102" cy="331" r="2.5" fill="#70dbcc"/><circle cx="116" cy="331" r="2.5" fill="#70dbcc"/>
+    <text x="151" y="330" font-size="23" fill="#9ac8cf">AGENT</text>
+    <text x="151" y="375" font-size="37" font-weight="550" letter-spacing="-.7" fill="#fff">Let me look inside.</text>
+    <text x="151" y="417" font-size="25" fill="#c5dadf">My tools. My runtime. My own code.</text>
+
+    <path d="M148 492H840v105H148v-61" fill="none" stroke="#70dbcc" stroke-width="2.5" marker-end="url(#arrow)"/>
+    <g fill="#102d37"><rect x="173" y="464" width="184" height="56"/><rect x="400" y="464" width="177" height="56"/><rect x="625" y="464" width="195" height="56"/></g>
+    <g font-size="27" fill="#fff" text-anchor="middle"><text x="265" y="500">Inspect</text><text x="490" y="500">Edit</text><text x="722" y="500">Hot reload</text></g>
+    <g font-size="21" fill="#9ac8cf" text-anchor="middle"><text x="265" y="537">via VM Service / MCP</text><text x="490" y="537">the harness</text><text x="722" y="537">the running app</text></g>
+    <rect x="279" y="576" width="442" height="41" fill="#102d37"/>
+    <text x="500" y="606" text-anchor="middle" font-size="27" fill="#70dbcc">New code. Same conversation.</text>
+    <path d="m91 653 7 7 12-15" fill="none" stroke="#70dbcc" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <text x="124" y="661" font-size="23" fill="#c5dadf">Session intact. No restart.</text>
+  </g>
+</svg>

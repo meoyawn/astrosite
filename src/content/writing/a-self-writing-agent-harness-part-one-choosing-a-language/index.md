@@ -12,6 +12,8 @@ time, on my desktop and on a VPS, and improve itself while it works. If the
 agent finds a bug in a tool, it should be able to fix the code and use the fix
 without throwing away its conversation, open connections, and pending work.
 
+![Illustration: “Can you debug yourself?” An agent looks into its own running Dart process through VM Service and MCP, edits the harness, and hot reloads. New code, same conversation.](./looking-into-itself.svg)
+
 I also want a GUI. That's an opinion about the product I want to build: a
 harness should be an application I can see into and interact with, rather than
 something I can only operate through a terminal. A headless deployment still
