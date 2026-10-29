@@ -3,7 +3,7 @@ title: "A Self-modifying AI Agent, Part One: Choosing a Language"
 description: >-
   Choosing between Dart and .NET for an AI agent that modifies itself to pursue
   its operator's goals: better task completion, lower token use, or faster work.
-updated_at: 2026-10-27
+updated_at: 2026-10-29
 published_at: 2026-10-19
 ---
 
@@ -226,6 +226,16 @@ can still be inspected with the
 heap graph, and `dotnet-dump` collects a process dump for analysis. These tools
 attach to the application's PID while the watcher continues doing its job.
 
+MAUI also has an agent-facing GUI inspection path.
+[DevFlow](https://github.com/dotnet/docs-maui/blob/main/docs/developer-tools/devflow/index.md)
+runs an agent inside the development app and exposes visual-tree inspection,
+element properties, screenshots, interactions, and profiling through a CLI
+and `maui devflow mcp`. Mac Catalyst is listed as supported. The packages live
+in [Microsoft's MAUI Labs](https://github.com/dotnet/maui-labs), where they are
+explicitly experimental and outside the regular MAUI support policy. I haven't
+tested that inspection path; its documented capabilities make it a real
+candidate for the loop I want, with its maturity still to establish.
+
 An unsupported edit can restart the app and change that PID. Heap collection
 can trigger a GC and pause execution. Development profiles also need to be
 followed by measurements of the actual release build. Within those boundaries,
@@ -243,6 +253,9 @@ seeing changes in the running application. Flutter's
 [stateful hot reload](https://docs.flutter.dev/tools/hot-reload) applies to the
 UI as well as the Dart harness. The same development environment can show me
 the application, inspect its widgets, and change the code driving it.
+After an accepted reload, Flutter automatically rebuilds the widget tree
+against the retained state. It doesn't rerun `main()` or `initState()`, so
+initialization changes still need deliberate handling.
 
 My impression of .NET UI development had been XAML and a separate layer of UI
 machinery. That impression needs a qualification.
@@ -253,12 +266,39 @@ and community frameworks offer more explicitly React- or Elm-like approaches.
 provides a functional F# approach on Avalonia. .NET can express a view as a
 function of state; it doesn't require writing XML.
 
+MAUI has [XAML Hot Reload](https://learn.microsoft.com/en-us/dotnet/maui/xaml/hot-reload)
+on Mac Catalyst too, including through VS Code. It can update existing controls
+while preserving navigation and data. But XAML reload and C# reload are
+separate mechanisms. The MAUI team's
+[diagnosing guide](https://github.com/dotnet/maui/wiki/Diagnosing-Hot-Reload)
+explains that either can work while the other fails, recommends a supported
+debugger configuration, and says C# changes often need the relevant action or
+navigation to run again before their effects become visible. A patched method
+doesn't by itself update controls that were already constructed. The XAML
+documentation also warns that its full-page reload fallback can lose focus
+and selection. For an agent changing its own UI during an ongoing conversation,
+I see that coordination as a significant practical weakness.
+
+That guide predates the newer .NET 11 work.
+[MAUI's move to CoreCLR](https://devblogs.microsoft.com/dotnet/coreclr-progress-and-mono-timeline-dotnet-maui/)
+brings Hot Reload to `dotnet watch`, and the new incremental XAML engine,
+introduced in [.NET MAUI 11 Preview 7](https://learn.microsoft.com/en-us/dotnet/maui/xaml/hot-reload#enable-xaml-incremental-hot-reload),
+patches existing page instances without
+requiring navigation and supports XAML updates through the watcher. These
+are relevant improvements, still on the prerelease path as I write this.
+My .NET 10 server probes above didn't exercise MAUI's UI reload, and I haven't
+measured the newer Mac Catalyst workflow. The diagnostic guide establishes
+limitations and recovery steps, rather than a comparative failure rate;
+Flutter also has edits that require a restart.
+
 Maybe an agent makes the syntax distinction less important anyway. My
 preference is about the whole path: Flutter puts code-first UI, stateful
 reload, widget inspection, and native release builds together as its normal
-workflow. That's a practical advantage for the agent application I want to build,
-not proof that .NET lacks a capable cross-platform UI ecosystem. .NET remains
-a serious contender, especially after what it managed in the reload probes.
+workflow. I give that integration more weight than the presence of each
+capability on a feature list. MAUI's reload and DevFlow tooling deserve their
+own end-to-end test before I treat them as equivalent for this application.
+.NET remains a serious contender, especially after what it managed in the
+reload probes.
 
 Before choosing Dart, though, I needed to solve one problem both contenders
 share: how does an AOT application execute programs written after it ships?
