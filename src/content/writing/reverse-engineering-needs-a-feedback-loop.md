@@ -30,7 +30,8 @@ loop, the number of interacting behaviors was too large to keep in my head.
 The agent could keep producing changes long after I had lost confidence in
 how close we were.
 
-A Go application built with MyGo showed me what was missing.
+A Go application built with MyGo showed me what was missing. It contained
+JavaScript too, and we successfully reconstructed that part.
 
 For that reconstruction, we stayed with Go and matched the original compiler,
 dependencies and known build settings. We could rebuild the recovered source
@@ -62,10 +63,11 @@ early.
 Before attempting reverse engineering, research the original stack
 thoroughly. Use engineering blog posts, architecture talks, release notes and
 dependency notices to establish its languages, frameworks, runtimes and
-native components. Identify versions where possible, check that each source
-applies to the release you're studying, and keep remaining unknowns explicit.
+native components. Identify versions where possible and check that each
+source applies to the release you're studying. Treat this as an initial map;
+the investigation will have to fill in undocumented details.
 
-Once the stack is established, design the verification loop around it.
+Use that understanding of the stack to design the verification loop.
 Reconstruct in the original stack first: for an Electron app, start with
 Electron. Decide which behaviors to recover and what counts as a match.
 Capture the original's inputs, starting state and expected results. Choose
