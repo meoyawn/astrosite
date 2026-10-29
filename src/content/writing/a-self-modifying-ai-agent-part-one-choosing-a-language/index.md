@@ -247,9 +247,9 @@ agent can judge it against the actual objective.
 
 ## The GUI is part of the choice
 
-This is where Flutter starts to tip the decision for me. I like declaring a
-view in code from its current state, composing it from smaller pieces, and
-seeing changes in the running application. Flutter's
+The GUI needs to participate in the same experiment. After changing a view,
+the agent should be able to inspect the live UI and its state, observe the
+effect, and continue its ongoing work. Flutter's
 [stateful hot reload](https://docs.flutter.dev/tools/hot-reload) applies to the
 UI as well as the Dart harness. The same development environment can show me
 the application, inspect its widgets, and change the code driving it.
@@ -257,14 +257,10 @@ After an accepted reload, Flutter automatically rebuilds the widget tree
 against the retained state. It doesn't rerun `main()` or `initState()`, so
 initialization changes still need deliberate handling.
 
-My impression of .NET UI development had been XAML and a separate layer of UI
-machinery. That impression needs a qualification.
-[XAML is optional in .NET MAUI](https://learn.microsoft.com/en-us/dotnet/maui/xaml/),
-and community frameworks offer more explicitly React- or Elm-like approaches.
-[MauiReactor](https://github.com/adospace/reactorui-maui) uses C# components with
-`Render()` and `SetState`; [FuncUI](https://github.com/fsprojects/Avalonia.FuncUI)
-provides a functional F# approach on Avalonia. .NET can express a view as a
-function of state; it doesn't require writing XML.
+The syntax used to author the view isn't a deciding factor. What matters is
+which edits take effect in the running application, which state survives,
+and whether the agent can reload and inspect it through a CLI or MCP. This
+is where I still need a practical MAUI comparison.
 
 MAUI has [XAML Hot Reload](https://learn.microsoft.com/en-us/dotnet/maui/xaml/hot-reload)
 on Mac Catalyst too, including through VS Code. It can update existing controls
@@ -291,14 +287,13 @@ measured the newer Mac Catalyst workflow. The diagnostic guide establishes
 limitations and recovery steps, rather than a comparative failure rate;
 Flutter also has edits that require a restart.
 
-Maybe an agent makes the syntax distinction less important anyway. My
-preference is about the whole path: Flutter puts code-first UI, stateful
-reload, widget inspection, and native release builds together as its normal
-workflow. I give that integration more weight than the presence of each
-capability on a feature list. MAUI's reload and DevFlow tooling deserve their
-own end-to-end test before I treat them as equivalent for this application.
-.NET remains a serious contender, especially after what it managed in the
-reload probes.
+Flutter brings stateful UI reload, widget inspection, runtime diagnostics,
+and native release builds into one development workflow. That integration
+matters because the agent has to operate the loop itself: apply the change,
+find out whether it took effect, and collect evidence about the result.
+MAUI's reload and DevFlow tooling deserve their own end-to-end test against
+those requirements. .NET remains a serious contender, especially after what
+it managed in the server reload probes.
 
 Before choosing Dart, though, I needed to solve one problem both contenders
 share: how does an AOT application execute programs written after it ships?
@@ -455,19 +450,96 @@ I wanted to know what each runtime feature would cost the application I ship.
 They don't measure task completion or token efficiency. Those need to be
 evaluated with the agent doing the work its operator cares about.
 
+## How the native hosts compare on Linux
+
+I also wanted evidence for Dart outside Flutter. My
+[Linux HTTP benchmarks](https://github.com/meoyawn/http-benchmarks#linux-results)
+compare Dart and .NET as headless servers, including their native AOT builds.
+These measurements ran on October 22, 2026, on a separate Linux VM with eight
+AMD EPYC-Rome KVM vCPUs and 15.24 GiB RAM. They aren't comparable to the Mac
+measurements above.
+
+Dart 3.13.4 used its native `HttpServer`, standard JSON, and sqlite3 3.7.1,
+with four or eight HTTP isolates. .NET SDK 10.0.402, with runtime / ASP.NET Core
+10.0.13, used Kestrel, generated System.Text.Json, two pool workers, and three
+socket I/O threads. Both used the same SQLite 3.53.4 source and settings, with
+one dedicated writer. Each configuration stayed the same across both endpoints.
+
+The stacks had separate four-round rotating sweeps on the same host. Five
+clients sent 50 concurrent requests over Unix sockets: ten seconds of writes,
+then ten seconds of JSON echo, with fresh processes and databases and no HTTP
+warm-up. Clients shared the VM with the server, without CPU pinning or
+guaranteed host isolation. Throughput, p50 latency, and CPU are medians; peak
+RSS is the largest sample taken roughly every 100 ms. CPU at 100% means one
+vCPU. The tables below focus on AOT; the repository also includes JIT results.
+
+For `/posts`, each request validates JSON and commits its own SQLite
+transaction before returning a response.
+
+| Native AOT server | Requests/s | p50 latency | Peak RSS | CPU | Requests/s per vCPU |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Dart, 4 HTTP isolates | 7.9K | 3.921 ms | 27.0 MiB | 199% | 3.99K |
+| Dart, 8 HTTP isolates | 8.3K | 3.603 ms | 50.5 MiB | 204% | 4.08K |
+| .NET, 2 pool + 3 I/O | 8.2K | 3.284 ms | 36.0 MiB | 183% | 4.46K |
+
+For `/echo`, each request parses JSON and serializes its two fields without a
+database write.
+
+| Native AOT server | Requests/s | p50 latency | Peak RSS | CPU | Requests/s per vCPU |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Dart, 4 HTTP isolates | 38.8K | 1.077 ms | 27.4 MiB | 321% | 12.11K |
+| Dart, 8 HTTP isolates | 41.0K | 0.939 ms | 51.0 MiB | 359% | 11.43K |
+| .NET, 2 pool + 3 I/O | 114.9K | 0.301 ms | 40.1 MiB | 261% | 43.96K |
+
+The SQLite write rates are roughly on par, with overlapping run ranges.
+.NET uses less CPU for that workload. The echo results show a much larger
+difference: .NET AOT handles about 2.8–3 times as many requests, also with lower
+CPU use. These are comparisons of the complete HTTP and JSON stacks; they
+don't isolate the compiler or establish a general language-speed ratio.
+
+Startup and deployment costs favor Dart in this application:
+
+| Property | Dart AOT, 4 isolates | Dart AOT, 8 isolates | .NET AOT |
+| --- | ---: | ---: | ---: |
+| Start + Unix-socket bind | 15.35 ms | 15.41 ms | 55.37 ms |
+| Idle RSS | 13.5 MiB | 13.6 MiB | 29.7 MiB |
+| Clean release build | 43.55 s | 43.55 s | 78.91 s |
+| Executable size | 6.80 MiB | 6.80 MiB | 9.59 MiB |
+| Full deployment bundle | 8.49 MiB | 8.49 MiB | 11.51 MiB |
+
+Startup is the median of seven fresh processes, including runtime, SQLite,
+and HTTP initialization, with filesystem caches left warm. Clean build times
+are three-run medians including native SQLite compilation, with toolchains
+and downloaded dependencies cached. Bundles include the runtime and SQLite;
+OS libraries, databases, and debug symbols are excluded. Neither AOT bundle
+needs a separately installed language runtime. Four-isolate Dart also uses
+less memory under load; eight isolates give up that advantage for a modest
+throughput increase.
+
+This gives me more confidence in a headless Dart host. Both stacks can ship
+small native servers and reach similar write throughput here, while .NET has
+a clear HTTP/JSON throughput advantage. These short server runs don't measure
+agent behavior, long-run stability, GUI costs, or the embedded code-mode
+interpreter. The repository retains the
+[Dart samples](https://github.com/meoyawn/http-benchmarks/blob/master/dart/measurements.json)
+and [.NET samples](https://github.com/meoyawn/http-benchmarks/blob/master/csharp/measurements-linux.json),
+including response and database correctness checks. The remaining language
+decision still needs a hands-on comparison of the application workflow.
+
 ## Where this leaves me
 
 .NET and Dart both remain credible answers. .NET reached further into closures
 and suspended procedures in my reload probes, has excellent diagnostic CLIs,
-and can ship native AOT applications. The issue wasn't finding a reason to
-rule it out. It was choosing the development and UI stack I want to live in.
+and can ship native AOT applications. The remaining comparison is how well
+the agent can operate the complete change-and-inspect loop, including its UI.
 
 For this agent, I'm leaning toward Dart with Flutter, and QuickJS for code
 mode. Dart owns the agent loop, conversation, connections, tools, and UI state.
 That is the implementation I want the agent to be able to modify. JavaScript
 programs compose tool calls through an explicit asynchronous bridge. The
-headless Dart loop can run on a VPS too, although Linux packaging still needs
-its own proof.
+Linux benchmark establishes a working native HTTP/SQLite deployment.
+Packaging the full headless agent and its embedded interpreter for a VPS
+still needs its own test.
 
 That gives each stage a clear job. In Flutter's debug runtime, the agent could
 change its implementation, reload it, inspect what happened, and evaluate the
@@ -484,14 +556,18 @@ inside the host address space. Semi-trusted tool programs still need explicit
 capabilities, resource limits, and cancellation.
 
 Flutter's advantage for me is that the GUI belongs to this same loop from the
-start. I can change the application, inspect it, and ship it using one coherent
-stack. Someone who prefers a .NET UI framework could reasonably make the other
-choice. TypeScript's new AOT work may give me another strong option soon.
+start. The agent can use the stack's reload and inspection facilities across
+its implementation and UI. A MAUI trial needs to establish how well .NET
+supports that same loop. TypeScript's new AOT work may give me another strong
+option soon.
 
-Right now, Dart gets me closest to the application I want with the least
-custom machinery. The next test is to give the agent a concrete objective and
-let it work on its own implementation: complete more of a set of tasks, reduce
-the tokens needed to reach an acceptable result, or finish the work sooner.
+Dart remains my leading option, but I want to try a small MAUI application
+before settling the choice. The agent needs to change the UI and application
+logic, inspect the effects, and collect runtime evidence while a conversation
+and background work stay alive. After that, the next test is to give the agent
+a concrete objective and let it work on its own
+implementation: complete more of a set of tasks, reduce the tokens needed to
+reach an acceptable result, or finish the work sooner.
 I want to see whether it can make changes, evaluate them, and retain the ones
 that help over a long run. The language experiments establish some of the
 mechanics. Whether the agent can use them to achieve the operator's goal is
