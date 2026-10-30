@@ -13,7 +13,7 @@ export interface IconLinkProps {
 
 export const IconLink = (props: IconLinkProps) => (
   <a
-    class="flex w-fit max-w-full items-center gap-2 text-sm leading-6 font-medium text-sky-700 hover-underline sm:text-[15px] print:gap-1.5 print:text-[12px] print:leading-[1.35]"
+    class="flex w-fit max-w-full items-center gap-2 text-[0.9375rem] leading-6 font-semibold text-link hover-underline print:gap-1.5 print:text-[12px] print:leading-[1.35]"
     target="_blank"
     rel="noreferrer"
     href={props.href}

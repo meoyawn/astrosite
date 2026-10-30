@@ -107,7 +107,7 @@ test.describe("e2e tests", () => {
       "href",
       routes.cv,
     )
-    await expect(main.getByText(/Pneuma LLC/)).toBeVisible()
+    await expect(main.getByText(/Pneuma LLC/)).toHaveCount(0)
   })
 
   test("npm install article frontmatter matches HTML and Open Graph metadata", async ({

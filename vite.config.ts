@@ -22,24 +22,28 @@ import { staticSite } from "solid-static"
 
 const codeTheme = "github-dark-default"
 const codeColors = {
-  attribute: "#79C0FF",
-  comment: "#8B949E",
-  foreground: "#C9D1D9",
-  identifier: "#79C0FF",
-  keyword: "#FF7B72",
-  literal: "#D2A8FF",
-  operator: "#FF7B72",
-  punctuation: "#C9D1D9",
-  string: "#A5D6FF",
-  tag: "#D2A8FF",
-  type: "#79C0FF",
+  attribute: "var(--color-code-identifier)",
+  comment: "var(--color-code-comment)",
+  foreground: "var(--color-code-foreground)",
+  identifier: "var(--color-code-identifier)",
+  keyword: "var(--color-code-keyword)",
+  literal: "var(--color-code-literal)",
+  operator: "var(--color-code-keyword)",
+  punctuation: "var(--color-code-punctuation)",
+  string: "var(--color-code-string)",
+  tag: "var(--color-code-literal)",
+  type: "var(--color-code-identifier)",
 }
 const codeHighlightOptions: RehypeShikiOptions = {
   includeExplanation: true,
   theme: codeTheme,
   transformers: [
     {
-      name: "apply-deep-cool-palette",
+      name: "apply-site-code-tokens",
+      pre(node) {
+        node.properties.style =
+          "background-color:var(--color-code-background);color:var(--color-code-foreground)"
+      },
       tokens(lines) {
         for (const line of lines) {
           const explainedTokens = line.flatMap((token) => {
@@ -140,6 +144,8 @@ const codeHighlightOptions: RehypeShikiOptions = {
               token.color = codeColors.keyword
             } else if (hasScope("punctuation")) {
               token.color = codeColors.punctuation
+            } else {
+              token.color = codeColors.foreground
             }
 
             token.htmlStyle = {

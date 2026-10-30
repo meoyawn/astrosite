@@ -2,7 +2,32 @@
 @plugin "@tailwindcss/typography";
 
 @theme {
+  --font-sans:
+    ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
+    "Segoe UI Symbol", "Noto Color Emoji";
   --color-date: #6b7280;
+  --color-link: oklch(22.64% 0 0);
+  --color-link-underline: oklch(61.67% 0 0);
+  --color-cv-link: oklch(50% 0.134 242.749);
+  --color-selection: oklch(96.42% 0 0);
+  --color-selection-ink: oklch(24.35% 0 0);
+  --color-code-background: #0d1117;
+  --color-code-foreground: #e6edf3;
+  --color-code-punctuation: #c9d1d9;
+  --color-code-comment: #8b949e;
+  --color-code-identifier: #79c0ff;
+  --color-code-keyword: #ff7b72;
+  --color-code-string: #a5d6ff;
+  --color-code-literal: #d2a8ff;
+  --color-code-inline-background: #f4f4f5;
+  --color-code-inline-ink: #18181b;
+  --leading-reading: 1.8;
+  --text-display: clamp(2.5rem, 9vw, 6rem);
+  --text-display--line-height: 1.04;
+  --text-reading-title: clamp(2.5rem, 5.5vw, 4rem);
+  --text-reading-title--line-height: 1.12;
+  --text-code: 0.9375rem;
+  --text-code--line-height: 1.6;
 }
 
 html {
@@ -11,8 +36,8 @@ html {
 }
 
 ::selection {
-  background: #18181b;
-  color: #ffffff;
+  background: var(--color-selection);
+  color: var(--color-selection-ink);
 }
 
 :focus-visible {
@@ -22,10 +47,10 @@ html {
 }
 
 @utility hover-underline {
-  text-decoration-color: color-mix(in oklab, currentColor 25%, transparent);
+  text-decoration-color: var(--color-link-underline);
   text-decoration-line: underline;
-  text-decoration-thickness: 1px;
-  text-underline-offset: 3px;
+  text-decoration-thickness: auto;
+  text-underline-offset: 4px;
   transition-duration: var(--default-transition-duration);
   transition-property: text-decoration-color;
   transition-timing-function: var(--default-transition-timing-function);
@@ -33,10 +58,14 @@ html {
   &:hover {
     text-decoration-color: currentColor;
   }
+
+  @media (prefers-reduced-motion: reduce) {
+    transition-duration: 0s;
+  }
 }
 
 .prose :where(a):not(:where([class~="not-prose"], [class~="not-prose"] *)) {
-  @apply hover-underline;
+  @apply font-semibold text-link hover-underline;
 }
 
 .prose
@@ -46,6 +75,7 @@ html {
   > :where(a[href^="#"]) {
   position: relative;
   color: inherit;
+  font-weight: inherit;
   display: block;
   text-decoration-color: transparent;
 }

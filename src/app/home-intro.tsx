@@ -2,6 +2,7 @@ import { createMemo } from "solid-js"
 import { HomeTimepiece } from "./home-timepiece.tsx"
 import type { Locale } from "./i18n.ts"
 import { LocaleSwitcher } from "./locale-switcher.tsx"
+import { NavigationLink } from "./navigation-link.tsx"
 import { siteCopy } from "./site-copy.ts"
 
 export interface HomeIntroProps {
@@ -16,14 +17,14 @@ export const HomeIntro = (props: HomeIntroProps) => {
       <HomeTimepiece />
       <h1
         id="home-title"
-        class="m-0 font-serif text-[clamp(2.3rem,9vw,6rem)] leading-[0.96] font-normal tracking-[-0.03em] text-balance text-zinc-900"
+        class="m-0 font-sans text-display font-bold tracking-tight text-balance text-zinc-900"
       >
         {copy().siteTitle}
       </h1>
       <p class="mx-auto mt-5 max-w-[58ch] text-[1.0625rem] leading-6 text-zinc-600 max-sm:max-w-[32ch] max-sm:text-base">
         {copy().projectsPrefix}
         <a
-          class="text-inherit hover-underline"
+          class="font-semibold text-link hover-underline"
           href="https://listenbox.app"
           rel="noreferrer"
           target="_blank"
@@ -32,7 +33,7 @@ export const HomeIntro = (props: HomeIntroProps) => {
         </a>
         {` ${copy().and} `}
         <a
-          class="text-inherit hover-underline"
+          class="font-semibold text-link hover-underline"
           href="https://strengthmcp.com/"
           rel="noreferrer"
           target="_blank"
@@ -41,40 +42,37 @@ export const HomeIntro = (props: HomeIntroProps) => {
         </a>
         {copy().projectsSuffix}
       </p>
-      <div class="mt-6 flex flex-wrap items-center justify-center gap-x-5 gap-y-3 max-sm:gap-x-4">
+      <div class="mt-6 flex flex-wrap items-center justify-center gap-x-4 gap-y-2">
         <nav aria-label={copy().profileLinksLabel}>
-          <ul class="m-0 flex list-none flex-wrap items-center gap-5 p-0 max-sm:gap-4">
+          <ul class="m-0 flex list-none flex-wrap items-center gap-1 p-0">
             <li>
-              <a
-                class="text-sm text-zinc-500 no-underline transition-colors hover:text-zinc-900"
+              <NavigationLink
                 href="https://github.com/meoyawn"
                 rel="noreferrer"
                 target="_blank"
               >
                 GitHub
-              </a>
+              </NavigationLink>
             </li>
             <li>
-              <a
-                class="text-sm text-zinc-500 no-underline transition-colors hover:text-zinc-900"
+              <NavigationLink
                 href="https://www.linkedin.com/in/adelnizamuddin"
                 rel="noreferrer"
                 target="_blank"
               >
                 LinkedIn
-              </a>
+              </NavigationLink>
             </li>
             <li>
-              <a
-                class="text-sm text-zinc-500 no-underline transition-colors hover:text-zinc-900"
+              <NavigationLink
                 href="mailto:mail@adelnz.com"
               >
                 {copy().email}
-              </a>
+              </NavigationLink>
             </li>
           </ul>
         </nav>
-        <div class="border-l border-zinc-200 pl-5 max-sm:pl-4">
+        <div class="border-l border-zinc-200 pl-4">
           <LocaleSwitcher currentLocale={props.locale} currentPath="home" />
         </div>
       </div>

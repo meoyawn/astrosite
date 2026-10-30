@@ -11,7 +11,12 @@ colors:
   rule: "oklch(92% 0.004 286.32)"
   focus-ink: "#18181b"
   date: "#6b7280"
+  link: "oklch(22.64% 0 0)"
+  link-underline: "oklch(61.67% 0 0)"
   cv-link: "oklch(50% 0.134 242.749)"
+  selection: "oklch(96.42% 0 0)"
+  selection-ink: "oklch(24.35% 0 0)"
+  navigation-ink: "oklch(37% 0.013 285.805)"
   cv-ink: "oklch(27.4% 0.006 286.033)"
   code-background: "#0d1117"
   code-foreground: "#e6edf3"
@@ -21,77 +26,80 @@ colors:
   code-keyword: "#FF7B72"
   code-string: "#A5D6FF"
   code-literal: "#D2A8FF"
+  code-inline-background: "#f4f4f5"
+  code-inline-ink: "#18181b"
   travel-blue: "#0369a1"
   travel-ink: "#07111f"
   travel-muted: "#687383"
 typography:
   display:
-    fontFamily: 'ui-serif, Georgia, Cambria, "Times New Roman", Times, serif'
-    fontSize: "clamp(2.3rem, 9vw, 6rem)"
-    fontWeight: 400
-    lineHeight: 0.96
-    letterSpacing: "-0.03em"
+    fontFamily: 'ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"'
+    fontSize: "clamp(2.5rem, 9vw, 6rem)"
+    fontWeight: 700
+    lineHeight: 1.04
+    letterSpacing: "-0.025em"
   headline:
-    fontFamily: 'ui-serif, Georgia, Cambria, "Times New Roman", Times, serif'
-    fontSize: "clamp(3.25rem, 8vw, 4.75rem)"
-    fontWeight: 400
-    lineHeight: 0.98
-    letterSpacing: "-0.03em"
+    fontFamily: 'ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"'
+    fontSize: "clamp(2.5rem, 5.5vw, 4rem)"
+    fontWeight: 700
+    lineHeight: 1.12
+    letterSpacing: "-0.025em"
   base:
-    fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", "Noto Sans", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"'
+    fontFamily: 'ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"'
     fontSize: "15px"
     fontWeight: 400
     lineHeight: "1.5rem"
     letterSpacing: "-0.01em"
   body:
-    fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", "Noto Sans", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"'
+    fontFamily: 'ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"'
     fontSize: "1.0625rem"
     fontWeight: 400
-    lineHeight: "1.75rem"
-    letterSpacing: "-0.15px"
-  article-title:
-    fontFamily: 'ui-serif, Georgia, Cambria, "Times New Roman", Times, serif'
-    fontSize: "3rem"
-    fontWeight: 400
-    lineHeight: 0.98
-    letterSpacing: "-0.03em"
-  cv-body:
-    fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", "Noto Sans", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"'
-    fontSize: "1rem"
-    fontWeight: 400
-    lineHeight: 1.65
-    letterSpacing: "-0.15px"
+    lineHeight: 1.8
+    letterSpacing: "0px"
+  content-link:
+    fontFamily: 'ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"'
+    fontSize: "inherit"
+    fontWeight: 600
+    lineHeight: "inherit"
+    letterSpacing: "inherit"
   code:
     fontFamily: 'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace'
-    fontSize: "0.875em"
-    fontWeight: 400
-    lineHeight: 1.7142857
-  title:
-    fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", "Noto Sans", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"'
-    fontSize: "1.125rem"
-    fontWeight: 500
-    lineHeight: "1.5rem"
-    letterSpacing: "-0.01em"
-  utility:
-    fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", "Noto Sans", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"'
     fontSize: "0.9375rem"
-    fontWeight: 400
+    fontWeight: 500
+    lineHeight: 1.6
+    letterSpacing: "0px"
+  title:
+    fontFamily: 'ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"'
+    fontSize: "1.125rem"
+    fontWeight: 600
+    lineHeight: 1.375
+    letterSpacing: "0px"
+  utility:
+    fontFamily: 'ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"'
+    fontSize: "0.9375rem"
+    fontWeight: 600
     lineHeight: "1.5rem"
-    letterSpacing: "-0.15px"
+    letterSpacing: "0px"
+  brand:
+    fontFamily: 'ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"'
+    fontSize: "1.125rem"
+    fontWeight: 700
+    lineHeight: 1.375
+    letterSpacing: "-0.025em"
   small:
-    fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", "Noto Sans", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"'
+    fontFamily: 'ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"'
     fontSize: "0.875rem"
     fontWeight: 400
     lineHeight: "1.25rem"
     letterSpacing: "-0.15px"
   date:
-    fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", "Noto Sans", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"'
+    fontFamily: 'ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"'
     fontSize: "0.8125rem"
     fontWeight: 400
     lineHeight: "1.25rem"
     letterSpacing: "-0.15px"
   label:
-    fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", "Noto Sans", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"'
+    fontFamily: 'ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"'
     fontSize: "0.8125rem"
     fontWeight: 600
     lineHeight: "1.25rem"
@@ -99,7 +107,7 @@ typography:
 rounded:
   none: "0px"
   focus: "2px"
-  code: "0.375rem"
+  code: "0.5rem"
   cv-logo: "0.75rem"
   cv-logo-print: "0.25rem"
   travel-tooltip: "0.5rem"
@@ -116,31 +124,32 @@ spacing:
 components:
   site-nav:
     backgroundColor: "transparent"
-    textColor: "{colors.heading-ink}"
+    textColor: "{colors.navigation-ink}"
     typography: "{typography.utility}"
     rounded: "{rounded.none}"
-    padding: "0"
+    padding: "0.5rem"
   locale-link:
     backgroundColor: "transparent"
-    textColor: "{colors.quiet-ink}"
-    typography: "{typography.small}"
+    textColor: "{colors.navigation-ink}"
+    typography: "{typography.utility}"
     rounded: "{rounded.none}"
-    padding: "0"
+    padding: "0.5rem"
   writing-row:
     backgroundColor: "{colors.background}"
     textColor: "{colors.heading-ink}"
     typography: "{typography.title}"
     rounded: "{rounded.none}"
-    padding: "0.375rem 0"
+    padding: "0.5rem 0"
   prose-link:
     backgroundColor: "transparent"
-    textColor: "{colors.heading-ink}"
-    typography: "{typography.body}"
+    textColor: "{colors.link}"
+    typography: "{typography.content-link}"
     rounded: "{rounded.none}"
     padding: "0"
   cv-contact:
     backgroundColor: "transparent"
     textColor: "{colors.cv-link}"
+    typography: "{typography.utility}"
     rounded: "{rounded.none}"
     padding: "0"
   code-block:
@@ -148,7 +157,7 @@ components:
     textColor: "{colors.code-foreground}"
     typography: "{typography.code}"
     rounded: "{rounded.code}"
-    padding: "0.8571429em 1.1428571em"
+    padding: "1.25rem"
   home-timepiece:
     backgroundColor: "transparent"
     textColor: "{colors.heading-ink}"
@@ -179,47 +188,56 @@ the author's work remains legible without portfolio ceremony. Type, links, and
 space carry the identity. A small mechanical timepiece above the homepage title
 adds a restrained moving signature without taking over the reading surface.
 
-The system pairs system-serif display type with system-sans prose and utility
-text. Plain underlines, one-pixel rules, muted dates, and restrained responsive
-spacing keep the page close to a well-set document. The CV is a denser sans-serif
-document; syntax highlighting and the travel map have functional palettes and
-interaction needs of their own.
+Bold system-sans titles connect the homepage, reading pages, CV, and navigation.
+Semibold links, offset gray underlines, muted dates, and relaxed reading rhythm
+keep the page open and approachable. Plain text navigation and pale gray text
+selection carry the same restrained personality. The CV adds blue links to the
+shared typography and keeps a compact print layout. Syntax highlighting and the
+travel map retain their functional palettes.
 
 **Key Characteristics:**
 
 - Flat white field with near-black zinc ink and a muted gray hierarchy.
-- System-serif display type with system-sans prose, utility, and metadata text.
-- Underlined text links and one-pixel rules provide state and separation.
+- Bold system-sans display and reading titles with a consistent navigation hierarchy.
+- Semibold black content links and clearly offset underlines identify destinations.
 - Narrow reading measures, with fixed homepage gutters and responsive prose gutters.
 - Plain, keyboard-visible multilingual links rather than chips or controls.
 - A small monochrome timepiece, with motion paused when hidden or unwanted.
 
-This refresh records current source and the local site inspected on 2026-09-14.
+The shared type, navigation, link, and selection treatments were updated on
+2026-10-30, following the
+[Listenbox guide](https://listenbox.app/guides/import-youtube-as-a-podcast/).
 Shared evidence lives in `src/styles/global.css`, `src/layouts/html-root.tsx`,
 `src/layouts/site-shell.tsx`, and the navigation, locale, and writing-list
 components in `src/app/`. Surface evidence lives in the home components,
 `src/pages/writing/[...slug].tsx`, `src/app/cv/`, `src/app/travel/`, and
-`vite.config.ts` for syntax colors. Frontmatter records observed values;
+`vite.config.ts` for syntax-role mapping and `src/styles/global.css` for colors.
+Frontmatter records observed values;
 `cv-`, `code-`, and `travel-` prefixes limit their scope. Layout descriptions
 record current behavior, not mandatory compositions for future routes.
 
 ## Colors
 
-White and zinc neutrals carry the shared interface. Blue identifies CV links
-and travel selection; syntax colors distinguish technical meaning inside code.
+White and zinc neutrals carry the shared interface. Black content links use
+weight and gray underlines for recognition. Blue identifies CV links and travel selection;
+syntax colors distinguish technical meaning inside code.
 Color names below refer to the normative frontmatter values.
 
 ### Primary
 
 - **Heading Zinc** (`heading-ink`): Display titles, reading text, shell
-  navigation, and writing titles. Homepage project links inherit Muted Zinc
-  from their supporting sentence.
+  navigation, heading anchors, and writing titles.
 
 ### Secondary
 
-- **CV Sky** (`cv-link`): The darker sky tone explicitly applied to CV contact,
-  product, company, education, and award links. It overrides the typography
-  plugin's default sky link color.
+- **Link Ink** (`link`): The shared near-black content-link color, defined as
+  `--color-link` in `src/styles/global.css` and exposed through `text-link`.
+  It applies to reading prose and homepage project links in every locale.
+  The CV scopes this same role to its blue accent token.
+- **Link Underline** (`link-underline`): A solid neutral gray, independent of
+  text opacity, for persistent content-link underlines.
+- **CV Blue** (`cv-link`): The sky accent for CV content and contact links.
+  Weight, underline, and focus behavior remain shared with the rest of the site.
 - **Travel Blue** (`travel-blue`): Selected stays, timeline fill and thumb,
   and keyboard focus within the travel island.
 - **Code syntax** (`code-*`): Identifier blue also covers attributes and types;
@@ -232,16 +250,20 @@ Color names below refer to the normative frontmatter values.
 - **White Field** (`background`): Page and content background.
 - **Ink Zinc** (`ink`): Base body ink and primary CV headings.
 - **Muted Zinc** (`muted-ink`): Supporting copy, section labels, and location text.
-- **Quiet Zinc** (`quiet-ink`): Dates, quiet profile links, and inactive locales.
+- **Quiet Zinc** (`quiet-ink`): Publication dates and supporting metadata.
+- **Navigation Ink** (`navigation-ink`): Utility, profile, and locale links at rest.
 - **Faint Zinc** (`faint-ink`): Heading-anchor markers and the timepiece spring.
-- **Rule Zinc** (`rule`): Dividers and resting navigation underlines.
-- **Focus Ink** (`focus-ink`): Global keyboard outlines and selection background;
-  selected text becomes white.
+- **Rule Zinc** (`rule`): Dividers between grouped information.
+- **Focus Ink** (`focus-ink`): Global keyboard outlines.
+- **Selection / Selection Ink** (`selection`, `selection-ink`): Listenbox's pale
+  neutral-gray highlight and dark selected text.
 - **Date Gray** (`date`): The custom `--color-date` token for CV date and location metadata.
-- **CV Ink** (`cv-ink`): CV body and subtitle.
+- **CV Ink** (`cv-ink`): The CV's professional subtitle.
 - **Code Field / Code Foreground** (`code-background`, `code-foreground`):
   Dark code containers and unclassified text. Highlighted punctuation has its
   separate configured token.
+- **Inline Code** (`code-inline-background`, `code-inline-ink`): A pale neutral
+  surface and dark text for short identifiers inside prose.
 - **Travel Ink / Travel Muted** (`travel-ink`, `travel-muted`): Place headings,
   date previews, and supporting map status or tooltip text.
 
@@ -250,13 +272,15 @@ Color names below refer to the normative frontmatter values.
 **The Ink First Rule.** Keep body and primary reading text near-black on white;
 muted color is reserved for metadata and supporting utility text.
 
-**The Functional Accent Rule.** Keep CV, code, and travel colors attached to
-their documented information and interaction roles.
+**The Functional Accent Rule.** Content links use semibold text and clear
+underlines: black for reading pages and homepage projects, blue for the CV.
+Navigation, locale switches, writing-index titles, and heading anchors retain
+their own hierarchy. Keep code and travel colors attached to their documented roles.
 
 ## Typography
 
-**Display Font:** Tailwind's system `font-serif` stack, recorded in the display,
-headline, and article-title tokens.
+**Display Font:** Tailwind's system `font-sans` stack, shared by the homepage,
+reading titles, CV, brand, and body text. No serif role is currently used.
 
 **Body Font:** Tailwind's system `font-sans` stack, recorded in the base and
 reading tokens, including system emoji fallbacks.
@@ -266,37 +290,46 @@ There are no loaded webfonts. The travel stylesheet currently names `Inter`
 before system fallbacks; this legacy declaration is an implementation exception,
 not permission to add a font dependency.
 
-**Character:** Native, practical, and quietly editorial. Serif signals the
-homepage display and prose-page title; sans supports scanning and sustained
-reading. The CV keeps its name and every heading in sans.
+**Character:** Native, direct, and approachable. Bold sans titles establish
+hierarchy; relaxed prose supports sustained reading across pages and the CV.
 
 ### Hierarchy
 
-- **Display:** The large, fluid, balanced homepage title.
-- **Headline:** The fluid serif h1 in the default prose shell, including
-  consulting and now. **Article Title** overrides its size while keeping the
-  same serif, normal weight, tracking, and tight leading.
-- **Title:** Medium-weight recent-writing titles with a hover-revealed underline.
+- **Display:** The bold, balanced homepage title, scaling from 40px to 96px with
+  1.04 leading and tight tracking.
+- **Headline:** The shared bold sans h1 for reading pages, including writing,
+  work together, now, and the CV. `text-reading-title` scales from 40px to 64px, with
+  1.12 leading, `tracking-tight`, and balanced wrapping. Articles use this same
+  role without a separate size override.
+- **Title:** Semibold 18px recent-writing titles, with normal tracking and a
+  hover-revealed underline.
 - **Base:** Default body typography and inherited tracking. Descendants inherit
   the computed tracking length unless they explicitly override it.
-- **Body:** Reading prose uses fixed leading from its token, not a unitless
-  multiplier. The homepage project sentence uses tighter leading (24px) and
+- **Body:** Reading prose uses unitless 1.8 leading (30.6px at 17px), exposed as
+  `leading-reading`, and normal tracking. The homepage project sentence uses
+  tighter leading (24px) and
   reduces its size below `sm` (16px).
-- **CV Body:** Denser sans prose with its own leading. The name is semibold
-  (32px; 36px from `sm`), section titles are semibold (20px/28px), and role
-  titles are semibold (18px with snug leading).
-- **Utility:** Shared shell navigation and brand links.
-- **Small:** Locale and quiet profile links. Article publication metadata uses
-  this size with medium weight and looser leading (24px).
+- **Content Link:** Semibold at the surrounding text size, shared across reading
+  prose, homepage projects, and the CV. Only the CV link color differs.
+- **CV:** Uses the shared Headline and Body roles on screen. Section headings
+  use h2; role, education, and award headings use h3. Print has explicit density
+  overrides for a compact document layout.
+- **Brand:** Bold 18px site-title link, with tight tracking.
+- **Utility:** Semibold 15px navigation, profile, locale, and CV contact links;
+  current navigation links become bold.
+- **Small:** Supporting metadata. Article publication dates use this size with
+  medium weight and looser leading (24px).
 - **Date:** Smaller recent-writing dates, with tabular numerals.
 - **Label:** Uppercase recent-writing label, semibold and deliberately tracked out.
-- **Code:** Block monospace size is relative to its reading container. Inline
-  code stays in the prose flow and uses the typography plugin's code treatment.
+- **Code:** System monospace at 15px/1.6 with medium weight and normal tracking.
+  Inline code stays at 0.875em, also medium weight, with a pale background and
+  no decorative backticks. Preserve whitespace and indentation in blocks.
 
 ### Named Rules
 
-**The Serif Signal Rule.** Use system serif for the homepage display and
-prose-page h1; keep prose subheadings, the CV, utilities, and metadata in sans.
+**The Reading Type Rule.** Use bold system sans for display and reading titles.
+The CV shares the same screen typography and reading measure; blue links are
+its accent. Compact print typography is a deliberate medium-specific exception.
 
 ## Layout
 
@@ -310,14 +343,18 @@ section gap with viewport height (`clamp(3rem, 8svh, 5rem)`).
 The shared prose shell uses the prose measure, including padding. It switches
 from the narrow to the wide gutter at `sm` (640px). Header top padding scales
 with viewport width (`clamp(2rem, 7vw, 5rem)`); main content uses the shell-top
-token with a 60px override below `sm`. The navigation's utility group wraps
-while the brand stays separate. Locale links remain inline.
+token with a 60px override below `sm`. Navigation stacks the brand above the
+utilities below `sm`; at wider sizes the utilities can wrap alongside it.
+Locale links remain together.
 
-The CV body is full-width with narrow gutters on mobile, 48px horizontal
-margins from `sm`, and 64px margins from `md` (768px). Only its navigation is
-centered in a prose-width container. Contact links change from one column to
-two at `sm`; organization rows reserve a logo column and let text shrink and
-wrap. Print removes navigation and outer spacing, reduces body text to
+The main content is a grid item in a single-column wrapper. This contains
+WebKit's native selection painting to selected text lines instead of filling
+page margins and paragraph gaps. Print restores normal block flow for pagination.
+
+The CV uses the same centered reading measure and gutters as article pages.
+Contact links change from one column to two at `sm`; organization rows reserve
+a logo column and let text shrink and wrap. Print removes navigation, width
+constraints, and outer spacing, reduces body text to
 12px/1.35, keeps organization rows together, and uses two columns for contacts
 and skills. Print names are 24px bold; section titles are 13.5px and role
 titles are 13px bold.
@@ -353,7 +390,8 @@ rules, type weight, and link state to establish hierarchy before adding surface 
 ## Shapes
 
 Shared text links and writing rows have square silhouettes with no filled
-container. Underlines are one pixel with a 3px offset. Keyboard focus is a
+container. Content, navigation, and writing-row underlines use the browser's
+automatic thickness and a 4px offset. Keyboard focus is a
 2px Focus Ink outline, offset 4px, with the focus radius. This is distinct
 from hover and remains visible across shared components.
 
@@ -367,16 +405,21 @@ not define a general card or pill system.
 
 ### Navigation
 
-A text-first row with a site-title link and Consulting/CV utilities. Near-black
-text uses pale resting underlines that darken on hover; the current page keeps
-the dark underline and adds medium weight. The utility group wraps with 24px
-horizontal gaps and 12px row gaps, reducing to 16px and 10px below `sm`.
-There is no hamburger menu. The homepage uses its own centered profile row.
+A bold site-title link accompanies Work together/CV utilities. Navigation,
+homepage profiles, and locale links share `NavigationLink`: 15px semibold text,
+44px minimum height, 8px padding, and an underline revealed on hover or current
+state. Current links become bold. Backgrounds remain transparent with no pill
+shapes. Keyboard focus uses the shared outline.
+
+The brand stacks above the utility group below `sm`. The group has 16px
+horizontal gaps and 8px row gaps; links within a list have a 4px gap.
+There is no hamburger menu. Homepage profiles form a centered row.
 
 ### Locale links
 
-Three plain links, EN/RU/TT, with a 12px gap. Inactive locales use Quiet Zinc;
-the current locale uses Heading Zinc and an underline. Hover darkens the ink.
+Three plain links, EN/RU/TT, with a 2px gap between padded targets. They share
+the navigation treatment: the current locale becomes bold and underlined.
+Hover darkens the ink and reveals the gray underline.
 Locale switching appears on the home, consulting, and CV surfaces. The
 homepage separates it from profile links with a one-pixel vertical rule.
 
@@ -390,29 +433,39 @@ no card backgrounds or dividers; spacing gives the list its rhythm.
 
 ### Prose links and anchors
 
-Prose links use an underline mixed from 25% current color at rest and full
-current color on hover. Heading fragment links are block-level, inherit heading
-color and weight, and reveal a muted # marker just outside the text on hover
-or keyboard focus. Hover also reveals the underline; focus adds an outline.
-Link-color and marker-opacity transitions use the sidecar's default link timing.
+Content links use semibold Link Ink with a persistent gray underline, offset by
+4px. Thickness follows the browser's automatic text-decoration sizing. The
+underline uses Link Underline at rest and becomes full current color on hover.
+Homepage project links share this treatment. The CV scopes `--color-link` to
+`--color-cv-link`, preserving the same semibold weight and underline behavior
+with a blue accent across every locale.
+
+Heading fragment links are block-level, inherit heading color and weight, and
+reveal a muted # marker just outside the text on hover or keyboard focus.
+Hover also reveals the underline; focus adds an outline.
+Underline-color and marker-opacity transitions use the sidecar's default link timing.
+Content-link underline transitions turn off when reduced motion is requested.
 Document scrolling is smooth, switching to automatic with reduced motion.
 
 ### CV contacts and organization rows
 
 Contact links pair a fixed monochrome icon (16px) with wrapping blue text.
-They use medium weight and an 8px gap, reducing to 6px in print. Contact text
-is 14px on mobile, 15px from `sm`, and 12px in print. Organization rows pair
+They use semibold weight and an 8px gap, reducing to 6px in print. Contact text
+is 15px on screen and 12px in print. Organization rows pair
 a logo with role, company, dates, location, and prose. Their screen grid is
 48px plus flexible text with a 16px gap; print uses 32px and a 10px gap.
 Dates and locations stay visually subordinate. Blue links remain underlined.
 
 ### Code blocks
 
-Dark, softly rounded containers with system monospace text and scoped syntax
-colors. In the standard reading shell, the relative code token resolves to
-14.875px text with 25.5px leading; padding scales with that type size. Long
-lines scroll horizontally. Quotes, tables, lists, and inline code retain the
-typography plugin's document styling rather than becoming independent cards.
+Dark containers retain the original cool syntax palette, with medium-weight
+system monospace at 15px/24px, normal tracking, 20px padding, and 8px corners.
+Syntax colors come from shared CSS tokens; Shiki maps grammatical roles to
+those tokens. Long lines scroll horizontally and preserve indentation.
+Inline code uses medium-weight monospace on a pale neutral surface, with no
+decorative backticks. Long inline identifiers wrap within the reading column;
+code blocks retain their indentation and horizontal scrolling. Quotes, tables,
+and lists retain their document styling.
 
 ### Homepage timepiece
 
@@ -446,6 +499,8 @@ date-preview transitions also turn off for reduced motion.
 - Do use Tailwind's system font-sans, font-serif, and font-mono stacks.
 - Do let Tailwind utilities own component layout, spacing, typography, color, responsive behavior, and interaction states.
 - Do keep the field white, reading ink near-black, and muted tones for supporting text.
+- Do use shared link tokens across locales, with the documented CV accent.
+- Do keep text selection within selected lines in WebKit and Chromium.
 - Do preserve distinct homepage, prose, CV, and travel layout behavior.
 - Do use underlines, semantic current-state attributes, and visible keyboard focus.
 - Do retain CV print density, wrapping contact text, and organization-row grouping.
@@ -459,6 +514,6 @@ date-preview transitions also turn off for reduced motion.
 - Don't turn travel shadows, blue controls, or CV logo rounding into global component rules.
 - Don't replace plain navigation or locale links with chips, pills, or invented buttons.
 - Don't use muted metadata colors for sustained body reading.
-- Don't treat article, CV, and default prose headings as one interchangeable type role.
+- Don't replace the CV's shared screen typography with a separate type system.
 - Don't replace the homepage timepiece with a broad decorative animation system.
 - Don't promote one route's composition into a requirement for every page.

@@ -54,7 +54,7 @@ export const WritingList = (props: WritingListProps) => {
                 <article class="m-0 p-0">
                   <a
                     href={writingRoute(entry.id)}
-                    class="group block py-1.5 text-zinc-900 no-underline"
+                    class="group block py-2 text-zinc-900 no-underline"
                   >
                     <time
                       datetime={dateTime(entry.data.published_at)}
@@ -62,7 +62,7 @@ export const WritingList = (props: WritingListProps) => {
                     >
                       {formatDate(entry.data.published_at, props.locale)}
                     </time>
-                    <h3 class="m-0 inline text-lg leading-6 font-medium tracking-[-0.01em] underline decoration-transparent decoration-1 underline-offset-3 transition-colors group-hover:decoration-current">
+                    <h3 class="m-0 inline text-lg leading-snug font-semibold tracking-normal underline decoration-transparent underline-offset-4 transition-colors group-hover:decoration-link-underline motion-reduce:transition-none">
                       {entry.data.title}
                     </h3>
                   </a>

@@ -25,7 +25,7 @@ body:has(#travel-island) > header :is(a, button) {
   pointer-events: auto;
 }
 
-body:has(#travel-island) > main {
+body:has(#travel-island) main {
   position: relative;
   height: 100svh;
   min-height: 0;
