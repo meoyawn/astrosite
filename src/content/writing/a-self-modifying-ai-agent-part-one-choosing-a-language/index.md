@@ -3,7 +3,7 @@ title: "A Self-modifying AI Agent, Part One: Choosing a Language"
 description: >-
   Choosing between Dart and .NET for an AI agent that modifies itself to pursue
   its operator's goals: better task completion, lower token use, or faster work.
-updated_at: 2026-10-29
+updated_at: 2026-10-30
 published_at: 2026-10-19
 ---
 
@@ -287,6 +287,32 @@ measured the newer Mac Catalyst workflow. The diagnostic guide establishes
 limitations and recovery steps, rather than a comparative failure rate;
 Flutter also has edits that require a restart.
 
+A change to a Flutter music player made one of those limits concrete. Adding
+Previous and Next hardware media button handlers meant changing Swift
+registrations in the macOS runner. Dart already owned the playback decisions,
+but the missing OS callbacks lived outside its reloadable runtime. That edit
+required a native rebuild and process restart, as Flutter's
+[documentation for native code](https://docs.flutter.dev/tools/hot-reload#native-code)
+describes.
+
+MAUI could have an advantage for this change. Its Mac Catalyst target already
+has C# bindings for Apple's
+[`NextTrackCommand`](https://learn.microsoft.com/en-us/dotnet/api/mediaplayer.mpremotecommandcenter.nexttrackcommand)
+and
+[`AddTarget`](https://learn.microsoft.com/en-us/dotnet/api/mediaplayer.mpremotecommand.addtarget).
+The registration and callback could both stay in C#, within the code that
+.NET Hot Reload can update. With a supported edit and debug configuration,
+the restart would probably have been avoidable. Reloading the method would
+still need to be followed by safely replacing the subscriptions; it wouldn't
+rerun startup registration automatically.
+
+I haven't run that MAUI experiment. Existing bindings establish that the
+registration can be written in C#, rather than proving that this exact edit
+reloads successfully on Mac Catalyst. A useful comparison needs to add an OS
+event handler while playback and connections remain active, then verify both
+the new behavior and the retained state. The server probes above don't
+establish that workflow.
+
 Flutter brings stateful UI reload, widget inspection, runtime diagnostics,
 and native release builds into one development workflow. That integration
 matters because the agent has to operate the loop itself: apply the change,
@@ -557,9 +583,10 @@ capabilities, resource limits, and cancellation.
 
 Flutter's advantage for me is that the GUI belongs to this same loop from the
 start. The agent can use the stack's reload and inspection facilities across
-its implementation and UI. A MAUI trial needs to establish how well .NET
-supports that same loop. TypeScript's new AOT work may give me another strong
-option soon.
+its Dart implementation and UI. The Swift media button change showed where
+that loop stops. A MAUI trial needs to establish how well .NET supports the
+same loop, including OS integration through its existing C# bindings.
+TypeScript's new AOT work may give me another strong option soon.
 
 Dart remains my leading option, but I want to try a small MAUI application
 before settling the choice. The agent needs to change the UI and application
