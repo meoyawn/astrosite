@@ -347,6 +347,10 @@ token with a 60px override below `sm`. Navigation stacks the brand above the
 utilities below `sm`; at wider sizes the utilities can wrap alongside it.
 Locale links remain together.
 
+Writing pages use 24px above navigation and 32px between navigation and the
+title below `sm`; both intervals become 40px at wider sizes. Article titles
+stay in normal flow without negative top margins.
+
 The main content is a grid item in a single-column wrapper. This contains
 WebKit's native selection painting to selected text lines instead of filling
 page margins and paragraph gaps. Print restores normal block flow for pagination.

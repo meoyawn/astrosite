@@ -4,7 +4,10 @@ import {
   parseWritingEntry,
   type WritingEntry,
 } from "../../app/static-site-types.ts"
-import { SiteShell } from "../../layouts/site-shell.tsx"
+import {
+  readingContentClass,
+  SiteShell,
+} from "../../layouts/site-shell.tsx"
 import { writingRoute } from "../../routes.ts"
 import { getCollection } from "solid-static/runtime"
 
@@ -88,15 +91,15 @@ const ArticlePage = (props: ArticlePageProps) => {
   return (
     <SiteShell
       canonicalPath={writingRoute(props.entry.id)}
-      contentClass={undefined}
+      contentClass={`${readingContentClass} pt-8! sm:pt-10!`}
       currentPath={undefined}
       description={props.entry.data.description}
       lang="en"
-      navClass={undefined}
+      navClass="pt-6! sm:pt-10!"
       openGraphType="article"
       title={props.entry.data.title}
     >
-      <h1 id={titleId} class="-mt-6! mb-0 sm:-mt-10!">
+      <h1 id={titleId}>
         {props.entry.data.title}
       </h1>
       <p class="not-prose mt-2 mb-8 text-sm leading-6 font-medium text-zinc-500">
