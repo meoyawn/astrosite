@@ -1,9 +1,9 @@
 ---
 title: "A Self-modifying AI Agent, Part One: Choosing a Language"
 description: >-
-  Choosing between Dart and .NET for an AI agent that modifies itself to pursue
-  its operator's goals: better task completion, lower token use, or faster work.
-updated_at: 2026-10-30
+  Comparing Dart and .NET for a self-modifying AI agent, and why a real failure
+  during hot reload made .NET my next attempt.
+updated_at: 2026-10-31
 published_at: 2026-10-19
 ---
 
@@ -26,6 +26,12 @@ for a long time, on my desktop and on a VPS. While it experiments with its own
 implementation, I want it to preserve its conversation, open connections, and
 pending work. Changing how it works should fit into the work it is already
 doing.
+
+**Update, October 31:** a real task failed during hot reload after its running
+code called a helper that a refactor had removed. The process and history
+survived; the task did not. That changes the language decision below. My next
+attempt is .NET. I've kept the earlier measurements and added
+[what happened in the running agent](#a-real-task-broke-during-reload).
 
 ## The goal drives the change
 
@@ -151,9 +157,9 @@ announced release date. It still carries Bun's runtime, and dynamically
 generated code takes an interpreted path. The compatibility limits need testing,
 but that direction could change this comparison considerably.
 
-For a choice today, Dart and .NET put the three requirements together most
-convincingly for me. I kept Vite in the experiments because its development
-experience was too good to dismiss without testing.
+Those requirements initially led me to Dart and .NET. I kept Vite in the
+experiments because its development experience was too good to dismiss
+without testing.
 
 ## What a live edit actually changes
 
@@ -192,6 +198,60 @@ structural edit. Every runtime needed explicit cleanup: timing out a wait
 didn't stop the underlying work. These probes established useful development
 behavior, with limits. They said nothing yet about AOT releases or whether an
 agent's edits would improve task completion or token use.
+
+## A real task broke during reload
+
+On October 31, the Dart agent made that old async body much harder to dismiss.
+Happen was running on macOS ARM64 with Dart 3.13.7 and Flutter 3.47.8. A task
+had been working for about three minutes and seventeen seconds when it failed:
+
+```text
+NoSuchMethodError: No top-level method 'mcpContext' declared.
+Receiver: top-level
+Tried calling: mcpContext()
+```
+
+The tool-discovery implementation had been refactored and hot reloaded while
+the task was running. The source now used `catalogContext` instead of
+`mcpContext`, with its callers updated. The error points to a suspended old
+async body resuming and calling the helper that had been removed. Updating
+the callers on disk hadn't replaced that execution already in progress.
+
+The [Dart VM's hot-reload semantics](https://github.com/dart-lang/sdk/blob/main/runtime/docs/hot-reload.md)
+explain the distinction. Existing closures and stack frames retain their
+function bodies. Later calls can resolve against the updated program. That
+allows an old procedure to use a newly implemented helper, as my earlier
+probe showed. It also means the old procedure can depend on an entry point
+that the new program no longer provides.
+
+I had treated “old async body” in the table as a manageable limitation. In
+an agent, an async body can contain the entire task loop. It might remain
+alive across dozens of model requests and tool calls. A normal refactor can
+therefore be valid for a fresh run while breaking the task already underway.
+
+The UI, network, storage, and agent workers were in the same isolate group.
+The VM Service's [`reloadSources` operation](https://github.com/dart-lang/sdk/blob/main/runtime/vm/service/service.md#reloadsources)
+reloads that group. Separate worker isolates hadn't given each running task
+an independent version of its code. Being in one process preserved state,
+but it hadn't made this edit safe for the suspended work.
+
+The history still contained all 21 completed code cells. The last result was
+saved before the failure, so the conversation could be recovered. That is
+useful, but recovering a conversation after a failed turn falls short of
+the uninterrupted work I wanted. The window staying open wasn't enough.
+
+There are possible ways to design around this: retain callable entry points
+while old work uses them, keep task state outside long-lived closures, and
+enter updated code at deliberate step boundaries. Those still need testing
+with real work in flight. They bring back the upgrade coordination I had
+hoped the runtime would largely handle. I should apply that same standard
+to the BEAM model I set aside earlier.
+
+This failure changes my choice. Dart may support a carefully constrained
+reload design, but ordinary refactoring during a long-running task is central
+to the agent I want. I'm moving the next attempt to .NET, whose closure and
+continuation behavior was more promising in the probes. I haven't yet tested
+this exact refactor there; that is now a requirement for the next experiment.
 
 ## Giving the agent eyes into that process
 
@@ -257,6 +317,11 @@ After an accepted reload, Flutter automatically rebuilds the widget tree
 against the retained state. It doesn't rerun `main()` or `initState()`, so
 initialization changes still need deliberate handling.
 
+Rebuilding the widget tree also doesn't re-enter a suspended agent loop.
+The task failure above happened entirely in Dart, without any native code
+change. Flutter's UI reload and reliable updates to ongoing agent work need
+separate evidence.
+
 The syntax used to author the view isn't a deciding factor. What matters is
 which edits take effect in the running application, which state survives,
 and whether the agent can reload and inspect it through a CLI or MCP. This
@@ -321,8 +386,9 @@ MAUI's reload and DevFlow tooling deserve their own end-to-end test against
 those requirements. .NET remains a serious contender, especially after what
 it managed in the server reload probes.
 
-Before choosing Dart, though, I needed to solve one problem both contenders
-share: how does an AOT application execute programs written after it ships?
+Before the task failure changed my direction, I also investigated a problem
+both contenders share: how does an AOT application execute programs written
+after it ships?
 
 ## A compiled host still needs code mode
 
@@ -554,48 +620,39 @@ decision still needs a hands-on comparison of the application workflow.
 
 ## Where this leaves me
 
-.NET and Dart both remain credible answers. .NET reached further into closures
-and suspended procedures in my reload probes, has excellent diagnostic CLIs,
-and can ship native AOT applications. The remaining comparison is how well
-the agent can operate the complete change-and-inspect loop, including its UI.
+My next attempt is .NET. I originally leaned toward Dart because Flutter
+combined UI reload, runtime inspection, and native deployment so well. Those
+strengths are real, and the measurements above still stand. But the running
+agent exposed a gap in the requirement that mattered most: changing its
+implementation while its task continues reliably.
 
-For this agent, I'm leaning toward Dart with Flutter, and QuickJS for code
-mode. Dart owns the agent loop, conversation, connections, tools, and UI state.
-That is the implementation I want the agent to be able to modify. JavaScript
-programs compose tool calls through an explicit asynchronous bridge. The
-Linux benchmark establishes a working native HTTP/SQLite deployment.
-Packaging the full headless agent and its embedded interpreter for a VPS
-still needs its own test.
+.NET reached further into closures and suspended procedures in my probes.
+That gives me a reason to try it, rather than proof that arbitrary edits are
+safe. Its unsupported-edit behavior already caused restarts or suspended
+reloading in the small tests. I need to establish which changes the agent can
+make without losing the work it is doing.
 
-That gives each stage a clear job. In Flutter's debug runtime, the agent could
-change its implementation, reload it, inspect what happened, and evaluate the
-next run against the operator's goal. Once a change is worth shipping, the
-native AOT release needs its own measurements. The release keeps an interpreter
-for agent-written programs without carrying a Dart compiler and JIT solely
-for code mode.
+The next experiment needs a real agent task waiting on a model response or
+a tool call. Refactor a helper, reload, then let the task continue. Check that
+it uses the intended implementation, retains its conversation and pending
+input, records results once, and doesn't repeat a tool's side effects. Test
+cancellation and an unsupported edit too. A reload acknowledgement and an
+unchanged PID don't establish any of that.
 
-There are boundaries I still need to design. Updating the compiled Dart host
-in production is a deployment decision. Replacing JavaScript code needs a
-policy for existing callbacks and state, as the Vite experiment showed. And
-an embedded evaluator doesn't supply a security boundary: these proofs ran
-inside the host address space. Semi-trusted tool programs still need explicit
-capabilities, resource limits, and cancellation.
+The GUI remains part of the comparison. A small MAUI application needs to
+exercise C# and UI reload together, preserve the active conversation, and
+expose enough runtime and visual-tree evidence for the agent to inspect its
+own changes. The Swift media-button example also gives me a concrete OS
+integration change to try through MAUI's C# bindings.
 
-Flutter's advantage for me is that the GUI belongs to this same loop from the
-start. The agent can use the stack's reload and inspection facilities across
-its Dart implementation and UI. The Swift media button change showed where
-that loop stops. A MAUI trial needs to establish how well .NET supports the
-same loop, including OS integration through its existing C# bindings.
-TypeScript's new AOT work may give me another strong option soon.
+The code-mode work remains useful independently of that language choice.
+A compiled host can keep a small interpreter for agent-written tool programs.
+The QuickJS prototypes established that direction in Dart; a .NET host still
+needs its own bridge and packaging measurements. Updating a shipped AOT host
+remains a rebuild and deployment, and an embedded interpreter still needs
+explicit capabilities, resource limits, and cancellation.
 
-Dart remains my leading option, but I want to try a small MAUI application
-before settling the choice. The agent needs to change the UI and application
-logic, inspect the effects, and collect runtime evidence while a conversation
-and background work stay alive. After that, the next test is to give the agent
-a concrete objective and let it work on its own
-implementation: complete more of a set of tasks, reduce the tokens needed to
-reach an acceptable result, or finish the work sooner.
-I want to see whether it can make changes, evaluate them, and retain the ones
-that help over a long run. The language experiments establish some of the
-mechanics. Whether the agent can use them to achieve the operator's goal is
-the question this project is trying to answer.
+Once the reload behavior survives that test, I can return to the original
+objective: let the agent change itself to complete more tasks, spend fewer
+tokens, or finish sooner. I want to measure those improvements while it keeps
+working. The Dart failure showed why proving that last part comes first.
