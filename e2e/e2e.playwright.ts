@@ -245,11 +245,13 @@ test.describe("e2e tests", () => {
     await page.setViewportSize({ height: 844, width: 390 })
 
     const response = await page.goto(
-      `${builtOrigin}${writingRoute("a-self-modifying-ai-agent-part-one-choosing-a-language")}`,
+      `${builtOrigin}${writingRoute("slop-city")}`,
     )
 
     expect(response?.ok() ?? false).toEqual(true)
-    const screenshot = page.getByRole("img", { name: /ChatGPT process group/ })
+    const screenshot = page
+      .getByRole("main")
+      .getByRole("img", { name: /Slop Kazan/ })
 
     await screenshot.scrollIntoViewIfNeeded()
     await expect(screenshot).toHaveAttribute("src", /\/(assets|@solid-static\/images)\/[^/]+\.webp$/)

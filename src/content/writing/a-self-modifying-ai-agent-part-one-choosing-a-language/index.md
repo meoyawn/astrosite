@@ -1,209 +1,185 @@
 ---
 title: "A Self-modifying AI Agent, Part One: Choosing a Language"
 description: >-
-  Comparing Dart and .NET for a self-modifying AI agent, and why a real failure
-  during hot reload made .NET my next attempt.
-updated_at: 2026-10-31
+  Dart wins hot reload for a self-modifying AI agent. Fresh runtime probes show
+  why deleting a field disqualifies .NET, despite its method-patching abilities.
+updated_at: 2026-11-01
 published_at: 2026-10-19
 ---
 
-![Illustrative Codex-style conversation: “Can you debug yourself?” The agent describes profiling its own running Dart process, finding retained objects, inspecting its UI, and hot reloading a fix. Same process, same conversation.](./looking-into-itself.svg)
+I'm choosing Dart for a self-modifying AI agent. Among the modern application
+languages I evaluated, it wins on the requirement that matters most to this
+project: changing a running program while keeping its state and work alive.
 
-I'm building an AI agent that can modify its own implementation to get better
-at whatever its human operator wants it to do. I might want it to complete
-more tasks, spend fewer tokens, run faster, or gain a capability it needs for a
-new kind of work. The goal comes from me. The agent should be able to change
-how it works in pursuit of that goal.
+The decision came down to deleting a field. While developing Happen as a
+.NET MAUI application targeting `net11.0-maccatalyst`, I removed
+`sendShortcut`. With the local file path shortened, this was the response:
 
-By its implementation, I mean the software around the model: the agent loop,
-context handling, tool orchestration, and the application I interact with.
-I want that source code to be part of the agent's workspace. It should be able
-to inspect its behavior, make a change, try it, and measure whether the change
-helped. Fixing a bug is one possible use of that ability.
+```text
+[ui] dotnet watch ❌ [Happen.App (net11.0-maccatalyst)] MainPage.cs(3,1): error ENC0033: Deleting field 'sendShortcut' requires restarting the application.
+[ui]   ❔ Do you want to restart your app? Yes (y) / No (n) / Always (a) / Never (v)
+```
 
-This first part is about choosing a language for that agent. I want it to run
-for a long time, on my desktop and on a VPS. While it experiments with its own
-implementation, I want it to preserve its conversation, open connections, and
-pending work. Changing how it works should fit into the work it is already
-doing.
+A routine change to the application's data required throwing away the
+running application. For an agent that should refactor its own implementation
+while working, that is enough to rule out .NET. I need changes to the shape
+of the program to participate in hot reload too.
 
-**Update, October 31:** a real task failed during hot reload after its running
-code called a helper that a refactor had removed. The process and history
-survived; the task did not. That changes the language decision below. My next
-attempt is .NET. I've kept the earlier measurements and added
-[what happened in the running agent](#a-real-task-broke-during-reload).
+I tested that boundary directly in Dart and .NET 11. Dart removed the field
+from a live object while preserving its state and open connection. .NET
+restarted. The same restriction showed up outside MAUI, in a small server
+with no GUI involved.
 
-## The goal drives the change
+## What I want the agent to do
 
-Suppose I ask the agent to spend fewer tokens on a recurring task. It could
-look at which context it sends to the model, how much tool output it carries
-forward, or how it groups work into model calls. It could then change that
-part of its implementation and compare the next runs. Lower token use only
-helps if the result still meets the task's requirements.
+The agent's implementation is the software around the model: its task loop,
+context management, tool orchestration, storage, and user interface. I want
+that source code in its workspace. Given an objective, it should be able to
+inspect its behavior, change the implementation, and measure whether the
+change helped.
 
-If I care about task completion, the useful change might instead be in how it
-breaks down work, checks its results, or recovers from an unsuccessful attempt.
-That change might spend more tokens. If I care about latency, it might change
-how independent operations run concurrently. Nothing has to be broken for
-any of these changes to be worth making.
+Suppose I ask it to spend fewer tokens. It might change how it selects context,
+summarizes tool output, or groups operations into model calls. If I ask it to
+complete more tasks, it might change how it decomposes work or recovers from
+failures. If I care about latency, it might change which operations run
+concurrently. Those objectives can call for different implementations.
 
-The loop I want is: understand the objective, observe the current behavior,
-choose a change, edit the implementation, and evaluate the result. Then keep,
-revise, or revert the change. The operator supplies the objective and the
-constraints; the agent needs room to experiment with how it meets them.
-Choosing useful evaluations is part of this project too. A runtime accepting
-an edit doesn't tell me whether the agent became better at its task.
+The human supplies the goal and constraints. The agent experiments with how
+to meet them. A successful reload only establishes that an edit took effect;
+the application still needs evaluations that establish whether the result
+became better.
 
-I also want a GUI where I can give the agent direction, see what it is changing,
-and inspect the results. That's an opinion about the product I want to build:
-the agent should be an application I can see into and interact with. A headless
-deployment still matters, but the desktop application isn't an optional
-wrapper I'll add later. Its UI framework belongs in the language decision.
+![Illustrative conversation in which an agent profiles its own Dart process, inspects retained objects and its UI, and hot reloads a fix while the conversation continues.](./looking-into-itself.svg)
 
-That has left me with two strongest contenders: Dart and C# on .NET. Both offer
-a serious live-development workflow, official runtime diagnostics, and native
-AOT deployment. .NET did better than I expected in my reload experiments. Dart
-has Flutter, which brings the UI and the development loop together in a way I
-find especially appealing.
+I also want a desktop application where I can direct that work and inspect
+what is happening. A headless deployment on a VPS matters too, but the GUI is
+part of the product from the beginning. Its development and inspection tools
+belong in the language decision.
 
-The difficult part was working out how those strengths fit a self-modifying
-AI agent. I want ordinary procedures, plain data, mainstream libraries, and as
-little custom reload machinery as possible. I also want code mode: the agent
-writes programs that compose tool calls. Choosing a language for the agent's
-implementation doesn't necessarily mean choosing that same language for every
-program it runs.
+That gives me three requirements:
 
-## Three things the runtime has to do
+- **Change the running application.** Update behavior and ordinary data
+  structures while preserving conversation state, connections, and pending
+  work.
+- **Inspect it programmatically.** Obtain runtime errors, CPU profiles,
+  memory information, and UI structure through tools the agent can call.
+- **Ship native code.** Compile the accepted implementation ahead of time,
+  without distributing the development compiler and JIT in every release.
 
-The language decision is about making that loop practical. I need to apply a
-change, observe its effects, and eventually ship the resulting application.
+The first requirement concerns the development runtime, where the agent
+experiments with itself. The third concerns the application I ship. Updating
+an AOT release still means building and deploying it. I want an ecosystem
+that supports both stages well.
 
-First, **change the running program**. I want stateful hot reload while the
-agent experiments with its implementation. It should be able to change how it
-selects context or schedules work and use that change in the same session.
-A watcher that restarts the process after every save loses too much of the
-ongoing work.
+## Test structural edits on existing state
 
-Second, **inspect the running program**. The agent needs evidence to choose a
-change and understand its effects. Task outcomes, token counts, and timings
-need application-level measurement. For the runtime side, I want excellent
-official CLI tools or an MCP: start and stop performance recordings, collect
-CPU profiles and timeline traces, capture a heap, and follow objects that
-remain alive. For the GUI, I want access to its widget and accessibility
-structure as well. These operations need to be callable by the agent, without
-waiting for me to click through an IDE.
+On November 1, 2026, I ran fresh behavior probes on an M1 Pro Mac with 16 GiB
+of RAM and macOS 26.4. The runtimes were Dart 3.13.7 and .NET
+11.0.0-rc.3.26522.148, using SDK 11.0.100-rc.3.26522.148. The .NET SDK was the
+preview toolchain installed for the MAUI application.
 
-Third, **ship a lean native binary**. Once the application is ready, I want
-native ahead-of-time compilation, without packaging the development compiler
-and JIT with every release. The GC and necessary runtime support can stay.
-AOT still has a runtime; the important part is that executing the host doesn't
-require shipping a compiler.
+The fixtures were a plain Dart HTTP server and a minimal ASP.NET Core server.
+Each created a typed state object, a registered named callback, a closure,
+and an async operation waiting on a gate controlled by the probe. Each also
+accepted a WebSocket connection.
 
-These requirements belong to different stages. The live self-modification
-loop would run in a development runtime, where the agent can edit, reload,
-and inspect itself. Shipping an accepted change in the native host still
-means rebuilding and deploying it, then measuring the AOT release. I don't
-expect the shipped native binary to hot reload itself. I want one language
-ecosystem that takes the whole cycle seriously.
+The counter started at `73`. Before editing the source, the controller changed
+it to `97` over HTTP and opened the WebSocket. That gave the test actual state
+to lose: a restart would produce a new session and restore the counter to
+`73`. The closure captured `73` before that mutation, so I could check its
+captured value separately from its function body.
 
-[Armin Ronacher's discussion of changing running applications](https://www.youtube.com/watch?v=HDdbU10r7Js&t=3009s)
-helped sharpen the first requirement. Restoring saved state and preserving a
-running program are different problems. A conversation log doesn't recreate
-an open stream or a procedure halfway through its work.
+I applied Dart edits through the VM Service's `reloadSources` operation.
+For .NET, I used `dotnet watch --non-interactive`. That option
+[automatically restarts on unsupported edits](https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-watch#options),
+allowing the probe to observe the result rather than stop at a prompt.
+A passing live update had to expose the changed code in the same process and
+session, retain the counter at `97`, and answer through the original WebSocket.
 
-<iframe class="aspect-video h-auto w-full" width="560" height="315" src="https://www.youtube-nocookie.com/embed/HDdbU10r7Js?start=3009" title="Armin Ronacher on changing running applications while preserving state" loading="lazy" allow="encrypted-media; picture-in-picture; fullscreen" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+These were the results for class instances:
 
-## How I narrowed it down
+| Edit or observation | Dart 3.13.7 | .NET 11 preview |
+| --- | --- | --- |
+| Delete an existing field | Reloaded; state and original socket preserved | Restarted; state reset and original socket closed |
+| Add an integer field initialized to `42` | Existing object read `42`; other state preserved | Existing object read `0`; other state preserved |
+| Change a registered named callback's body | Updated | Updated |
+| Change a previously captured closure's body | Kept its old body and captured value | Updated its body; retained the captured value |
+| Change a procedure suspended at `await` and its helper | Old continuation called the updated helper | Updated continuation called the updated helper |
+| Rename the helper used by the suspended procedure | Old procedure kept calling the old helper in this probe | Resumed procedure called the replacement |
 
-BEAM was an obvious place to start. Erlang's
-[code-loading model](https://www.erlang.org/doc/system/code_loading.html)
-allows old and new code to coexist, but execution can remain in old code, and
-changes to the meaning of existing state can require explicit upgrade
-coordination. I wanted the agent making ordinary source edits without
-maintaining an application-level versioning protocol.
+I repeated field deletion in three independent launches for Dart classes,
+.NET classes, and .NET structs. Dart preserved the process, counter, and
+original socket in all three. .NET restarted in all three class cases and
+all three struct cases. Adding a field to a .NET struct also required a restart
+in its separate probe.
 
-Lisp and Smalltalk have compelling live-programming environments. For this
-project, I wanted a more mainstream application ecosystem. Go lacked the
-first-party live-patching workflow I was looking for, while Rust/Subsecond
-brought compilation and data-layout constraints back into the decision.
+For the other scenarios, the table reports one run each. The reported set
+contains sixteen probe runs, each starting from a fresh process. These are
+observations about specific edits, not an exhaustive catalog of supported
+changes or a reload-speed benchmark.
 
-The JVM deserves a more careful comparison. Standard
-[HotSwap](https://docs.oracle.com/en/java/javase/25/docs/api/jdk.jdi/com/sun/jdi/VirtualMachine.html#redefineClasses(java.util.Map))
-can replace method bodies while preserving application state. Active stack
-frames finish the old method; subsequent calls use the replacement. Structural
-changes, such as adding fields or methods, are more restricted in ordinary
-HotSpot HotSwap. Its AOT story is moving too: Project Leyden's
-[ahead-of-time code compilation](https://openjdk.org/jeps/544) is targeted for
-[JDK 28 in March 2027](https://www.jcp.org/en/jsr/detail?id=403). It caches native
-code from a training run while retaining the JIT, so it addresses a different
-release model from the no-JIT binary I want.
+The field-addition result matters too. Preserving an existing object doesn't
+mean running its new constructor or initialization logic. In the C# class
+probe, a newly added field declared with an initializer of `42` read as
+`0` on the existing instance. Dart supplied `42` in the corresponding edit.
+An agent needs to check the resulting state, even when the runtime accepts
+the change.
 
-TypeScript is worth watching closely. Node's built-in
-[watch mode](https://nodejs.org/api/cli.html#--watch) restarts the process, but
-[Vite supports server-side HMR](https://vite.dev/guide/api-environment-runtimes),
-and Bun has hot reload that keeps the process alive. Vite's ordinary
-[acceptance and disposal hooks](https://vite.dev/guide/api-hmr) are enough to
-build a useful live-development loop. The question is which existing functions
-and resources actually pick up an edit.
+.NET's closure and continuation behavior is useful. It still fails the
+structural-edit requirement. An agent can't freely simplify its data model
+if deleting one of its fields ends the running session.
 
-Bun also has a genuine experimental
-[native-AOT pull request](https://github.com/oven-sh/bun/pull/45631), compiling
-JavaScript and TypeScript to machine code without a JIT, with Claude Code
-already used as a test case. The
-[engine work](https://github.com/oven-sh/WebKit/pull/757) has merged; the Bun
-integration is still unmerged as I write this. I expect TypeScript AOT to become
-a practical option in late 2026 or early 2027. That's my expectation, not an
-announced release date. It still carries Bun's runtime, and dynamically
-generated code takes an interpreted path. The compatibility limits need testing,
-but that direction could change this comparison considerably.
+## Why .NET and Subsecond fall short here
 
-Those requirements initially led me to Dart and .NET. I kept Vite in the
-experiments because its development experience was too good to dismiss
-without testing.
+The MAUI error agrees with Roslyn's
+[supported-edit matrix](https://github.com/dotnet/roslyn/blob/main/docs/wiki/EnC-Supported-Edits.md),
+which excludes fields from the members that can be deleted during Hot Reload.
+Microsoft's [diagnostic reference](https://learn.microsoft.com/en-us/visualstudio/debugger/edit-and-continue-errors)
+identifies `ENC0033` as a deletion requiring a restart.
 
-## What a live edit actually changes
+The standalone .NET 11 probes make the consequence concrete. This restriction
+doesn't depend on a MAUI page failing to redraw or a XAML reload mechanism
+being misconfigured. Removing a field from the server's state was enough
+to restart it.
 
-I tested small procedural servers with free functions, dictionary state,
-registered callbacks, a suspended async procedure, and live WebSocket and SSE
-connections. The versions were Dart 3.13.5, .NET SDK 10.0.402, and Node 26.12.0
-with Vite 8.2.2. The Vite server used an ordinary HMR acceptance callback,
-without an application-level versioning protocol.
+Rust's Subsecond has a comparable boundary. Its
+[struct-layout documentation](https://docs.rs/subsecond/0.7.10/subsecond/#struct-layout-and-alignment)
+explains that code compiled for a changed layout cannot safely use existing
+instances with the old layout. The framework must dispose of or replace
+affected state. Subsecond doesn't automatically migrate those structs.
+This part of the comparison comes from its documented behavior; I didn't
+run Rust in the Dart/.NET probes.
 
-These probes test the mechanics a self-modifying AI agent would depend on. If it
-changes a scheduling function or a context-selection callback, I need to know
-when that change takes effect and which work continues under the old code.
+That leaves the application responsible for carrying state across an ordinary
+structural edit. I could build a protocol for reconstructing it, or restrict
+the agent to edits that preserve existing layouts. Both choices would
+constrain the central feature of the project.
 
-| After editing the source                      | Dart VM   | .NET / C#                         | Node + Vite  |
-| --------------------------------------------- | --------- | --------------------------------- | ------------ |
-| Previously registered named function callback | Updated   | Updated                           | Old function |
-| Existing captured closure body                | Old body  | Updated body                      | Old body     |
-| Procedure suspended at an await               | Old body  | Updated continuation in this edit | Old body     |
-| Original WebSocket and SSE connections        | Preserved | Preserved                         | Preserved    |
+Recovering saved conversation history is useful, but a conversation log
+doesn't recreate an open stream or an operation halfway through a tool call.
+Restarting and replaying work can also repeat side effects. The runtime's
+ability to preserve the live application therefore matters independently of
+how quickly it can compile a replacement.
 
-.NET was the surprise. The updated closure still held its previously captured
-data, and the suspended procedure picked up the changed continuation in this
-edit. Dart's old async body could call newly updated named functions. Vite's
-old procedure continued calling functions from its old module. Keeping a
-process alive didn't give all three systems the same reload semantics.
+Dart provides more of that capability directly. The field-deletion probes
+showed the ordinary operation I need: change the object structure, keep the
+other values, and continue using the existing connection.
 
-Earlier small-fixture tests measured warm reload medians of about 26 ms for
-Dart, 51 ms for .NET, and 14 ms for Vite with a tuned watcher; default Vite was
-about 101 ms. The tuned watcher missed an immediate successive edit, so the
-passing runs spaced writes by 120 ms. These were twenty-edit local macOS
-measurements, not evidence of long-run reliability.
+## Dart still has rules for work in flight
 
-There were failures too. The .NET watch setup restarted or suspended reloading
-on unsupported edits. Dart 3.13.5 hit a reproducible VM crash during a
-structural edit. Every runtime needed explicit cleanup: timing out a wait
-didn't stop the underlying work. These probes established useful development
-behavior, with limits. They said nothing yet about AOT releases or whether an
-agent's edits would improve task completion or token use.
+Choosing Dart doesn't make arbitrary edits safe. Its
+[hot-reload semantics](https://github.com/dart-lang/sdk/blob/main/runtime/docs/hot-reload.md)
+preserve function bodies already captured by closures and stack frames.
+Later calls can use updated implementations. That explains the combination
+in the table: an old async continuation called a newly implemented helper.
 
-## A real task broke during reload
+The rename probe exposed another consequence. New calls saw the replacement
+helper, while the suspended Dart procedure continued calling the old helper.
+The source on disk and the work already in progress were executing different
+versions of that part of the program.
 
-On October 31, the Dart agent made that old async body much harder to dismiss.
-Happen was running on macOS ARM64 with Dart 3.13.7 and Flutter 3.47.8. A task
-had been working for about three minutes and seventeen seconds when it failed:
+Happen has also encountered the other failure mode during a real refactor:
+a running task resumed and tried to call a helper that had been removed.
 
 ```text
 NoSuchMethodError: No top-level method 'mcpContext' declared.
@@ -211,448 +187,99 @@ Receiver: top-level
 Tried calling: mcpContext()
 ```
 
-The tool-discovery implementation had been refactored and hot reloaded while
-the task was running. The source now used `catalogContext` instead of
-`mcpContext`, with its callers updated. The error points to a suspended old
-async body resuming and calling the helper that had been removed. Updating
-the callers on disk hadn't replaced that execution already in progress.
+That task's history survived, but its turn failed. The small rename probe
+didn't reproduce that exception, so retaining a removed helper in one edit
+isn't something I can assume for every refactor. The application has to keep
+entry points available while active work still depends on them.
 
-The [Dart VM's hot-reload semantics](https://github.com/dart-lang/sdk/blob/main/runtime/docs/hot-reload.md)
-explain the distinction. Existing closures and stack frames retain their
-function bodies. Later calls can resolve against the updated program. That
-allows an old procedure to use a newly implemented helper, as my earlier
-probe showed. It also means the old procedure can depend on an entry point
-that the new program no longer provides.
+My design will keep task state outside long-lived closures and move through
+short steps that enter the current implementation. A refactor can retain
+a compatibility function until the work using it has finished. Cancellation
+must stop the underlying operation, and recovery must account for tool calls
+that already produced side effects.
 
-I had treated “old async body” in the table as a manageable limitation. In
-an agent, an async body can contain the entire task loop. It might remain
-alive across dozens of model requests and tool calls. A normal refactor can
-therefore be valid for a fresh run while breaking the task already underway.
+Dart has structural limits as well. The VM treats a field rename as removal
+and addition; it can't infer that the new field should inherit the old
+field's value. Changes such as altering a class's number of type parameters
+or converting a class to an enum require a restart. I have also encountered
+a Dart VM crash during a structural edit. The successful probes here establish
+the behavior of these cases, while reliability across a whole application's
+refactors still needs testing.
 
-The UI, network, storage, and agent workers were in the same isolate group.
-The VM Service's [`reloadSources` operation](https://github.com/dart-lang/sdk/blob/main/runtime/vm/service/service.md#reloadsources)
-reloads that group. Separate worker isolates hadn't given each running task
-an independent version of its code. Being in one process preserved state,
-but it hadn't made this edit safe for the suspended work.
+Those are constraints I can design around in the chosen runtime. Dart lets
+ordinary field additions and removals participate in that design. .NET's
+restart requirement for deletion rules it out before I reach the harder
+question of coordinating active tasks.
 
-The history still contained all 21 completed code cells. The last result was
-saved before the failure, so the conversation could be recovered. That is
-useful, but recovering a conversation after a failed turn falls short of
-the uninterrupted work I wanted. The window staying open wasn't enough.
+## Flutter makes this useful for the whole application
 
-There are possible ways to design around this: retain callable entry points
-while old work uses them, keep task state outside long-lived closures, and
-enter updated code at deliberate step boundaries. Those still need testing
-with real work in flight. They bring back the upgrade coordination I had
-hoped the runtime would largely handle. I should apply that same standard
-to the BEAM model I set aside earlier.
+Flutter brings the same Dart runtime into the desktop UI. After an accepted
+[stateful hot reload](https://docs.flutter.dev/tools/hot-reload), it rebuilds
+the widget tree against retained state. That makes it possible to change a
+view and inspect the result while staying in the current conversation.
 
-This failure changes my choice. Dart may support a carefully constrained
-reload design, but ordinary refactoring during a long-running task is central
-to the agent I want. I'm moving the next attempt to .NET, whose closure and
-continuation behavior was more promising in the probes. I haven't yet tested
-this exact refactor there; that is now a requirement for the next experiment.
+The rebuild doesn't rerun `main()` or `initState()`, and it doesn't replace
+a suspended agent loop. Initialization and ongoing work still need the
+handling described above. Changes to native Swift, Objective-C, Kotlin, or
+Java code require a full restart. I want to keep the agent loop and as much
+of the application behavior as possible in Dart, where the live-development
+workflow applies.
 
-## Giving the agent eyes into that process
-
-A successful reload only tells me the edit was accepted. To decide whether a
-change helped, the agent needs feedback tied to the operator's objective.
-For task completion, that means evaluating the work it produced. For token
-use, it means comparing consumption while checking the quality of the result.
-Runtime inspection adds evidence about how the implementation does that work:
-where time goes, what runs concurrently, and what stays in memory.
-
-Dart and Flutter offer an unusually coherent foundation here. The official
-[MCP server](https://github.com/dart-lang/ai/blob/main/pkgs/dart_mcp_server/README.md)
-exposes hot reload, runtime errors, widget inspection, and a bridge into the
-VM Service. [DevTools](https://docs.flutter.dev/tools/devtools) and the
+The inspection side is equally important. The official
+[Dart and Flutter MCP server](https://github.com/dart-lang/ai/blob/main/pkgs/dart_mcp_server/README.md)
+offers hot reload, runtime errors, widget inspection, and access to VM Service
+methods. [DevTools](https://docs.flutter.dev/tools/devtools) supplies UI,
+CPU, and memory inspection; the
 [VM Service](https://github.com/dart-lang/sdk/blob/main/runtime/vm/service/service.md)
-provide CPU profiles, timeline traces, heap snapshots, and retaining paths.
-Flutter also exposes its
-[semantics tree](https://docs.flutter.dev/testing/code-debugging) for
-accessibility inspection. That gives the agent something much richer than a
-screenshot of the UI it just changed.
+exposes the runtime protocol behind tools such as profiling and heap analysis.
 
-There is integration work left: widget inspection, semantics dumps, and
-streamed heap snapshots need different handling. The MCP isn't a turnkey
-interface to every DevTools feature. What matters is that the underlying
-runtime exposes the evidence, and the agent has a supported way into it.
+These pieces give the agent a supported route from editing its source to
+observing the running result. Connecting every useful diagnostic to the
+agent still takes integration work. A heap snapshot and a widget tree also
+answer different questions from a task evaluation. The application must
+connect runtime evidence to completion rates, token use, and elapsed time.
 
-.NET is strong here too. An application launched with
-[`dotnet watch`](https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-watch)
-can still be inspected with the
-[official diagnostic CLIs](https://learn.microsoft.com/en-us/dotnet/core/diagnostics/).
-`dotnet-trace` records the running process, `dotnet-gcdump` captures a managed
-heap graph, and `dotnet-dump` collects a process dump for analysis. These tools
-attach to the application's PID while the watcher continues doing its job.
+This is why the language choice includes Flutter. I want the agent to operate
+the development loop itself, including the application I use to direct it.
 
-MAUI also has an agent-facing GUI inspection path.
-[DevFlow](https://github.com/dotnet/docs-maui/blob/main/docs/developer-tools/devflow/index.md)
-runs an agent inside the development app and exposes visual-tree inspection,
-element properties, screenshots, interactions, and profiling through a CLI
-and `maui devflow mcp`. Mac Catalyst is listed as supported. The packages live
-in [Microsoft's MAUI Labs](https://github.com/dotnet/maui-labs), where they are
-explicitly experimental and outside the regular MAUI support policy. I haven't
-tested that inspection path; its documented capabilities make it a real
-candidate for the loop I want, with its maturity still to establish.
+## Native deployment and code mode
 
-An unsupported edit can restart the app and change that PID. Heap collection
-can trigger a GC and pause execution. Development profiles also need to be
-followed by measurements of the actual release build. Within those boundaries,
-both contenders give the agent a useful edit-and-inspect loop.
+Dart's development runtime and its native deployment model serve different
+parts of the project. [Native compilation](https://dart.dev/tools/dart-compile)
+can produce a self-contained executable for the headless host. Flutter has
+separate [development and release modes](https://docs.flutter.dev/testing/build-modes)
+for the desktop application. The shipped AOT host doesn't hot reload itself;
+accepted implementation changes must be rebuilt and deployed.
 
-That is the runtime part of the feedback I want. The application still needs
-to connect each change to task results, model usage, and elapsed time so the
-agent can judge it against the actual objective.
+The agent also needs code mode: writing small programs that compose tool
+calls during a session. That is useful in a released application too. It
+doesn't require the tool program to use the host's language.
 
-## The GUI is part of the choice
+I'm choosing an embedded JavaScript interpreter for that role.
+[QuickJS](https://bellard.org/quickjs/) is a small embeddable engine that can
+execute those programs inside the host process. Dart owns the application
+and its state; the interpreter runs tool programs through a bridge whose
+capabilities, limits, and cancellation the host controls.
 
-The GUI needs to participate in the same experiment. After changing a view,
-the agent should be able to inspect the live UI and its state, observe the
-effect, and continue its ongoing work. Flutter's
-[stateful hot reload](https://docs.flutter.dev/tools/hot-reload) applies to the
-UI as well as the Dart harness. The same development environment can show me
-the application, inspect its widgets, and change the code driving it.
-After an accepted reload, Flutter automatically rebuilds the widget tree
-against the retained state. It doesn't rerun `main()` or `initState()`, so
-initialization changes still need deliberate handling.
+This keeps the two requirements separate. During development, the agent can
+edit its Dart implementation and reload it. In an AOT release, it can still
+write new tool programs without carrying the Dart development compiler and
+JIT along with the application.
 
-Rebuilding the widget tree also doesn't re-enter a suspended agent loop.
-The task failure above happened entirely in Dart, without any native code
-change. Flutter's UI reload and reliable updates to ongoing agent work need
-separate evidence.
+## Dart won hot reload
 
-The syntax used to author the view isn't a deciding factor. What matters is
-which edits take effect in the running application, which state survives,
-and whether the agent can reload and inspect it through a CLI or MCP. This
-is where I still need a practical MAUI comparison.
+Dart is the clear choice for this agent among the modern application
+languages I evaluated. Its support for structural edits, Flutter's stateful
+UI updates, runtime inspection, and native deployment fit the application
+I want to build.
 
-MAUI has [XAML Hot Reload](https://learn.microsoft.com/en-us/dotnet/maui/xaml/hot-reload)
-on Mac Catalyst too, including through VS Code. It can update existing controls
-while preserving navigation and data. But XAML reload and C# reload are
-separate mechanisms. The MAUI team's
-[diagnosing guide](https://github.com/dotnet/maui/wiki/Diagnosing-Hot-Reload)
-explains that either can work while the other fails, recommends a supported
-debugger configuration, and says C# changes often need the relevant action or
-navigation to run again before their effects become visible. A patched method
-doesn't by itself update controls that were already constructed. The XAML
-documentation also warns that its full-page reload fallback can lose focus
-and selection. For an agent changing its own UI during an ongoing conversation,
-I see that coordination as a significant practical weakness.
+The deciding observation is small and concrete: I deleted a field. Dart kept
+the running program and its state. .NET required a restart, both in the MAUI
+application and in the isolated .NET 11 probes. Subsecond's documented
+struct-layout limitation presents the same practical obstacle to changing
+a live data model.
 
-That guide predates the newer .NET 11 work.
-[MAUI's move to CoreCLR](https://devblogs.microsoft.com/dotnet/coreclr-progress-and-mono-timeline-dotnet-maui/)
-brings Hot Reload to `dotnet watch`, and the new incremental XAML engine,
-introduced in [.NET MAUI 11 Preview 7](https://learn.microsoft.com/en-us/dotnet/maui/xaml/hot-reload#enable-xaml-incremental-hot-reload),
-patches existing page instances without
-requiring navigation and supports XAML updates through the watcher. These
-are relevant improvements, still on the prerelease path as I write this.
-My .NET 10 server probes above didn't exercise MAUI's UI reload, and I haven't
-measured the newer Mac Catalyst workflow. The diagnostic guide establishes
-limitations and recovery steps, rather than a comparative failure rate;
-Flutter also has edits that require a restart.
-
-A change to a Flutter music player made one of those limits concrete. Adding
-Previous and Next hardware media button handlers meant changing Swift
-registrations in the macOS runner. Dart already owned the playback decisions,
-but the missing OS callbacks lived outside its reloadable runtime. That edit
-required a native rebuild and process restart, as Flutter's
-[documentation for native code](https://docs.flutter.dev/tools/hot-reload#native-code)
-describes.
-
-MAUI could have an advantage for this change. Its Mac Catalyst target already
-has C# bindings for Apple's
-[`NextTrackCommand`](https://learn.microsoft.com/en-us/dotnet/api/mediaplayer.mpremotecommandcenter.nexttrackcommand)
-and
-[`AddTarget`](https://learn.microsoft.com/en-us/dotnet/api/mediaplayer.mpremotecommand.addtarget).
-The registration and callback could both stay in C#, within the code that
-.NET Hot Reload can update. With a supported edit and debug configuration,
-the restart would probably have been avoidable. Reloading the method would
-still need to be followed by safely replacing the subscriptions; it wouldn't
-rerun startup registration automatically.
-
-I haven't run that MAUI experiment. Existing bindings establish that the
-registration can be written in C#, rather than proving that this exact edit
-reloads successfully on Mac Catalyst. A useful comparison needs to add an OS
-event handler while playback and connections remain active, then verify both
-the new behavior and the retained state. The server probes above don't
-establish that workflow.
-
-Flutter brings stateful UI reload, widget inspection, runtime diagnostics,
-and native release builds into one development workflow. That integration
-matters because the agent has to operate the loop itself: apply the change,
-find out whether it took effect, and collect evidence about the result.
-MAUI's reload and DevFlow tooling deserve their own end-to-end test against
-those requirements. .NET remains a serious contender, especially after what
-it managed in the server reload probes.
-
-Before the task failure changed my direction, I also investigated a problem
-both contenders share: how does an AOT application execute programs written
-after it ships?
-
-## A compiled host still needs code mode
-
-Changing its own implementation and writing a program to do a task are two
-abilities I want the agent to have. Hot reload lets it experiment with changes
-to the running harness in a development runtime. Code mode lets it compose
-tools into a new program during an ordinary session, including in a release
-build. A tool program can help it do work or carry out an experiment; executing
-that program doesn't by itself change the agent's implementation.
-
-JavaScript has direct options such as Node's
-[`vm.Script`](https://nodejs.org/api/vm.html). C# has Microsoft's
-[Roslyn scripting APIs](https://github.com/dotnet/roslyn/blob/main/docs/wiki/Scripting-API-Samples.md):
-`CSharpScript.EvaluateAsync` can compile and execute snippets with
-host-supplied objects on the normal JIT-capable runtime. Dart has no ordinary
-built-in eval, although the
-[VM Service evaluates expressions](https://github.com/dart-lang/sdk/blob/main/runtime/vm/service/service.md#evaluate)
-and JIT-mode
-[`Isolate.spawnUri`](https://api.dart.dev/dart-isolate/Isolate/spawnUri.html)
-can run a script in another isolate.
-
-Those convenient development paths don't survive native AOT unchanged.
-Flutter's native [release builds use AOT](https://docs.flutter.dev/testing/build-modes).
-Its expression-evaluation path relies on compilation machinery, including the
-[resident tool compiler](https://github.com/flutter/flutter/blob/master/packages/flutter_tools/lib/src/run_hot.dart).
-Shipping dynamic Dart execution would mean accounting for a JIT and compiler,
-as well as the appropriate macOS
-[signing entitlement](https://docs.flutter.dev/add-to-app/macos/project-setup).
-Putting a JIT executable next to an AOT host wouldn't enable eval inside it.
-
-Roslyn has the same fundamental problem: it
-[emits and loads a managed assembly](https://github.com/dotnet/roslyn/blob/main/src/Scripting/Core/ScriptBuilder.cs),
-which [.NET Native AOT doesn't support](https://learn.microsoft.com/en-us/dotnet/core/deploying/native-aot/#limitations-of-native-aot-deployment).
-[ReadyToRun retains the JIT](https://learn.microsoft.com/en-us/dotnet/core/deploying/ready-to-run).
-A separate JIT process could execute C# scripts, but that adds another runtime
-and process boundary. Roslyn scripting wasn't an AOT advantage over Dart.
-
-The way out was to separate two decisions I'd been treating as one. The
-harness can be compiled ahead of time, while a small embedded interpreter
-runs the agent's programs. I don't need the host's language to do both jobs.
-
-## Testing that separation
-
-I first built a Dart AOT CLI with a compressed JIT runtime inside its
-executable. It extracted the runtime and evaluated a Dart expression in a
-child process. A small function declaring `const something = 21` and returning
-`something * 2` returned `42`. Single-file distribution worked, but I wanted
-code mode close to the agent loop, inside the host process.
-
-Then I tried [FJS](https://pub.dev/packages/fjs), which embeds
-[QuickJS](https://bellard.org/quickjs/) through Rust and Dart FFI. With its
-package metadata adapted for pure Dart, an AOT CLI could extract the native
-library and run JavaScript in the host process. An awaited JavaScript-to-Dart
-bridge call returned the host's PID. Constants, arithmetic, and promises
-worked without an installed SDK.
-
-That favored QuickJS, but I hadn't given Dart an equivalent chance. A small
-C++ bridge eventually loaded a separate JIT-capable Dart VM into the AOT
-process, on a native thread. An AOT compiler snapshot in another isolate group
-compiled new source into kernel; the embedded JIT VM ran it, and a native
-callback copied the result back. The two VMs had separate heaps in one
-address space.
-
-This version accepted new expressions after launch with child processes
-prohibited and access to the installed SDK blocked. Collections, microtask
-futures, and compilation and runtime errors worked too. It depended on private
-scheduling hooks and established only one evaluation per CLI launch on macOS
-ARM64, but it made the comparison fairer: Dart execution could live inside the
-AOT host. The question was what I would pay to ship it.
-
-## What the two execution paths cost
-
-Both prototypes used Dart 3.13.5 AOT hosts; the JavaScript version used FJS
-3.3.2. Each shipped as one file and extracted its runtime assets into a
-temporary directory. The Dart version also carried its compiler and platform
-kernel.
-
-On an M1 Pro with 16 GiB RAM and macOS 26.4, I ran 100 fresh launches of each
-CLI. Each expression performed 100 rounds of 10,000 modular multiply updates:
-`x = (x * 48271) % 2147483647`, with a different starting value per round.
-Both returned `1966450964`, within JavaScript's exact-integer range. These are
-medians except for the P95 row.
-
-| Property | AOT host + Dart JIT | AOT host + FJS / QuickJS |
-| --- | ---: | ---: |
-| Distributable executable | 38.0 MiB | 11.3 MiB |
-| Extracted runtime and compiler assets | 62.6 MiB | 7.1 MiB |
-| Full arithmetic pipeline | 458 ms | 181 ms |
-| Full arithmetic pipeline, P95 | 523 ms | 189 ms |
-| Arithmetic execution alone | 6.25 ms | 122 ms |
-| Peak process RAM during the pipeline | 249.5 MiB | 52.9 MiB |
-| Trivial `6 * 7` pipeline, 20 launches | 450 ms | 58.5 ms |
-
-The full pipeline included launch, extraction, source compilation, execution,
-result transfer, cleanup, and exit. Runs were serial, alternating engine
-order, with warm filesystem caches. Peak RAM included the host, compiler, and
-execution runtime. The arithmetic timer excluded setup and compilation but
-included first execution and any JIT optimization during the loop. I hadn't
-measured repeated evaluations in a resident application.
-
-Dart executed the arithmetic about 19.5 times faster. QuickJS returned the
-complete result about 2.5 times faster, with much less machinery. The Dart
-prototype spent roughly 234 ms unpacking assets and 115 ms compiling source.
-For programs that mostly compose tool calls, QuickJS looked like the more
-attractive starting point. Actual agent programs, bridge calls, and I/O still
-needed measurement.
-
-That packaging question mattered beyond the tiny prototypes. This screenshot
-from my desktop shows the ChatGPT process group using 7.48 GB of RAM and 1,262
-threads, with many child `node` processes around 80 MB each.
-
-![Process monitor showing the ChatGPT process group using 7.48 GB of RAM and 1,262 threads, with numerous child Node.js processes.](./codex-memory-usage.png)
-
-It's a complete desktop application, so the screenshot doesn't isolate the
-cost of its code execution. It does explain why I wanted to avoid starting
-another runtime process for every tool program.
-
-I also checked Codex CLI 0.163.0 on macOS ARM64. Its executable was almost
-250 MB. By then I'd started a larger, still partial Dart CLI using the embedded
-interpreter design. Its AOT executable, including the compressed native
-payload, was 12.86 MB.
-
-I measured thirty warm `--version` launches after three warmups, alternating
-order. These sizes use decimal MB, unlike the MiB above.
-
-| Property | Codex CLI 0.163.0 | Partial Dart AOT CLI |
-| --- | ---: | ---: |
-| Executable size | 249.95 MB | 12.86 MB |
-| Warm startup, median | 12.03 ms | 18.94 ms |
-| Warm startup, P95 | 12.61 ms | 21.97 ms |
-| Peak resident memory, median | 20.22 MB | 15.29 MB |
-| Peak physical footprint, median | 9.00 MB | 5.15 MB |
-
-Physical footprint came from five separate runs per executable. The first
-Dart launch with an empty native cache took 181 ms, peaked at 64.47 MB of
-resident memory, and created a 10.07 MB cache. That was a fresh native cache,
-not a cold operating-system cache. Once cached, Codex printed its version
-faster; my executable was much smaller.
-
-I haven't established what accounts for Codex's size, whether it bundles
-Node.js, or what any particular dependency contributes. QuickJS's own
-[size example](https://bellard.org/quickjs/) is 367 KiB of x86 code for a
-hello-world program; my ARM64 FJS library was 7.44 MB before compression, with
-its compressed payload already inside the 12.86 MB executable. Those are
-different artifacts.
-
-A partial CLI printing its version isn't a like-for-like agent comparison.
-These measurements gave me a packaging direction, not a claim that I'd built
-a smaller equivalent of Codex. They also made the third requirement concrete:
-I wanted to know what each runtime feature would cost the application I ship.
-They don't measure task completion or token efficiency. Those need to be
-evaluated with the agent doing the work its operator cares about.
-
-## How the native hosts compare on Linux
-
-I also wanted evidence for Dart outside Flutter. My
-[Linux HTTP benchmarks](https://github.com/meoyawn/http-benchmarks#linux-results)
-compare Dart and .NET as headless servers, including their native AOT builds.
-These measurements ran on October 22, 2026, on a separate Linux VM with eight
-AMD EPYC-Rome KVM vCPUs and 15.24 GiB RAM. They aren't comparable to the Mac
-measurements above.
-
-Dart 3.13.4 used its native `HttpServer`, standard JSON, and sqlite3 3.7.1,
-with four or eight HTTP isolates. .NET SDK 10.0.402, with runtime / ASP.NET Core
-10.0.13, used Kestrel, generated System.Text.Json, two pool workers, and three
-socket I/O threads. Both used the same SQLite 3.53.4 source and settings, with
-one dedicated writer. Each configuration stayed the same across both endpoints.
-
-The stacks had separate four-round rotating sweeps on the same host. Five
-clients sent 50 concurrent requests over Unix sockets: ten seconds of writes,
-then ten seconds of JSON echo, with fresh processes and databases and no HTTP
-warm-up. Clients shared the VM with the server, without CPU pinning or
-guaranteed host isolation. Throughput, p50 latency, and CPU are medians; peak
-RSS is the largest sample taken roughly every 100 ms. CPU at 100% means one
-vCPU. The tables below focus on AOT; the repository also includes JIT results.
-
-For `/posts`, each request validates JSON and commits its own SQLite
-transaction before returning a response.
-
-| Native AOT server | Requests/s | p50 latency | Peak RSS | CPU | Requests/s per vCPU |
-| --- | ---: | ---: | ---: | ---: | ---: |
-| Dart, 4 HTTP isolates | 7.9K | 3.921 ms | 27.0 MiB | 199% | 3.99K |
-| Dart, 8 HTTP isolates | 8.3K | 3.603 ms | 50.5 MiB | 204% | 4.08K |
-| .NET, 2 pool + 3 I/O | 8.2K | 3.284 ms | 36.0 MiB | 183% | 4.46K |
-
-For `/echo`, each request parses JSON and serializes its two fields without a
-database write.
-
-| Native AOT server | Requests/s | p50 latency | Peak RSS | CPU | Requests/s per vCPU |
-| --- | ---: | ---: | ---: | ---: | ---: |
-| Dart, 4 HTTP isolates | 38.8K | 1.077 ms | 27.4 MiB | 321% | 12.11K |
-| Dart, 8 HTTP isolates | 41.0K | 0.939 ms | 51.0 MiB | 359% | 11.43K |
-| .NET, 2 pool + 3 I/O | 114.9K | 0.301 ms | 40.1 MiB | 261% | 43.96K |
-
-The SQLite write rates are roughly on par, with overlapping run ranges.
-.NET uses less CPU for that workload. The echo results show a much larger
-difference: .NET AOT handles about 2.8–3 times as many requests, also with lower
-CPU use. These are comparisons of the complete HTTP and JSON stacks; they
-don't isolate the compiler or establish a general language-speed ratio.
-
-Startup and deployment costs favor Dart in this application:
-
-| Property | Dart AOT, 4 isolates | Dart AOT, 8 isolates | .NET AOT |
-| --- | ---: | ---: | ---: |
-| Start + Unix-socket bind | 15.35 ms | 15.41 ms | 55.37 ms |
-| Idle RSS | 13.5 MiB | 13.6 MiB | 29.7 MiB |
-| Clean release build | 43.55 s | 43.55 s | 78.91 s |
-| Executable size | 6.80 MiB | 6.80 MiB | 9.59 MiB |
-| Full deployment bundle | 8.49 MiB | 8.49 MiB | 11.51 MiB |
-
-Startup is the median of seven fresh processes, including runtime, SQLite,
-and HTTP initialization, with filesystem caches left warm. Clean build times
-are three-run medians including native SQLite compilation, with toolchains
-and downloaded dependencies cached. Bundles include the runtime and SQLite;
-OS libraries, databases, and debug symbols are excluded. Neither AOT bundle
-needs a separately installed language runtime. Four-isolate Dart also uses
-less memory under load; eight isolates give up that advantage for a modest
-throughput increase.
-
-This gives me more confidence in a headless Dart host. Both stacks can ship
-small native servers and reach similar write throughput here, while .NET has
-a clear HTTP/JSON throughput advantage. These short server runs don't measure
-agent behavior, long-run stability, GUI costs, or the embedded code-mode
-interpreter. The repository retains the
-[Dart samples](https://github.com/meoyawn/http-benchmarks/blob/master/dart/measurements.json)
-and [.NET samples](https://github.com/meoyawn/http-benchmarks/blob/master/csharp/measurements-linux.json),
-including response and database correctness checks. The remaining language
-decision still needs a hands-on comparison of the application workflow.
-
-## Where this leaves me
-
-My next attempt is .NET. I originally leaned toward Dart because Flutter
-combined UI reload, runtime inspection, and native deployment so well. Those
-strengths are real, and the measurements above still stand. But the running
-agent exposed a gap in the requirement that mattered most: changing its
-implementation while its task continues reliably.
-
-.NET reached further into closures and suspended procedures in my probes.
-That gives me a reason to try it, rather than proof that arbitrary edits are
-safe. Its unsupported-edit behavior already caused restarts or suspended
-reloading in the small tests. I need to establish which changes the agent can
-make without losing the work it is doing.
-
-The next experiment needs a real agent task waiting on a model response or
-a tool call. Refactor a helper, reload, then let the task continue. Check that
-it uses the intended implementation, retains its conversation and pending
-input, records results once, and doesn't repeat a tool's side effects. Test
-cancellation and an unsupported edit too. A reload acknowledgement and an
-unchanged PID don't establish any of that.
-
-The GUI remains part of the comparison. A small MAUI application needs to
-exercise C# and UI reload together, preserve the active conversation, and
-expose enough runtime and visual-tree evidence for the agent to inspect its
-own changes. The Swift media-button example also gives me a concrete OS
-integration change to try through MAUI's C# bindings.
-
-The code-mode work remains useful independently of that language choice.
-A compiled host can keep a small interpreter for agent-written tool programs.
-The QuickJS prototypes established that direction in Dart; a .NET host still
-needs its own bridge and packaging measurements. Updating a shipped AOT host
-remains a rebuild and deployment, and an embedded interpreter still needs
-explicit capabilities, resource limits, and cancellation.
-
-Once the reload behavior survives that test, I can return to the original
-objective: let the agent change itself to complete more tasks, spend fewer
-tokens, or finish sooner. I want to measure those improvements while it keeps
-working. The Dart failure showed why proving that last part comes first.
+I'm building the host in Dart, the desktop UI in Flutter, and code mode around
+an embedded interpreter. The next engineering problem is making active tasks
+cross reloads reliably, then measuring whether the agent's changes actually
+improve its work.
