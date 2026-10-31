@@ -1,7 +1,10 @@
-import { existsSync, readFileSync } from "node:fs"
+import { existsSync, readdirSync, readFileSync } from "node:fs"
 import { join } from "node:path"
+import { fileURLToPath, pathToFileURL } from "node:url"
 import { expect, test } from "@playwright/test"
 import { load } from "js-yaml"
+import type { Nodes } from "mdast"
+import { fromMarkdown } from "mdast-util-from-markdown"
 import sharp from "sharp"
 import {
   localizedRoute,
@@ -23,6 +26,58 @@ const routeFileName = (route: string): string =>
 
 const pdfPageCount = (pdf: Buffer): number =>
   pdf.toString("latin1").match(/\/Type\s*\/Page\b/g)?.length ?? 0
+
+function collectMarkdownNodes(node: Nodes): Nodes[] {
+  return "children" in node
+    ? [node, ...node.children.flatMap(collectMarkdownNodes)]
+    : [node]
+}
+
+function collectArticleImages() {
+  const writingDirectory = join("src", "content", "writing")
+
+  return readdirSync(writingDirectory, { encoding: "utf8", recursive: true })
+    .filter(fileName => fileName.endsWith(".md"))
+    .flatMap(function imagesInArticle(fileName) {
+      const markdownPath = join(writingDirectory, fileName)
+      const nodes = collectMarkdownNodes(
+        fromMarkdown(readFileSync(markdownPath, "utf8")),
+      )
+      const definitions = new Map<string, string>()
+
+      for (const node of nodes) {
+        if (node.type === "definition") {
+          definitions.set(node.identifier, node.url)
+        }
+      }
+
+      const images = nodes.filter(node =>
+        node.type === "image" || node.type === "imageReference",
+      )
+
+      return images.flatMap(function localImage(image, imageIndex) {
+        const url = image.type === "image"
+          ? image.url
+          : definitions.get(image.identifier)
+
+        if (
+          url === undefined ||
+          /^(?:[a-z][a-z\d+.-]*:|\/|#)/i.test(url) ||
+          !/\.(?:avif|gif|jpe?g|png|svg|webp)(?:[?#]|$)/i.test(url)
+        ) {
+          return []
+        }
+
+        return [{
+          imageIndex,
+          imagePath: fileURLToPath(new URL(url, pathToFileURL(markdownPath))),
+          route: writingRoute(fileName.replaceAll("\\", "/").replace(/(?:\/index)?\.md$/, "")),
+        }]
+      })
+    })
+}
+
+const articleImages = collectArticleImages()
 
 test.describe("e2e tests", () => {
   test("Open Graph image is a 1200 by 630 PNG smaller than the prior JPEG", async ({
@@ -238,37 +293,39 @@ test.describe("e2e tests", () => {
     await expect(metadataTimes.first()).toHaveText(frontmatter.publishedAtText)
   })
 
-  test("article screenshots load as responsive assets", async ({
-    page,
-  }) => {
-    await routeBuiltFiles(page)
-    await page.setViewportSize({ height: 844, width: 390 })
+  for (const { imageIndex, imagePath, route } of articleImages) {
+    test(`article image ${imageIndex + 1} on ${route} loads as a responsive asset`, async ({
+      page,
+    }) => {
+      await routeBuiltFiles(page)
+      await page.setViewportSize({ height: 844, width: 390 })
 
-    const response = await page.goto(
-      `${builtOrigin}${writingRoute("slop-city")}`,
-    )
+      const response = await page.goto(`${builtOrigin}${route}`)
 
-    expect(response?.ok() ?? false).toEqual(true)
-    const screenshot = page
-      .getByRole("main")
-      .getByRole("img", { name: /Slop Kazan/ })
+      expect(response?.ok() ?? false).toEqual(true)
+      const screenshot = page.locator("article img").nth(imageIndex)
+      const metadata = await sharp(imagePath).metadata()
 
-    await screenshot.scrollIntoViewIfNeeded()
-    await expect(screenshot).toHaveAttribute("src", /\/(assets|@solid-static\/images)\/[^/]+\.webp$/)
-    await expect(screenshot).toHaveAttribute("srcset", /\S+ \d+w, \S+ \d+w/)
-    await expect.poll(() => screenshot.evaluate(image =>
-      image instanceof HTMLImageElement && image.complete && image.naturalWidth > 0,
-    )).toEqual(true)
+      await screenshot.scrollIntoViewIfNeeded()
+      await expect(screenshot).toHaveAttribute("src", /\/(assets|@solid-static\/images)\/[^/]+\.webp$/)
+      await expect(screenshot).toHaveAttribute(
+        "srcset",
+        metadata.width > 640 ? /\S+ \d+w, \S+ \d+w/ : /\S+ \d+w/,
+      )
+      await expect.poll(() => screenshot.evaluate(image =>
+        image instanceof HTMLImageElement && image.complete && image.naturalWidth > 0,
+      )).toEqual(true)
 
-    const bounds = await screenshot.boundingBox()
-    expect(bounds).not.toEqual(null)
-    if (bounds === null) {
-      throw new Error("Expected the article screenshot to have visible dimensions.")
-    }
+      const bounds = await screenshot.boundingBox()
+      expect(bounds).not.toEqual(null)
+      if (bounds === null) {
+        throw new Error("Expected the article image to have visible dimensions.")
+      }
 
-    expect(bounds.x).toBeGreaterThanOrEqual(0)
-    expect(bounds.x + bounds.width).toBeLessThanOrEqual(390)
-  })
+      expect(bounds.x).toBeGreaterThanOrEqual(0)
+      expect(bounds.x + bounds.width).toBeLessThanOrEqual(390)
+    })
+  }
 
   test("npm install article headings link to fragments and scroll there", async ({
     page,

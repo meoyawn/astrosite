@@ -26,6 +26,22 @@
 - never disable, skip or ignore tests
 - never edit [tsconfig.json](tsconfig.json) unless explicitly asked
 
+## Test content independence
+
+- **Never assert content.** Do not pin article prose, titles, descriptions,
+  headings, captions, alt text, dates, quotations, or code examples in tests.
+- Content-dependent selectors count too: never hard-code editorial text in
+  locators or require a particular article, screenshot, or image filename to
+  exist just to test rendering or layout.
+- Test behavior and structure: navigation, semantic roles, asset processing,
+  resource loading, metadata structure, accessibility, and layout constraints.
+- Discover content-dependent cases from the current authored source, or use
+  dedicated test fixtures. Rewriting, renaming, adding, or removing content
+  must not break unrelated functionality tests.
+- When an editorial change exposes a content-coupled test, repair the test
+  while preserving its behavioral coverage. Never restore obsolete content
+  to satisfy an assertion, and never skip or weaken the functional checks.
+
 ## Verification
 
 - run `task check` before reporting completion for every code/config change;
