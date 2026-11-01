@@ -71,3 +71,8 @@ Keeping a development server alive is useful. Leaving a command running
 after the user stops its turn is a different expectation. These lifetimes
 should be visible, with a way to cancel work belonging to the turn while
 preserving processes the user deliberately wants to keep.
+
+## Codex Desktop freezes macOS
+
+Codex Desktop version 26.1027.51404 is straight up freezing macOS on my
+machine.
