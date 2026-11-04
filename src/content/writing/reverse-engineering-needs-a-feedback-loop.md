@@ -1,6 +1,6 @@
 ---
 title: Reverse engineering needs a feedback loop
-description: A Flutter reconstruction kept me guessing for two days. A Go/MyGo rebuild taught me to research the stack, design the comparison loop, then let the agent run it.
+description: A Flutter reconstruction kept me guessing for two days. A Go/MyGo rebuild taught me to research the stack and design a comparison loop the agent can run.
 published_at: 2026-10-29
 ---
 

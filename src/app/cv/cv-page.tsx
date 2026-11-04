@@ -31,7 +31,7 @@ export const CvPage = (props: CvPageProps) => (
     canonicalPath={localizedRoute(props.locale, "cv")}
     contentClass={`${readingContentClass} [--color-link:var(--color-cv-link)] print:m-0 print:max-w-none print:p-0 print:text-[12px] print:leading-[1.35] prose-h2:print:break-after-avoid-page prose-h2:print:mt-3 prose-h2:print:mb-1.5 prose-h2:print:text-[13.5px] prose-h2:print:leading-snug prose-p:print:my-0.5 prose-ul:print:my-0.5 prose-li:marker:text-zinc-500 prose-li:print:my-0`}
     currentPath="cv"
-    description="Personal website"
+    description={props.copy.description}
     lang={props.locale}
     navClass="print:hidden"
     openGraphType="website"

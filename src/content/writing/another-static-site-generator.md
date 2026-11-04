@@ -1,6 +1,6 @@
 ---
 title: Another static site generator
-description: Astro-inspired static sites with a faster, simpler toolchain
+description: Why I built solid-static, an Astro-inspired Vite plugin with SolidJS, TSX, content collections, optimized images, and JavaScript islands.
 published_at: 2026-08-14
 ---
 

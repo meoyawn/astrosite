@@ -97,6 +97,8 @@ const ArticlePage = (props: ArticlePageProps) => {
       lang="en"
       navClass="pt-6! sm:pt-10!"
       openGraphType="article"
+      publishedAt={props.entry.data.published_at}
+      modifiedAt={props.entry.data.updated_at}
       title={props.entry.data.title}
     >
       <h1 id={titleId}>

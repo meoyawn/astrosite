@@ -15,6 +15,8 @@ export interface SiteShellProps {
   lang: Locale
   navClass: string | undefined
   openGraphType: "article" | "website"
+  publishedAt?: Date | undefined
+  modifiedAt?: Date | undefined
   title: string
 }
 
@@ -55,6 +57,8 @@ export const SiteShell = (props: SiteShellProps) => {
       canonicalPath={props.canonicalPath}
       lang={props.lang}
       openGraphType={props.openGraphType}
+      publishedAt={props.publishedAt}
+      modifiedAt={props.modifiedAt}
       title={props.title}
     >
       <header

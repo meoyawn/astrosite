@@ -1,7 +1,8 @@
 ---
 title: How to HTTP + JSON
 description:
-  Author contracts in TypeScript, then generate focused Go and TypeScript code.
+  Author API contracts in TypeScript, compile them to OpenAPI, and generate
+  Go and TypeScript clients, validation, CLIs, and MCP servers.
 published_at: 2026-08-15
 ---
 

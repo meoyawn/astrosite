@@ -1,6 +1,6 @@
 ---
 title: "npm install is extremely dangerous"
-description: Treat dependency installation as code execution.
+description: Dependency installation can execute code before an app starts. A practical threat model for recruiter repos, lifecycle scripts, and install gates.
 published_at: 2026-05-29
 updated_at: 2026-06-18
 ---

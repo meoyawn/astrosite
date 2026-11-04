@@ -6,7 +6,7 @@ const Now = () => (
     canonicalPath={routes.now}
     contentClass={undefined}
     currentPath={undefined}
-    description="What Adel Nizamutdinov is focused on now in Kazan, Tatarstan, Russia."
+    description="What Adel Nizamutdinov is focused on now: building Listenbox and living in Kazan, Tatarstan, Russia. A brief update on his current work and location."
     lang="en"
     navClass={undefined}
     openGraphType="website"

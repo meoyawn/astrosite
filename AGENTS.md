@@ -69,10 +69,8 @@
 
 - resolve the social image origin from `SITE_URL` when set; use the canonical
   `https://adelnz.com` origin as the production fallback
-- `og:image` and `twitter:image` are the only Open Graph or Twitter fields that
-  may contain URLs, and both must use the same absolute, content-hashed
+- `og:image` and `twitter:image` must use the same absolute, content-hashed
   `/assets/...` URL
-- never emit `og:url` or any other URL-valued Open Graph or Twitter field
 
 ## Writing
 

@@ -1,6 +1,6 @@
 ---
 title: "2026: regex search is still king"
-description: Coding agents still reward regex search and shell. Indexed grep fits that model.
+description: Why regex search and shell remain my default for coding agents, and how indexed grep and semantic navigation compare on time, cost, and correctness.
 published_at: 2026-08-19
 updated_at: 2026-09-08
 ---

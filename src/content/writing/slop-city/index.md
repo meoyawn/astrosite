@@ -1,5 +1,5 @@
 ---
-title: Slop City
+title: "Slop City: Rebuilding Kazan in 3D"
 description:
   A practical brief for LLM agents rebuilding cities through geographic data,
   building generations, settlement patterns and shared procedural systems.

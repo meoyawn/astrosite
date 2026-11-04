@@ -33,12 +33,13 @@ const TravelPage = (): JSX.Element => (
     canonicalPath={routes.travel}
     contentClass="max-w-none p-0"
     currentPath={undefined}
-    description="An interactive globe and timeline of travels from 2013 to 2026."
+    description="Explore Adel Nizamutdinov's travels from 2013 to 2026 on an interactive globe. Follow journeys, select places, and browse dated stays on the timeline."
     lang="en"
     navClass="w-full max-w-none"
     openGraphType="website"
-    title="Travels — Adel"
+    title="Travels — Adel Nizamutdinov"
   >
+    <h1 class="sr-only">Travels</h1>
     <div id="travel-island">
       <section data-travel-shell aria-label="Travel map">
         <p data-travel-globe-status>Loading...</p>

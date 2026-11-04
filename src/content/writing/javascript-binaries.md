@@ -1,6 +1,6 @@
 ---
 title: Single file JavaScript binaries with C++ dependencies
-description: Bun, Deno, and Node package require("canvas") and its C++ addon with very different amounts of preparation
+description: Comparing Bun, Deno, and Node for single-file JavaScript executables that package node-canvas and its C++ addon, including setup and memory use.
 published_at: 2026-08-28
 ---
 

@@ -1,8 +1,9 @@
-import type { Locale } from "../i18n"
+import type { Locale } from "../i18n.ts"
 
 export interface CVPageCopy {
   awards: string
   cvTitle: string
+  description: string
   education: string
   experience: string
   iconAlt: {
@@ -20,6 +21,7 @@ export const cvPageCopy: Record<Locale, CVPageCopy> = {
   en: {
     awards: "Honors & awards",
     cvTitle: "Adel Nizamutdinov's CV",
+    description: "Adel Nizamutdinov's software engineering experience, projects, and skills, spanning SaaS products, APIs, developer tools, and mobile apps.",
     education: "Education",
     experience: "Experience",
     iconAlt: {
@@ -35,6 +37,7 @@ export const cvPageCopy: Record<Locale, CVPageCopy> = {
   ru: {
     awards: "Награды и достижения",
     cvTitle: "Резюме Аделя Низамутдинова",
+    description: "Опыт, проекты и навыки разработчика Аделя Низамутдинова: SaaS-продукты, API, инструменты для разработчиков и мобильные приложения.",
     education: "Образование",
     experience: "Опыт",
     iconAlt: {
@@ -50,6 +53,7 @@ export const cvPageCopy: Record<Locale, CVPageCopy> = {
   tt: {
     awards: "Бүләкләр һәм казанышлар",
     cvTitle: "Гадел Низаметдиновның CV",
+    description: "Гадел Низаметдиновның программа ясау тәҗрибәсе, проектлары һәм күнекмәләре: SaaS-продуктлар, API, эш кораллары һәм мобиль кушымталар.",
     education: "Белем",
     experience: "Эш тәрибәсе",
     iconAlt: {

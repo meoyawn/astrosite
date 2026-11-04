@@ -1,6 +1,6 @@
 ---
 title: A critique of Codex
-description: Avoidable cache misses, duplicated MCP processes, a heavyweight JavaScript runtime, and uneven cancellation.
+description: A look at Codex's avoidable cache misses, duplicated MCP processes, heavyweight JavaScript runtime, and uneven cancellation behavior.
 published_at: 2026-10-30
 ---
 

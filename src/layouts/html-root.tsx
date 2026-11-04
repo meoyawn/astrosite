@@ -1,4 +1,5 @@
 import type { JSX } from "solid-js"
+import { ssr } from "solid-js/web"
 import { getImage } from "solid-static/image"
 import type { Locale } from "../app/i18n.ts"
 import favicon from "../assets/favicon.svg?no-inline"
@@ -12,6 +13,8 @@ export interface HtmlRootProps {
   description: string
   lang: Locale
   openGraphType: "article" | "website"
+  publishedAt?: Date | undefined
+  modifiedAt?: Date | undefined
   title: string
 }
 
@@ -29,6 +32,28 @@ const openGraphImageUrl = new URL(
   openGraphImage.src,
   import.meta.env.SITE_ORIGIN,
 ).href
+const siteUrl = new URL("/", import.meta.env.SITE_ORIGIN).href
+const personId = new URL("#person", siteUrl).href
+const organizationId = new URL("#organization", siteUrl).href
+
+const canonicalUrlFor = (path: string): string =>
+  new URL(path, import.meta.env.SITE_ORIGIN).href
+
+const isSolidSsrNode = (value: unknown): value is JSX.Element =>
+  typeof value === "object" &&
+  value !== null &&
+  "t" in value &&
+  typeof value.t === "string"
+
+function emailObfuscationComment(closing: boolean): JSX.Element {
+  const comment = ssr(closing ? "<!--/email_off-->" : "<!--email_off-->")
+
+  if (!isSolidSsrNode(comment)) {
+    throw new TypeError("Email obfuscation comment could not be serialized")
+  }
+
+  return comment
+}
 
 const structuredDataFor = (props: HtmlRootProps): string =>
   JSON.stringify({
@@ -36,25 +61,26 @@ const structuredDataFor = (props: HtmlRootProps): string =>
     "@graph": [
       {
         "@type": "Person",
-        "@id": "#person",
+        "@id": personId,
         name: "Adel Nizamutdinov",
         description:
           "Software engineer and consultant building products, APIs, and developer tools.",
-        url: props.canonicalPath,
+        url: siteUrl,
         jobTitle: "Software engineer and consultant",
         sameAs: [
           "https://github.com/meoyawn",
           "https://www.linkedin.com/in/adelnizamuddin",
         ],
-        worksFor: { "@id": "#organization" },
+        worksFor: { "@id": organizationId },
       },
       {
         "@type": "Organization",
-        "@id": "#organization",
+        "@id": organizationId,
         name: "Pneuma LLC",
         description:
           "The software development and consulting business operated by Adel Nizamutdinov.",
-        url: props.canonicalPath,
+        url: siteUrl,
+        logo: openGraphImageUrl,
         contactPoint: {
           "@type": "ContactPoint",
           contactType: "business inquiries",
@@ -67,6 +93,22 @@ const structuredDataFor = (props: HtmlRootProps): string =>
           addressCountry: "RU",
         },
       },
+      ...(props.openGraphType === "article"
+        ? [{
+            "@type": "BlogPosting",
+            "@id": canonicalUrlFor(props.canonicalPath),
+            url: canonicalUrlFor(props.canonicalPath),
+            mainEntityOfPage: canonicalUrlFor(props.canonicalPath),
+            headline: props.title,
+            description: props.description,
+            inLanguage: props.lang,
+            image: openGraphImageUrl,
+            author: { "@id": personId },
+            publisher: { "@id": organizationId },
+            datePublished: props.publishedAt?.toISOString(),
+            dateModified: (props.modifiedAt ?? props.publishedAt)?.toISOString(),
+          }]
+        : []),
     ],
   }).replaceAll("<", "\\u003c")
 
@@ -84,11 +126,12 @@ export const HtmlRoot = (props: HtmlRootProps): JSX.Element => (
       <title>{props.title}</title>
       <meta name="description" content={props.description} />
       <meta name="title" content={props.title} />
-      <link rel="canonical" href={props.canonicalPath} />
+      <link rel="canonical" href={canonicalUrlFor(props.canonicalPath)} />
       <meta property="og:site_name" content="Adel Nizamutdinov" />
       <meta property="og:title" content={props.title} />
       <meta property="og:description" content={props.description} />
       <meta property="og:type" content={props.openGraphType} />
+      <meta property="og:url" content={canonicalUrlFor(props.canonicalPath)} />
       <meta property="og:image" content={openGraphImageUrl} />
       <meta property="og:image:type" content="image/png" />
       <meta property="og:image:width" content={String(openGraphImageWidth)} />
@@ -107,8 +150,10 @@ export const HtmlRoot = (props: HtmlRootProps): JSX.Element => (
       <link rel="stylesheet" href={stylesheet} />
     </head>
     <body class="m-0 min-h-screen bg-white font-sans text-[15px] leading-6 tracking-[-0.01em] text-zinc-950 antialiased">
+      {emailObfuscationComment(false)}
       {props.bodyStart}
       {props.children}
+      {emailObfuscationComment(true)}
     </body>
   </html>
 )

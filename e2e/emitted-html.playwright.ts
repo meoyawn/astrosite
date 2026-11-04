@@ -2,6 +2,7 @@ import { existsSync, readFileSync } from "node:fs"
 import { join } from "node:path"
 import { expect, test } from "@playwright/test"
 import postcss from "postcss"
+import { CORE_SCHEMA, load, timestampTag } from "js-yaml"
 import { routes } from "../src/routes.ts"
 import {
   builtOrigin,
@@ -83,7 +84,7 @@ test.describe("emitted HTML", () => {
         await expect(openGraphTitle).toHaveCount(1)
         await expect(openGraphDescription).toHaveCount(1)
         await expect(openGraphType).toHaveCount(1)
-        await expect(openGraphUrl).toHaveCount(0)
+        await expect(openGraphUrl).toHaveCount(1)
         await expect(openGraphImage).toHaveCount(1)
         await expect(openGraphImageType).toHaveCount(1)
         await expect(openGraphImageWidth).toHaveCount(1)
@@ -158,6 +159,27 @@ test.describe("emitted HTML", () => {
           )
         }
 
+        const canonical = page.locator('link[rel="canonical"]')
+
+        await expect(canonical).toHaveCount(1)
+        await expect(canonical).toHaveAttribute("href", /^https?:\/\//)
+        const canonicalHref = await canonical.getAttribute("href")
+
+        if (canonicalHref === null) {
+          throw new Error(`Expected ${target.pagePath} to have a canonical URL.`)
+        }
+
+        const canonicalUrl = new URL(canonicalHref)
+        const expectedPath = target.fileName === "404.html"
+          ? "/404"
+          : `/${target.fileName.replace(/(?:^|\/)index\.html$/, "/").replace(/^\/+/, "")}`
+
+        expect(canonicalUrl.pathname).toEqual(expectedPath)
+        expect(canonicalUrl.origin).toEqual(new URL(openGraphImageContent).origin)
+        expect(canonicalUrl.search).toEqual("")
+        expect(canonicalUrl.hash).toEqual("")
+        await expect(openGraphUrl).toHaveAttribute("content", canonicalHref)
+
         await expect(twitterImage).toHaveAttribute(
           "content",
           openGraphImageContent,
@@ -167,6 +189,63 @@ test.describe("emitted HTML", () => {
           openGraphImageAltContent,
         )
       })
+
+      if (target.fileName.startsWith(routes.writing.slice(1))) {
+        test("declares article authorship and source dates in structured data", async ({ page }) => {
+          const slug = target.fileName
+            .slice(routes.writing.length - 1)
+            .replace(/\/index\.html$/, "")
+          const sourcePaths = [
+            join("src/content/writing", `${slug}.md`),
+            join("src/content/writing", slug, "index.md"),
+          ]
+          const sourcePath = sourcePaths.find(path => existsSync(path))
+
+          if (sourcePath === undefined) {
+            throw new Error(`Expected an authored source for ${target.pagePath}.`)
+          }
+
+          const frontmatter = load(
+            readFileSync(sourcePath, "utf8").match(/^---\n([\s\S]*?)\n---/)?.[1] ?? "",
+            { schema: CORE_SCHEMA.withTags(timestampTag) },
+          )
+
+          if (typeof frontmatter !== "object" || frontmatter === null) {
+            throw new Error(`Expected frontmatter in ${sourcePath}.`)
+          }
+
+          await routeBuiltFiles(page)
+          await page.goto(`${builtOrigin}${target.pagePath}`)
+          const schema: unknown = JSON.parse(
+            await page.locator('script[type="application/ld+json"]').textContent() ?? "",
+          )
+
+          if (typeof schema !== "object" || schema === null || !("@graph" in schema)) {
+            throw new Error(`Expected a structured-data graph on ${target.pagePath}.`)
+          }
+
+          const publishedAt = "published_at" in frontmatter && frontmatter.published_at instanceof Date
+            ? frontmatter.published_at
+            : undefined
+          const modifiedAt = "updated_at" in frontmatter && frontmatter.updated_at instanceof Date
+            ? frontmatter.updated_at
+            : publishedAt
+
+          expect(schema["@graph"]).toEqual(expect.arrayContaining([
+            expect.objectContaining({
+              "@type": "BlogPosting",
+              headline: expect.any(String),
+              description: expect.any(String),
+              author: { "@id": expect.stringMatching(/^https?:\/\/[^/]+\/#person$/) },
+              publisher: { "@id": expect.stringMatching(/^https?:\/\/[^/]+\/#organization$/) },
+              mainEntityOfPage: expect.stringMatching(/^https?:\/\//),
+              image: expect.stringMatching(socialImagePattern),
+              ...(publishedAt === undefined ? {} : { datePublished: publishedAt.toISOString() }),
+              ...(modifiedAt === undefined ? {} : { dateModified: modifiedAt.toISOString() }),
+            }),
+          ]))
+        })
+      }
 
       test("references parseable CSS assets", async ({ page }) => {
         function collectStylesheetHrefs(html: string): string[] {
