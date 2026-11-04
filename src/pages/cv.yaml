@@ -35,7 +35,8 @@ experience:
       - Delivered media uploads, imports, publishing, billing, teams, and a public API
       - Delivered published podcast episodes to listeners through a CDN backed by S3-compatible object storage
       - Orchestrated media processing with Temporal, including retries, cancellation, and cleanup
-      - Built deterministic E2E tests with controllable service mocks and OpenTelemetry trace assertions
+      - Built deterministic end-to-end tests with controllable mocks for external services
+      - Implemented end-to-end observability for Listenbox with OpenTelemetry to investigate failures and performance across the system
       - Built an [eval harness](/writing/regex-search-is-still-king/) to compare coding-agent search tools, measuring answer accuracy, token usage, cost, and runtime.
       - Automated deployments and infrastructure management with Terraform and Ansible
       - Owned production maintenance, debugging, and reliability
