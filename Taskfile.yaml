@@ -43,6 +43,7 @@ tasks:
     run: once
     cmd: aube exec vite build --config vite.config.ts
     sources:
+      - .postcssrc.json
       - package.json
       - aube-lock.yaml
       - aube-workspace.yaml

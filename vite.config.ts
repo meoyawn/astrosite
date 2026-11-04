@@ -1,6 +1,5 @@
 import mdx from "@mdx-js/rollup"
 import rehypeShiki, { type RehypeShikiOptions } from "@shikijs/rehype"
-import tailwindcss from "@tailwindcss/postcss"
 import type { Root } from "hast"
 import type { Root as MdastRoot } from "mdast"
 import { fromMarkdown } from "mdast-util-from-markdown"
@@ -219,11 +218,6 @@ export default defineConfig({
   build: {
     emptyOutDir: true,
     outDir: "dist",
-  },
-  css: {
-    postcss: {
-      plugins: [tailwindcss()],
-    },
   },
   define: {
     "import.meta.env.SITE_ORIGIN": JSON.stringify(siteOrigin),

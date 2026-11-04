@@ -10,6 +10,7 @@ import {
 } from "../../layouts/site-shell.tsx"
 import { writingRoute } from "../../routes.ts"
 import { getCollection } from "solid-static/runtime"
+import { MarkdownContent } from "solid-static/render"
 
 export interface ArticlePageProps {
   entry: WritingEntry
@@ -126,7 +127,7 @@ const ArticlePage = (props: ArticlePageProps) => {
           )}
         </Show>
       </p>
-      <article innerHTML={props.entry.rendered.html} />
+      <article><MarkdownContent content={props.entry.rendered} /></article>
       <script>{alignFragmentTargetScript}</script>
     </SiteShell>
   )
