@@ -11,6 +11,9 @@ I wanted an agent that could inspect its own running program, edit it, and
 keep going. Dart's VM Service and Flutter's widget inspector make that
 possible. Traces give it a history to investigate.
 
+I'm building that agent as [Happen](https://github.com/meoyawn/happen), a Dart
+application with a Flutter desktop UI and a headless CLI.
+
 Happen can export a session as Chrome Trace Event JSON. I can open it in
 Perfetto; the agent can read the same file with its ordinary tools. Trace
 context crosses worker isolates and WebSockets, so a tool call, its storage
