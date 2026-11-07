@@ -30,7 +30,7 @@ export const SiteDesignContract = (): JSX.Element => {
   const contract = ssr(`<!--
 THESIS: One personal index makes current software and recent thinking legible without portfolio ceremony.
 OWN-WORLD: White field, near-black ink, bold system-sans display and reading titles, gray dates, semibold content links with offset gray underlines and a blue CV accent, plain text navigation, pale text selection, relaxed reading rhythm, no cards or shadows; Tailwind utilities own component styling.
-STORY: Recognize Producing software, inspect Listenbox and StrengthMCP, choose a direct profile link, then enter recent writing.
+STORY: Recognize Producing software, inspect Listenbox and Happen, choose a direct profile link, then enter recent writing.
 FIRST VIEWPORT: Oversized centered title above one project sentence and a quiet link row; recent posts begin below in a 680px left-aligned column.
 FORM: User-pinned sparse author index, direction seed 3e47b0f3; the Mo.io reference outranks assigned candidate 4.
 FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, DESIGN.md, and every shipping raster carrying its provenance

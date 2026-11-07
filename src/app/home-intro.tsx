@@ -34,11 +34,11 @@ export const HomeIntro = (props: HomeIntroProps) => {
         {` ${copy().and} `}
         <a
           class="font-semibold text-link hover-underline"
-          href="https://strengthmcp.com/"
+          href="https://github.com/meoyawn/happen"
           rel="noreferrer"
           target="_blank"
         >
-          StrengthMCP
+          Happen
         </a>
         {copy().projectsSuffix}
       </p>

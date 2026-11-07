@@ -1,0 +1,12 @@
+Generated with the built-in imagegen tool.
+Reference: a browser capture of a completed Tuesday workout in Strength MCP.
+The reference was captured at a 390 × 844 mobile viewport with a 3× pixel ratio.
+No training session was created or changed for the illustration.
+
+Use case: compositing.
+Asset type: an illustration for a personal blog post about a strength-training feedback loop.
+Input image 1 is the real, completed Tuesday workout screen. Use it as the exact screen insert, preserving its layout, colors, text, numbers, ellipses, and completed-set checkmarks. Do not redesign or rewrite the interface.
+Create a beautiful, realistic, straight-on front view of one modern black iPhone, centered and upright on a pure white background. Show the entire device with thin black bezels, subtly visible side buttons, rounded glass corners, a Dynamic Island and a small standard iOS status bar ABOVE the supplied app screenshot, and a home indicator BELOW it. Do not cover the app's controls with the Dynamic Island or status bar.
+The input screenshot must remain flat, sharp, legible and proportionally undistorted, with no perspective or glare across the screen. Its entire vertical content should be present, including the partial Assisted chin-up heading at the bottom. Retain "Finished", "1:13:49", "Tuesday — Push and Balanced Upper", "Nov 3, 2026", "Back extension", "Strict barbell overhead press", and the actual recorded values exactly as supplied.
+Clean restrained product photography with subtle realistic hardware highlights and a very soft small ground shadow. No hands, gym props, floating labels, captions, logos outside the screen, extra panels, URLs, decorative background, or watermark.
+Portrait composition, approximately 1:2 aspect ratio, tightly framed with a small even white margin around the whole phone so it stays readable at a 384-pixel display width. Output a high-resolution raster image suitable for the blog.
