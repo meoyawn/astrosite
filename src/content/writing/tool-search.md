@@ -41,7 +41,7 @@ The implementations now make different choices:
 
 | Harness | Initially visible | Discovery and invocation |
 | --- | --- | --- |
-| [Codex](https://github.com/openai/codex) | Core tools and bounded summaries of deferred namespaces. | [Local BM25 search](https://github.com/openai/codex/blob/67f0994b532b8740f14b5b738af7b7b2a915b1d6/codex-rs/core/src/tools/handlers/tool_search.rs) supports both paths: native `tool_search_output` loads schemas; code-mode search returns callable names and TypeScript declarations. |
+| [Codex](https://github.com/openai/codex) | With GPT-6.1, core declarations and bounded summaries of deferred namespaces. | Default code mode discovers deferred tools by filtering `ALL_TOOLS`. Enabling `code_mode_tool_search` adds [local BM25 search](https://github.com/openai/codex/blob/efdacaf46ff54660a239189a6d62434c5db33d2c/codex-rs/core/src/tools/handlers/tool_search.rs), returning callable names and TypeScript declarations. |
 | [Claude Code](https://github.com/anthropics/claude-code) | In the inspected mirror, deferred tools are announced by name; their parameter schemas stay deferred. | The [mirrored implementation](https://github.com/codeaashu/claude-code/blob/b983a3b8106bf77cbae6d439f700cc74d74ccd15/src/tools/ToolSearchTool/ToolSearchTool.ts) uses weighted keyword matching or exact `select:` queries. Results contain `tool_reference` blocks that load definitions for direct calls. |
 | [Grok Build](https://github.com/xai-org/grok-build) | [Local mode](https://github.com/xai-org/grok-build/blob/2bdd1d6a6369de0e8c68132ea4539e9abd9e14a8/crates/codegen/xai-grok-shell/src/session/acp_session_impl/sampler_turn.rs#L432) exposes built-in tools and MCP server summaries; individual integration schemas stay in the host catalog. | [`search_tool`](https://github.com/xai-org/grok-build/blob/2bdd1d6a6369de0e8c68132ea4539e9abd9e14a8/crates/codegen/xai-grok-tools/src/implementations/search_tool/mod.rs) returns matching names, descriptions and input schemas as JSON tool output, with five results by default. The index tries exact tool names before BM25. [`use_tool`](https://github.com/xai-org/grok-build/blob/2bdd1d6a6369de0e8c68132ea4539e9abd9e14a8/crates/codegen/xai-grok-tools/src/implementations/use_tool/mod.rs) dispatches calls by qualified name; search leaves the native tool list unchanged. |
 | [OpenCode](https://github.com/anomalyco/opencode) | A [partial code-mode catalog](https://github.com/anomalyco/opencode/blob/173f6c6dce7db669679625f6af93651ae66f16be/packages/core/src/codemode/catalog.ts), plus namespace summaries. | [`search`](https://github.com/anomalyco/opencode/blob/173f6c6dce7db669679625f6af93651ae66f16be/packages/codemode/src/tool-runtime.ts) returns descriptions and typed signatures, with namespace filtering and pagination. Calls run through code mode. |
@@ -72,6 +72,41 @@ Prompt caching makes placement matter too. OpenAI's
 [tool-search API](https://developers.openai.com/api/docs/guides/tools-tool-search#tool-search-and-caching)
 appends loaded definitions at the end of context, preserving the earlier
 prefix.
+
+## Codex defaults with GPT-6.1
+
+The inspected [GPT-6.1 model metadata](https://github.com/openai/codex/blob/efdacaf46ff54660a239189a6d62434c5db33d2c/codex-rs/models-manager/models.json#L177)
+selects `code_mode_only`. The separate
+[`code_mode_tool_search` feature defaults to `false`](https://github.com/openai/codex/blob/efdacaf46ff54660a239189a6d62434c5db33d2c/codex-rs/features/src/lib.rs#L1308).
+Code mode therefore supports deferred discovery without BM25: the model writes
+JavaScript that filters `ALL_TOOLS` and prints selected definitions.
+
+For each execution cell, the
+[JavaScript runtime injects](https://github.com/openai/codex/blob/efdacaf46ff54660a239189a6d62434c5db33d2c/codex-rs/code-mode-runtime/src/runtime/globals.rs#L15)
+`tools`, containing callable wrappers for the enabled nested tools, and
+`ALL_TOOLS`, containing their names, descriptions and TypeScript declarations.
+This includes eligible deferred tools. The generated script references these
+globals; it does not need to include the catalog in its source. The wrappers
+dispatch calls to the host, where the tool implementations run.
+
+The full catalog lives in runtime memory. The
+[`exec` description](https://github.com/openai/codex/blob/efdacaf46ff54660a239189a6d62434c5db33d2c/codex-rs/code-mode-protocol/src/description.rs#L279)
+omits deferred definitions from the initial model context. Printing selected
+entries with `text(...)` makes those definitions visible to the model before
+it calls `tools[name](args)`.
+
+To enable BM25 discovery inside code mode, set this in Codex's `config.toml`:
+
+```toml
+[features]
+code_mode_tool_search = true
+```
+
+This adds `tools.tool_search({query, limit})`, which ranks deferred tools and
+returns selected names and typed declarations. Both settings keep `ALL_TOOLS`
+and the deferred tool wrappers available in the cell. The flag changes
+discovery; it does not make the cell load each tool after searching. Codex also
+supports native schema loading in other tool modes, as described below.
 
 ## How hints guide tool search
 
@@ -114,7 +149,7 @@ ranking weight. Its retrieval effect depends on the model using the supplied
 identity in its query. Server startup can also make previously unavailable
 tools discoverable.
 
-Schema loading follows that search. For a native call,
+The response to BM25 search depends on the call path. For a native call,
 [`ToolSearchOutput::to_response_item`](https://github.com/openai/codex/blob/rust-v0.166.0/codex-rs/core/src/tools/context.rs#L281)
 returns `tool_search_output` with `execution: "client"`, the search `call_id`
 and the selected schemas in `tools`. A code-mode search returns callable names
