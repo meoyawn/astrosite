@@ -11,6 +11,12 @@ goal, follow a program for a training cycle, and record what I do. At the
 end of the cycle, we look at the evidence together and decide what comes
 next.
 
+<figure class="mx-auto max-w-sm">
+
+![iPhone mockup showing a completed Tuesday workout in Strength MCP, with previous results, recorded weights and reps, and completion checkmarks.](./iphone-workout.png)
+
+</figure>
+
 The goal is mine. I might want to get stronger, build muscle, get leaner,
 or focus on how I look. I can discuss a long-term ambition, then choose
 the focus and length of the next cycle. That gives us something specific
@@ -33,13 +39,6 @@ sets, weights, and reps in a simple web app. Previous results are there
 for reference, and I can add notes about how an exercise or the whole
 session felt. Planning and discussion happen in chat; the workout screen
 is where I keep the record while I train.
-
-<figure class="mx-auto max-w-sm">
-
-![iPhone mockup showing a completed Tuesday workout in Strength MCP, with previous results, recorded weights and reps, and completion checkmarks.](./iphone-workout.png)
-
-<figcaption class="text-center">A completed Tuesday workout in Strength MCP, shown in an iPhone mockup.</figcaption>
-</figure>
 
 That history accumulates across sessions. I can ask about my best sets,
 compare an exercise over time, or look back at a previous cycle. I can

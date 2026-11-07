@@ -26,6 +26,10 @@
 
 - Never assert site content
 
+## Posts
+
+- Keep images, videos, and Twitter embeds above the fold.
+
 ## Images
 
 - never put images in [public](public/); every local image, including social
