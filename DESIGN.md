@@ -500,8 +500,8 @@ date-preview transitions also turn off for reduced motion.
 
 ### Do:
 
-- Do use Tailwind's system font-sans, font-serif, and font-mono stacks.
-- Do let Tailwind utilities own component layout, spacing, typography, color, responsive behavior, and interaction states.
+- Do use only system font stacks through Tailwind's `font-sans`, `font-serif`, and `font-mono` utilities.
+- Do use Tailwind CSS utilities first for component layout, spacing, typography, color, responsive behavior, and interaction states.
 - Do keep the field white, reading ink near-black, and muted tones for supporting text.
 - Do use shared link tokens across locales, with the documented CV accent.
 - Do keep text selection within selected lines in WebKit and Chromium.
@@ -514,6 +514,7 @@ date-preview transitions also turn off for reduced motion.
 ### Don't:
 
 - Don't add font packages, remote font stylesheets, or self-hosted webfonts.
+- Don't add component-specific selectors to the global stylesheet when the same styling can be expressed cleanly with Tailwind utilities.
 - Don't add generic SaaS panels, gradient text, glass surfaces, or ornamental hero imagery to the text-first shell.
 - Don't turn travel shadows, blue controls, or CV logo rounding into global component rules.
 - Don't replace plain navigation or locale links with chips, pills, or invented buttons.

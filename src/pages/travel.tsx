@@ -1,7 +1,12 @@
-import type { JSX } from "solid-js"
+import { For, type JSX } from "solid-js"
 import { ssr } from "solid-js/web"
+import {
+  formatEventDate,
+  getEventPlaceLabel,
+  travelData,
+} from "../app/travel/travel-data.ts"
 import travelIsland from "../app/travel/travel-island.tsx?island"
-import { SiteShell } from "../layouts/site-shell.tsx"
+import { readingContentClass, SiteShell } from "../layouts/site-shell.tsx"
 import { routes } from "../routes.ts"
 
 const isSolidSsrNode = (value: unknown): value is JSX.Element =>
@@ -42,7 +47,28 @@ const TravelPage = (): JSX.Element => (
     <h1 class="sr-only">Travels</h1>
     <div id="travel-island">
       <section data-travel-shell aria-label="Travel map">
-        <p data-travel-globe-status>Loading...</p>
+        <div class={`${readingContentClass} h-full overflow-y-auto`}>
+          <h2>Travel itinerary</h2>
+          <p>
+            A record of my journeys, places lived, and time spent away from my
+            home base in Kazan, Tatarstan, Russia. Browse the dated stays below,
+            or use the interactive globe and timeline to explore the routes
+            between them. Approximate dates are marked in the itinerary.
+          </p>
+          <p data-travel-globe-status role="status">
+            Loading the interactive map. The itinerary is available below.
+          </p>
+          <ol>
+            <For each={travelData.timeline}>
+              {event => (
+                <li>
+                  <strong>{getEventPlaceLabel(event)}</strong>
+                  {" — "}{formatEventDate(event)}
+                </li>
+              )}
+            </For>
+          </ol>
+        </div>
       </section>
     </div>
     <noscript>

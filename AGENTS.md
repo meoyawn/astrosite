@@ -3,55 +3,28 @@
 - language: 100% TypeScript
 - framework: [SolidJS](https://www.solidjs.com/) with [Vite](https://vite.dev/)
 
-## Frontend styling
+## CLI tools
 
-- use only system font stacks through Tailwind's `font-sans`, `font-serif`, and
-  `font-mono` utilities; never add font packages, remote font stylesheets, or
-  self-hosted webfonts
-- use Tailwind CSS utilities first for component layout, spacing, typography,
-  color, responsive behavior, and interaction states
-- never add component-specific selectors to the global stylesheet when the
-  same styling can be expressed cleanly with Tailwind utilities
+- see `task --list-all` for dev server and other stuff
+- never call `node`, call `aube node` instead
+- never call `npx`, call `aube exec` for installed tools or `aube dlx` for
+  one-off packages instead
+- never run `oxfmt`
+- never call `wc`, call `scc` instead (both on files and folders)
+- never pass multiple paths to `scc`. Single dir/file only.
+- use `gh` for github
+- never give up/move on to alternatives when a `<cli>` is unavailable without
+  trying `pkgx <cli>`
 
 ## Dev server
 
-- dev server port is in [vite.config.ts](vite.config.ts)
-- never launch the dev server, it's already running
-- when trying to debug problems, start with simple `curl` (need to escalate
-  sandbox)
-
-## Rules
-
-- never add `oxlint-disable-next-line` unless explicitly asked
-- never disable, skip or ignore tests
-- never edit [tsconfig.json](tsconfig.json) unless explicitly asked
+- dev server port is in [vite.config.ts](vite.config.ts), and it's likely
+  running. If you really need to start it you can start it, but don't forget to
+  stop it when you done
 
 ## Test content independence
 
-- **Never assert content.** Do not pin article prose, titles, descriptions,
-  headings, captions, alt text, dates, quotations, or code examples in tests.
-- Content-dependent selectors count too: never hard-code editorial text in
-  locators or require a particular article, screenshot, or image filename to
-  exist just to test rendering or layout.
-- Test behavior and structure: navigation, semantic roles, asset processing,
-  resource loading, metadata structure, accessibility, and layout constraints.
-- Discover content-dependent cases from the current authored source, or use
-  dedicated test fixtures. Rewriting, renaming, adding, or removing content
-  must not break unrelated functionality tests.
-- When an editorial change exposes a content-coupled test, repair the test
-  while preserving its behavioral coverage. Never restore obsolete content
-  to satisfy an assertion, and never skip or weaken the functional checks.
-
-## Verification
-
-- run `task check` before reporting completion for every code/config change;
-  edits limited to [src/content/writing](src/content/writing/) are the sole
-  exception and do **not** require `task check`
-- individual lint, typecheck, build, or test commands never substitute for
-  `task check`
-- do not report a code change as complete until `task check` exits successfully
-- when `task check` fails, fix the failures and rerun the full `task check`;
-  never skip, disable, or ignore a failing check
+- Never assert site content
 
 ## Images
 
@@ -65,22 +38,6 @@
 - never hand-copy an optimized image into `public`; keep one source asset in
   `src` and let `solid-static` optimize, cache, and emit the derivative
 
-## Social metadata URLs
-
-- resolve the social image origin from `SITE_URL` when set; use the canonical
-  `https://adelnz.com` origin as the production fallback
-- `og:image` and `twitter:image` must use the same absolute, content-hashed
-  `/assets/...` URL
-
-## Writing
-
-- when changes are limited to [src/content/writing](src/content/writing/), never
-  run `task build`, `vite build`, or any other full-site build
-- validate the affected writing route through the already-running dev server
-  with a targeted `curl`
-- if the dev server is unavailable, report that targeted validation could not
-  run; never launch it or substitute a full-site build
-
 ## i18n sync
 
 - every edit to an original page in [src/pages](src/pages/) must begin by
@@ -92,17 +49,3 @@
   Russian, and Tatar content and confirm that wording and structure remain in
   sync
 - a page change is incomplete while any matching locale is stale
-
-## CLI tools
-
-- never call `node`, call `aube node` instead
-- never call `npx`, call `aube exec` for installed tools or `aube dlx` for
-  one-off packages instead
-- never run code formatting unless explicitly asked
-- never call `vitest` directly
-- `rg`, `ast-grep`, `jq` are available for calling
-- never call `wc`, call `scc` instead (both on files and folders)
-- never pass multiple paths to `scc`. Single dir/file only.
-- `gh` is available
-- never give up/move on to alternatives when a `<cli>` is unavailable without
-  trying `pkgx <cli>`
