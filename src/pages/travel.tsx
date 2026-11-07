@@ -46,8 +46,8 @@ const TravelPage = (): JSX.Element => (
   >
     <h1 class="sr-only">Travels</h1>
     <div id="travel-island">
-      <section data-travel-shell aria-label="Travel map">
-        <div class={`${readingContentClass} h-full overflow-y-auto`}>
+      <section class="h-full overflow-y-auto pt-28" aria-label="Travel itinerary">
+        <div class={readingContentClass}>
           <h2>Travel itinerary</h2>
           <p>
             A record of my journeys, places lived, and time spent away from my
@@ -55,8 +55,9 @@ const TravelPage = (): JSX.Element => (
             or use the interactive globe and timeline to explore the routes
             between them. Approximate dates are marked in the itinerary.
           </p>
-          <p data-travel-globe-status role="status">
-            Loading the interactive map. The itinerary is available below.
+          <p>
+            The interactive globe and timeline need JavaScript. The itinerary
+            is available here while the map loads, or with JavaScript turned off.
           </p>
           <ol>
             <For each={travelData.timeline}>
@@ -71,9 +72,6 @@ const TravelPage = (): JSX.Element => (
         </div>
       </section>
     </div>
-    <noscript>
-      This map needs JavaScript for globe and timeline interaction.
-    </noscript>
     <script type="module" src={travelIsland} />
   </SiteShell>
 )

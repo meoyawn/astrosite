@@ -20,12 +20,12 @@ colors:
   cv-ink: "oklch(27.4% 0.006 286.033)"
   code-background: "#0d1117"
   code-foreground: "#e6edf3"
-  code-punctuation: "#C9D1D9"
-  code-comment: "#8B949E"
-  code-identifier: "#79C0FF"
-  code-keyword: "#FF7B72"
-  code-string: "#A5D6FF"
-  code-literal: "#D2A8FF"
+  code-punctuation: "#c9d1d9"
+  code-comment: "#8b949e"
+  code-identifier: "#79c0ff"
+  code-keyword: "#ff7b72"
+  code-string: "#a5d6ff"
+  code-literal: "#d2a8ff"
   code-inline-background: "#f4f4f5"
   code-inline-ink: "#18181b"
   travel-blue: "#0369a1"
@@ -207,6 +207,9 @@ travel map retain their functional palettes.
 The shared type, navigation, link, and selection treatments were updated on
 2026-10-30, following the
 [Listenbox guide](https://listenbox.app/guides/import-youtube-as-a-podcast/).
+Documentation was refreshed from current source on 2026-11-07. Older review
+captures with serif titles predate the bold system-sans titles and navigation
+treatment recorded here.
 Shared evidence lives in `src/styles/global.css`, `src/layouts/html-root.tsx`,
 `src/layouts/site-shell.tsx`, and the navigation, locale, and writing-list
 components in `src/app/`. Surface evidence lives in the home components,
@@ -225,8 +228,8 @@ Color names below refer to the normative frontmatter values.
 
 ### Primary
 
-- **Heading Zinc** (`heading-ink`): Display titles, reading text, shell
-  navigation, heading anchors, and writing titles.
+- **Heading Zinc** (`heading-ink`): Display titles, reading text, heading
+  anchors, and writing titles.
 
 ### Secondary
 
@@ -248,7 +251,7 @@ Color names below refer to the normative frontmatter values.
 ### Neutral
 
 - **White Field** (`background`): Page and content background.
-- **Ink Zinc** (`ink`): Base body ink and primary CV headings.
+- **Ink Zinc** (`ink`): Base body ink.
 - **Muted Zinc** (`muted-ink`): Supporting copy, section labels, and location text.
 - **Quiet Zinc** (`quiet-ink`): Publication dates and supporting metadata.
 - **Navigation Ink** (`navigation-ink`): Utility, profile, and locale links at rest.
@@ -413,7 +416,9 @@ A bold site-title link accompanies Work together/CV utilities. Navigation,
 homepage profiles, and locale links share `NavigationLink`: 15px semibold text,
 44px minimum height, 8px padding, and an underline revealed on hover or current
 state. Current links become bold. Backgrounds remain transparent with no pill
-shapes. Keyboard focus uses the shared outline.
+shapes. Hover and current links use Link Ink with the Link Underline color.
+Keyboard focus uses the shared outline. Color and underline transitions turn
+off when reduced motion is requested.
 
 The brand stacks above the utility group below `sm`. The group has 16px
 horizontal gaps and 8px row gaps; links within a list have a 4px gap.
@@ -424,16 +429,17 @@ There is no hamburger menu. Homepage profiles form a centered row.
 Three plain links, EN/RU/TT, with a 2px gap between padded targets. They share
 the navigation treatment: the current locale becomes bold and underlined.
 Hover darkens the ink and reveals the gray underline.
-Locale switching appears on the home, consulting, and CV surfaces. The
+Locale switching appears on the home, Work together, and CV surfaces. The
 homepage separates it from profile links with a one-pixel vertical rule.
 
 ### Recent writing rows
 
 A date and title form one block link. Compact vertical padding comes from
 the writing-row token, with a 2px gap after the date. Dates use the Date role;
-titles use Title. The title's underline is transparent at rest and visible
-when the row is hovered. Keyboard focus outlines the entire link. Rows have
-no card backgrounds or dividers; spacing gives the list its rhythm.
+titles use Title. The title's underline is transparent at rest and uses Link
+Underline when the row is hovered. Keyboard focus outlines the entire link.
+Color transitions turn off when reduced motion is requested. Rows have no
+card backgrounds or dividers; spacing gives the list its rhythm.
 
 ### Prose links and anchors
 
@@ -446,7 +452,7 @@ with a blue accent across every locale.
 
 Heading fragment links are block-level, inherit heading color and weight, and
 reveal a muted # marker just outside the text on hover or keyboard focus.
-Hover also reveals the underline; focus adds an outline.
+Hover also reveals the underline; focus adds an outline in the heading's ink.
 Underline-color and marker-opacity transitions use the sidecar's default link timing.
 Content-link underline transitions turn off when reduced motion is requested.
 Document scrolling is smooth, switching to automatic with reduced motion.

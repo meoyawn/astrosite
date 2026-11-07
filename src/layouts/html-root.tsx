@@ -80,6 +80,7 @@ const structuredDataFor = (props: HtmlRootProps): string =>
         description:
           "The software development and consulting business operated by Adel Nizamutdinov.",
         url: siteUrl,
+        sameAs: ["https://www.linkedin.com/company/listenbox"],
         logo: openGraphImageUrl,
         contactPoint: {
           "@type": "ContactPoint",
