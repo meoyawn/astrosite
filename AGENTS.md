@@ -28,7 +28,10 @@
 
 ## Posts
 
-- Keep images, videos, and Twitter embeds above the fold.
+- Start posts with an opener paragraph, followed by an image, video, or
+  Twitter embed that begins above the fold.
+- Use illustrations to grab attention and add visual appeal. Keep them
+  prominent; do not shrink them just to fit entirely in the first viewport.
 
 ## Images
 
