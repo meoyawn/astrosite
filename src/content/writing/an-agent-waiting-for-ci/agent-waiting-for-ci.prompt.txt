@@ -1,0 +1,10 @@
+Use case: ui-mockup
+Asset type: editorial blog illustration for "An agent waiting for CI".
+Primary request: Create an original, simplified illustration of a coding-agent chat after the agent has pushed a CI fix and ended its turn, waiting for a completion event. The user's screenshot is a conceptual reference only; redesign the composition rather than reproducing a screenshot.
+Style/medium: elegant, crisp, flat 2D editorial UI illustration, white canvas, light gray rounded message bubble, charcoal sans-serif typography, generous spacing, restrained pale green accent for successful local checks. Slightly softened edges, almost no shadows. Large and readable at blog-column width.
+Composition/framing: landscape 3:2 composition. A single large chat conversation with generous outer margins. User message in a light-gray bubble in the upper right; assistant response left-aligned below it. Small neutral outlined status chip near the bottom reading "Waiting for CI" with a small amber dot. No surrounding browser, device, sidebar, input composer, code diffs, or app toolbar.
+Text (verbatim): user message: "Fix the failing CI and push the fix.\nWait for the CI event. Iterate until green."
+Assistant response: "Fix pushed. Local checks passed.\nThe CI event subscription is active.\n\nI’ll resume on CI completion and iterate until green."
+Render the assistant's LAST SENTENCE, "I’ll resume on CI completion and iterate until green.", in distinctly BOLD weight, visibly heavier than all other message text. It must be prominent, legible, and complete; wrap across two lines if needed.
+Status chip: "Waiting for CI".
+Constraints: Use only the generic text given above. No real or invented repository names, owner names, GitHub URLs, run IDs, commit hashes, filenames, branch names, model names, times, test counts, diff statistics, avatars, logos, or watermark. No blurred/redacted private text; simply omit identifying information. Do not claim CI is green: local checks have passed, CI is still pending. No flowchart arrows or robot mascots.

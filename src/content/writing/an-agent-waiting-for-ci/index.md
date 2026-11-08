@@ -14,21 +14,14 @@ another model turn. Users have reported this in
 I want the harness to handle the wait and resume the agent when a result
 arrives.
 
-![CI repair loop: the model diagnoses and pushes a fix, Happen watches GitHub while the model is idle, and a completed run wakes the saved thread. A passing run ends the watch.](./ci-event-loop.svg)
+![Illustrative agent conversation: the user asks for a CI fix, and the agent reports that its fix is pushed and local checks pass. Its final sentence is bold: “I’ll resume on CI completion and iterate until green.”](./agent-waiting-for-ci.png)
 
 I added native MCP Events to [Happen](https://github.com/meoyawn/happen)
 (my harness) and forked GitHub CLI to give an agent a way to watch CI
-between turns. The first use was
-[Listenbox's failing build](https://github.com/listenbox/listenbox2/actions/runs/42487285400):
-inspect it, fix it, push, and continue when GitHub reports the result.
+between turns.
 
-My prompt was short:
-
-> Using gh, look at the failed run. Find the root cause, fix it, push to
-> master. Wait for a gh MCP event. Iterate until green.
-
-The Listenbox thread inspected the run, identified the failing
-“Verify and deploy production” job, and subscribed to completed CI runs:
+The illustration paraphrases a real session. The agent pushed a fix,
+passed its local checks, and restored a watch for completed CI runs:
 
 ```json
 {
