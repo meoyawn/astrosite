@@ -1,31 +1,48 @@
 ---
 title: "A Self-modifying AI Agent, Part One: Choosing a Language"
 description: >-
-  From Smalltalk's living world to an agent that can inspect and change itself.
-  Following that idea through hot reload, runtime tools, Dart, and Flutter.
-updated_at: 2026-11-01
+  An agent investigates its own running application. From that live debugging
+  loop to Smalltalk, hot reload, and choosing Dart with Flutter.
+updated_at: 2026-11-08
 published_at: 2026-10-19
 ---
 
-Smalltalk imagined a world of living objects: you could inspect them,
-change their behavior, and keep going. I want an AI agent to live in a
-world like that.
+The agent had already replied, but the conversation still showed
+“Thinking.” I asked it to find out why. It began querying the running
+application through Dart's VM Service and reading the code that delivered
+its own replies.
 
-![Illustrative conversation in which an agent uses the Dart MCP server to inspect its own running process and UI, then hot reloads a fix while the conversation continues.](./looking-into-itself.svg)
+![Conceptual illustration of a conversation opening its own casing and inspecting a loose connection while its inner mechanism keeps running.](./looking-into-itself.png)
 
-The illustration sketches the interaction I want. A human asks, “Can you
-debug yourself?” The agent is the one answering. Behind its reply, the
+I'm building that application as [Happen](https://github.com/meoyawn/happen),
+a Dart agent harness with a Flutter desktop UI and a headless CLI. The
+saved history showed that the agent had reported a CI failure about five
+seconds after waking up, then continued making tool calls. The work was
+happening; the view wasn't receiving it.
+
+The investigation alternated VM Service calls with searches and reads of
+the server's subscription handling and the desktop's session code. The
 [Dart and Flutter MCP server](https://github.com/dart-lang/ai/blob/main/pkgs/dart_mcp_server/README.md)
-gives it access to the running application: runtime errors, VM Service
-methods, and Flutter's widget inspector. The tools supply observations;
-the agent uses them to decide what to change.
+gave it a REPL into the running application: query its current state,
+inspect the answer, and choose what to examine next. It could check its
+reading of the source against the process where the problem was still
+present.
 
-With its own source in its workspace, it could investigate a slow operation,
-edit the code responsible, reload it, and inspect the result. I want that to
-happen inside the conversation we are already having. The work in progress
-is part of the thing I want to preserve.
+The gap it identified was a missing subscription. Opening saved history
+loaded the conversation without subscribing the desktop to its live item
+updates. The global “turn started” signal still arrived, so the desktop
+could show “Thinking” while missing the replies and tool activity that
+followed. The agent proposed a lightweight watch for open transcripts,
+then a check that idle agent runtimes could still unload.
 
-That wish has a history much older than AI coding agents.
+That session reached a diagnosis and a proposed fix. The larger loop I
+want is to make the edit, reload it, and inspect the result inside the
+conversation we are already having. The work in progress is part of the
+thing I want to preserve.
+
+Smalltalk imagined a world of living objects: you could inspect them,
+change their behavior, and keep going. The debugging session gave me a
+concrete glimpse of why I want an AI agent to live in a world like that.
 
 ## The world as it should be
 
@@ -84,7 +101,7 @@ state through those updates. Pair that with
 [Chrome DevTools MCP](https://github.com/ChromeDevTools/chrome-devtools-mcp/),
 and an agent can inspect the live page, examine network requests and console
 messages, take screenshots, and record performance traces. Much of the
-interaction in the opening illustration is already possible in that world.
+inspection loop in the opening example is already possible in that world.
 
 Vite supplies the development workflow; the browser runs the application.
 Its [HMR boundaries](https://vite.dev/guide/api-hmr.html) determine how updates
@@ -191,7 +208,7 @@ Even an accepted edit needs inspection. In the C# class probe, the new field
 declared with an initializer of `42` read as `0` on the existing instance.
 Dart supplied `42` in the corresponding edit. Keeping an object alive
 doesn't mean replaying its construction as though it had always had the new
-definition. That takes us back to the tools in the illustration: the agent
+definition. That takes us back to the live investigation: the agent
 needs to observe the state it actually has after its edit.
 
 ## Where the state has to go
@@ -294,7 +311,7 @@ Java code require a full restart. I want to keep the agent loop and as much
 of the application behavior as possible in Dart, where the live-development
 workflow applies.
 
-Now the opening illustration becomes a workflow for the whole application.
+The same investigation can extend into the application's interface.
 Through the MCP connection, the agent can inspect the running UI and runtime,
 then request a reload after editing its source.
 [DevTools](https://docs.flutter.dev/tools/devtools) supplies UI, CPU, and
@@ -364,3 +381,8 @@ program. Dart and Flutter carry that vision into the modern application
 stack I want to use. Now I want to give an agent a place in that world: to
 look at the process it inhabits, change how it works, and stay for the next
 question.
+
+There is also work to do on what the agent can observe. In
+[part two](/writing/a-self-modifying-ai-agent-part-two-sharpening-itself/),
+I add application-level telemetry to explain a turn's execution across
+storage, tools, network requests, and the desktop.
