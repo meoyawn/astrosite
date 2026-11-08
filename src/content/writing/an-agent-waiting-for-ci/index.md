@@ -20,8 +20,9 @@ I added native MCP Events to [Happen](https://github.com/meoyawn/happen)
 (my harness) and forked GitHub CLI to give an agent a way to watch CI
 between turns.
 
-The illustration paraphrases a real session. The agent pushed a fix,
-passed its local checks, and restored a watch for completed CI runs:
+The illustration paraphrases a real session fixing CI for
+[Listenbox](https://listenbox.app/). The agent pushed a fix, passed its
+local checks, and restored a watch for completed CI runs:
 
 ```json
 {
