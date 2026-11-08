@@ -41,21 +41,29 @@ the commit, inspect a failure, or stop the watch once CI passes.
 
 ## A subscription outlives a turn
 
-The [MCP Triggers & Events proposal](https://github.com/modelcontextprotocol/experimental-ext-triggers-events/blob/main/docs/design-sketch-proposal.md)
+The [MCP Triggers & Events proposal](https://github.com/modelcontextprotocol/experimental-ext-triggers-events/blob/d5316be214be2e76e51462069c1d67e00a5a7619/docs/design-sketch-proposal.md)
 is experimental. It describes event discovery and three delivery modes:
 poll, push, and webhook. Polling happens in the client runtime; an empty
 response needs no model call.
 
-In Happen, the model discovers events with `list_mcp_events` and creates
-a watch with `subscribe_mcp_events`. The
-[subscription belongs to the saved thread](https://github.com/meoyawn/happen/blob/e3a35f579c7d84b657eb649bedf599582c579121/packages/mcp/README.md#experimental-events).
-It survives the end of a turn and a disconnected UI. A matching event
-enters the thread's inbox and wakes it when idle.
+Binding a subscription to a thread is **a design choice in Happen**.
+The draft's [“Delivering Events to the LLM” section](https://github.com/modelcontextprotocol/experimental-ext-triggers-events/blob/d5316be214be2e76e51462069c1d67e00a5a7619/docs/design-sketch-proposal.md#delivering-events-to-the-llm)
+explicitly leaves conversation handling to the application. A harness
+can create a new conversation or route the event to an existing one.
+
+In Happen, `subscribe_mcp_events`
+[binds the watch to the calling saved thread](https://github.com/meoyawn/happen/blob/e3a35f579c7d84b657eb649bedf599582c579121/packages/mcp/README.md#experimental-events).
+That association stays local to the harness. A matching event
+[enters that thread's inbox and starts a new turn when idle](https://github.com/meoyawn/happen/blob/e3a35f579c7d84b657eb649bedf599582c579121/packages/server/lib/src/mcp_events.dart#L103).
+Reusing the thread preserves the original task and repair history.
+An [integration test](https://github.com/meoyawn/happen/blob/e3a35f579c7d84b657eb649bedf599582c579121/packages/server/test/thread_unsubscribe_test.dart#L280)
+checks that delivery adds a second turn to the same thread and that the
+model request still includes the original prompt.
 
 Happen [persists the inbox entry, deduplication receipt, and resume checkpoint together](https://github.com/meoyawn/happen/blob/e3a35f579c7d84b657eb649bedf599582c579121/packages/storage/lib/src/mcp_events.dart#L45).
-Archiving the thread removes its watches. On macOS, an active saved watch
-also keeps the machine from entering idle system sleep; the display can
-still sleep.
+Ending a turn or disconnecting the UI keeps the watch active. Unsubscribe,
+archive, or provider termination removes it. On macOS, an active saved
+watch also prevents idle system sleep; the display can still sleep.
 
 ## Reusing gh
 
