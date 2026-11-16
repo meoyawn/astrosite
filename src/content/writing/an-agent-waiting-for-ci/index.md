@@ -54,12 +54,17 @@ The timing surprised me: the
 [design sketch was added to the repository on April 9](https://github.com/modelcontextprotocol/experimental-ext-triggers-events/commit/603f5de12a11944b6524fa2d2290415a311bde1a),
 nearly six months earlier.
 
-The [MCP Triggers & Events proposal](https://github.com/modelcontextprotocol/experimental-ext-triggers-events/blob/d5316be214be2e76e51462069c1d67e00a5a7619/docs/design-sketch-proposal.md)
-is still experimental. It describes event discovery and three delivery modes:
-poll, push, and webhook.
+The [MCP Triggers & Events design sketch](https://github.com/modelcontextprotocol/experimental-ext-triggers-events/blob/d5316be214be2e76e51462069c1d67e00a5a7619/docs/design-sketch-proposal.md)
+has been written up as [SEP-3415: Events Extension](https://github.com/modelcontextprotocol/modelcontextprotocol/pull/3415).
+The proposal is still experimental. It describes event discovery and
+three delivery modes: poll, push, and webhook.
 [ChatGPT supports the webhook part of that same draft](https://developers.openai.com/plugins/build/mcp-events).
 The CI watch here uses polling in the client runtime; an empty response
 needs no model call.
+
+Among mainstream agent harnesses, at least
+[OpenCode has implemented MCP Events](https://github.com/anomalyco/opencode/blob/dev/CHANGELOG.md):
+v2.3.0 adds experimental support behind the `mcp_events` flag.
 
 Binding a subscription to a thread is **a design choice in Happen**.
 The draft's [“Delivering Events to the LLM” section](https://github.com/modelcontextprotocol/experimental-ext-triggers-events/blob/d5316be214be2e76e51462069c1d67e00a5a7619/docs/design-sketch-proposal.md#delivering-events-to-the-llm)
