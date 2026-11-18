@@ -166,8 +166,8 @@ awards:
 skills:
   - Languages — Go, TypeScript, Python, Kotlin, Java, Rust
   - Databases — PostgreSQL, SQLite
-  - Backend and APIs — HTTP, OpenAPI, Temporal
+  - Backend and APIs — HTTP, OpenAPI, gRPC, Temporal
   - Web and mobile — React, SolidJS, Android SDK
   - Media delivery — FFmpeg, HLS, Cloudflare R2, CDN
-  - Developer tools — MCP, CLI
-  - Operations — Ansible, Terraform, Linux, CI/CD, OpenTelemetry
+  - Agentic tools — MCP, CLI
+  - Operations — Docker, Kubernetes, Ansible, Terraform, Linux, CI/CD, OpenTelemetry

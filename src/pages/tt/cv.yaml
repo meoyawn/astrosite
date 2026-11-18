@@ -166,8 +166,8 @@ awards:
 skills:
   - Программалау телләре — Go, TypeScript, Python, Kotlin, Java, Rust
   - Мәгълүмат базалары — PostgreSQL, SQLite
-  - Бэкенд һәм API — HTTP, OpenAPI, Temporal
+  - Бэкенд һәм API — HTTP, OpenAPI, gRPC, Temporal
   - Веб һәм мобиль кушымталар — React, SolidJS, Android SDK
   - Медиа тарату — FFmpeg, HLS, Cloudflare R2, CDN
-  - Программист кораллары — MCP, CLI
-  - Системаларны эшләтү — Ansible, Terraform, Linux, CI/CD, OpenTelemetry
+  - ЯИ-агентлар өчен кораллар — MCP, CLI
+  - Системаларны эшләтү — Docker, Kubernetes, Ansible, Terraform, Linux, CI/CD, OpenTelemetry

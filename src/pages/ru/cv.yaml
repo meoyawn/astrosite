@@ -166,8 +166,8 @@ awards:
 skills:
   - Языки — Go, TypeScript, Python, Kotlin, Java, Rust
   - Базы данных — PostgreSQL, SQLite
-  - Бэкенд и API — HTTP, OpenAPI, Temporal
+  - Бэкенд и API — HTTP, OpenAPI, gRPC, Temporal
   - Веб и мобильная разработка — React, SolidJS, Android SDK
   - Доставка медиа — FFmpeg, HLS, Cloudflare R2, CDN
-  - Инструменты разработчика — MCP, CLI
-  - Эксплуатация — Ansible, Terraform, Linux, CI/CD, OpenTelemetry
+  - Инструменты для ИИ-агентов — MCP, CLI
+  - Эксплуатация — Docker, Kubernetes, Ansible, Terraform, Linux, CI/CD, OpenTelemetry
