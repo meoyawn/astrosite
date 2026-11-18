@@ -9,7 +9,7 @@ head:
   twitter: https://twitter.com/meoyawn
 
 summaryMD: |
-  Senior software engineer with 14 years of professional experience. Led Android teams at Flatstack and Infotech, developed mobile apps at Yandex and Wheely, and founded Listenbox in 2019.
+  Senior software engineer with 14 years of professional experience. Led Android teams at Flatstack and Infotech, developed mobile apps at Yandex and Wheely, and founded Listenbox.
 
   Hired and mentored three Android developers at Flatstack, where the team shipped four apps from scratch. At Infotech, led the team that shipped two apps, including an offline tablet app for street-lighting crews.
 
@@ -36,8 +36,7 @@ experience:
       - Shipped a [public MCP server](https://listenbox.app/agents/) so producers can ask an AI assistant to create a show, change its description or invite an editor.
       - Released an [open-source CLI](https://github.com/listenbox/client) that lets an agent upload a recording, leave a draft for review or publish an approved episode as soon as processing finishes.
       - Automated [podcast website publishing](https://listenbox.app/podcast-website/). Releasing an episode now updates the show’s website and RSS feed and creates a shareable episode page with browser playback.
-      - Built streaming delivery for audio and video on a Cloudflare R2-backed CDN. Listeners can start playback immediately and seek through an episode without downloading the whole file.
-      - Operated the Cloudflare edge that delivered about 1 TB of audio per day around February 2025, mostly from cache. Cloudflare recorded 16.4 million Workers requests from 24 January to 23 February 2025.
+      - Built audio and video streaming on a Cloudflare R2-backed CDN so listeners could play and seek without downloading the whole file. Served about 1 TB of audio per day through Cloudflare’s edge.
       - Built a separate MCP server for the internal CRM to automate cold outreach, from contact research and personalized drafts to sending approved emails and tracking replies.
       - Wrote end-to-end tests across the CLI, web frontend, API, PostgreSQL and background jobs to reproduce interrupted uploads and external service delays before release.
       - Instrumented Listenbox end to end with OpenTelemetry. Used traces to pinpoint slow media processing and diagnose upload failures across the API and background jobs.
