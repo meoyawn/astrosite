@@ -31,7 +31,7 @@ experience:
       - name: Arrowbox
         url: https://arrowbox.co
     summaryMD: |
-      Built and ran Listenbox, an audio and video podcast hosting platform, as its only engineer. About 500 customers have used it. Day-to-day operation is now automated with LLM agents.
+      Built and ran Listenbox, an audio and video podcast hosting platform, as its only engineer. More than 1,000 paying customers have used it. Day-to-day operation is now automated with LLM agents.
 
       - Built the first backend on Kotlin coroutines and Vert.x with PostgreSQL and ran it in production for six years, then rebuilt the platform in Go in 2026 on Echo and pgx, with a public API described in OpenAPI.
       - Built audio and video delivery on a Cloudflare R2-backed CDN so listeners could play and seek without downloading the whole file. In early 2025 the edge served about 1 TB of audio a day and Cloudflare Workers handled 16–20 million requests a month.
