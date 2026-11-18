@@ -9,9 +9,11 @@ head:
   twitter: https://twitter.com/meoyawn
 
 summaryMD: |
-  - 14 years of experience shipping software; 6+ years building and running a bootstrapped SaaS
-  - Design APIs and build reusable developer tooling
-  - Built and led two engineering teams
+  Senior software engineer with 14 years of professional experience. Led Android teams at Flatstack and Infotech, developed mobile apps at Yandex and Wheely, and founded Listenbox in 2019.
+
+  Hired and mentored three Android developers at Flatstack, where the team shipped four apps from scratch. At Infotech, led the team that shipped two apps, including an offline tablet app for street-lighting crews.
+
+  Built and run Listenbox, an audio and video podcast hosting platform. Automated publication to the show website and RSS feed, delivered media over a CDN, and built two MCP integrations. One lets producers manage shows with an AI assistant. The other automates cold outreach inside the company’s CRM.
 
 experience:
   - title: Founder
@@ -29,18 +31,16 @@ experience:
       - name: Arrowbox
         url: https://arrowbox.co
     summaryMD: |
-      Founded and run Listenbox, a bootstrapped podcast hosting SaaS that reached $3K in monthly recurring revenue.
+      Built and launched Listenbox, an audio and video podcast hosting platform. Developed the Go publishing API, TypeScript dashboard and integrations for AI agents.
 
-      - Develop and maintain Listenbox using Go, TypeScript, and Rust
-      - Delivered media uploads, imports, publishing, billing, teams, and a public API
-      - Delivered published podcast episodes to listeners through a CDN backed by S3-compatible object storage
-      - Orchestrated media processing with Temporal, including retries, cancellation, and cleanup
-      - Built deterministic end-to-end tests with controllable mocks for external services
-      - Implemented end-to-end observability for Listenbox with OpenTelemetry to investigate failures and performance across the system
-      - Built an [eval harness](/writing/regex-search-is-still-king/) to compare coding-agent search tools, measuring answer accuracy, token usage, cost, and runtime.
-      - Automated deployments and infrastructure management with Terraform and Ansible
-      - Owned production maintenance, debugging, and reliability
-      - Handled customer support, SEO, sales, and marketing; built a CRM as an MCP server, with cold outreach tools
+      - Shipped a [public MCP server](https://listenbox.app/agents/) so producers can ask an AI assistant to create a show, change its description or invite an editor.
+      - Released an [open-source CLI](https://github.com/listenbox/client) that lets an agent upload a recording, leave a draft for review or publish an approved episode as soon as processing finishes.
+      - Automated [podcast website publishing](https://listenbox.app/podcast-website/). Releasing an episode now updates the show’s website and RSS feed and creates a shareable episode page with browser playback.
+      - Built streaming delivery for audio and video on a Cloudflare R2-backed CDN. Listeners can start playback immediately and seek through an episode without downloading the whole file.
+      - Operated the Cloudflare edge that delivered about 1 TB of audio per day around February 2025, mostly from cache. Cloudflare recorded 16.4 million Workers requests from 24 January to 23 February 2025.
+      - Built a separate MCP server for the internal CRM to automate cold outreach, from contact research and personalized drafts to sending approved emails and tracking replies.
+      - Wrote end-to-end tests across the CLI, web frontend, API, PostgreSQL and background jobs to reproduce interrupted uploads and external service delays before release.
+      - Instrumented Listenbox end to end with OpenTelemetry. Used traces to pinpoint slow media processing and diagnose upload failures across the API and background jobs.
 
   - title: Senior Android Developer
     org:
@@ -56,10 +56,10 @@ experience:
       - name: Wheely for Chauffeurs
         url: https://play.google.com/store/apps/details?id=com.wheely.groundio
     summaryMD: |
-      Developed passenger and driver Android apps. Interviewed Android developers.
+      Developed Wheely’s Android apps for passengers and chauffeurs.
 
-      - Redesigned the passenger app
-      - Introduced UI integration tests
+      - Automated app-wide UI integration tests in CI so the Android team could check user flows before release.
+      - Redesigned the passenger app’s interface for Android.
 
   - title: Lead Android Developer
     org:
@@ -75,12 +75,10 @@ experience:
       - name: Lighting Service
         url: https://play.google.com/store/apps/details?id=group.infotech.gorenie
     summaryMD: |
-      Developed Android apps, hired developers, and provided technical leadership.
+      Led Android development for apps used by street-lighting maintenance crews.
 
-      - Created internal processes and infrastructure for Android development
-      - Hired and led three Android developers
-      - Built two apps from scratch
-      - Built a fully offline-first Android tablet app for street-lighting repair crews to record faults and completed repairs despite unreliable mobile connectivity
+      - Hired and led three Android developers. The team shipped two apps from scratch.
+      - Built an offline tablet app so crews could record faults and completed repairs on site without a mobile signal.
 
   - title: Android Developer
     org:
@@ -93,11 +91,10 @@ experience:
       - name: Yandex Start
         url: https://play.google.com/store/apps/details?id=ru.yandex.searchplugin
     summaryMD: |
-      Developed [Yandex.Search for Android](https://play.google.com/store/apps/details?id=ru.yandex.searchplugin).
+      Developed Yandex Search for Android phones and tablets.
 
-      - Adapted the UI for tablets
-      - Improved app performance
-      - Introduced tests for application upgrades
+      - Adapted the search interface for tablets and improved app performance.
+      - Added upgrade tests so the team could verify a new release against an already installed version of the app.
 
   - title: Lead Android Developer
     org:
@@ -119,11 +116,10 @@ experience:
       - name: Roadtrippers
         url: https://play.google.com/store/apps/details?id=com.roadtrippers
     summaryMD: |
-      Developed Android apps, hired developers, provided technical leadership, and presented customer demos.
+      Led Android development for clients, including the Irish Examiner and BreakingNews.ie.
 
-      - Built four apps from scratch
-      - Created internal processes for Android development
-      - Hired and led three Android developers
+      - Hired and mentored three Android developers. The team built four apps from scratch.
+      - Reviewed code and demonstrated working builds to clients so they could give feedback during development.
 
 education:
   - org:
@@ -169,10 +165,10 @@ awards:
     date: 2011-10-01
 
 skills:
-  - Languages - Go, TypeScript, Kotlin, Java, Rust, Python
-  - Backend and data - PostgreSQL, SQLite, Temporal, Node.js, OpenAPI
-  - Media - FFmpeg, HLS
-  - Delivery and operations - Ansible, CI/CD, Linux, OpenTelemetry, Terraform
-  - Frontend and mobile - React, SolidJS, Android, GPUI.rs
-  - Product engineering - SaaS, product development, customer discovery, MCP, CLI
-  - Customer work - support, sales, marketing, SEO
+  - Languages — Go, TypeScript, Python, Kotlin, Java, Rust
+  - Databases — PostgreSQL, SQLite
+  - Backend and APIs — HTTP, OpenAPI, Temporal
+  - Web and mobile — React, SolidJS, Android SDK
+  - Media delivery — FFmpeg, HLS, Cloudflare R2, CDN
+  - Developer tools — MCP, CLI
+  - Operations — Ansible, Terraform, Linux, CI/CD, OpenTelemetry
