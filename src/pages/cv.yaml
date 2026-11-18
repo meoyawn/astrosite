@@ -13,10 +13,10 @@ summaryMD: |
 
   Hired and mentored three Android developers at Flatstack, where the team shipped four apps from scratch. At Infotech, led the team that shipped two apps, including an offline tablet app for street-lighting crews.
 
-  Built and run Listenbox, an audio and video podcast hosting platform. Automated publication to the show website and RSS feed, delivered media over a CDN, and built two MCP integrations. One lets producers manage shows with an AI assistant. The other automates cold outreach inside the company’s CRM.
+  Built and ran Listenbox, an audio and video podcast hosting platform, as its only engineer. Developed the backend in Kotlin and Python for six years, then rebuilt the platform in Go and TypeScript in 2026. Automated publication to the show website and RSS feed, delivered media over a CDN, and built two MCP integrations.
 
 experience:
-  - title: Founder
+  - title: Software Engineer & Founder
     org:
       name: Listenbox
       url: https://listenbox.app
@@ -31,12 +31,12 @@ experience:
       - name: Arrowbox
         url: https://arrowbox.co
     summaryMD: |
-      Built and launched Listenbox, an audio and video podcast hosting platform. Developed the Go publishing API, TypeScript dashboard and integrations for AI agents.
+      Built and ran Listenbox, an audio and video podcast hosting platform, as its only engineer. About 500 customers have used it. Day-to-day operation is now automated with LLM agents.
 
-      - Shipped a [public MCP server](https://listenbox.app/agents/) so producers can ask an AI assistant to create a show, change its description or invite an editor.
-      - Released an [open-source CLI](https://github.com/listenbox/client) that lets an agent upload a recording, leave a draft for review or publish an approved episode as soon as processing finishes.
+      - Built the first backend on Kotlin coroutines and Vert.x with PostgreSQL and ran it in production for six years, then rebuilt the platform in Go in 2026 on Echo and pgx, with a public API described in OpenAPI.
+      - Built audio and video delivery on a Cloudflare R2-backed CDN so listeners could play and seek without downloading the whole file. In early 2025 the edge served about 1 TB of audio a day and Cloudflare Workers handled 16–20 million requests a month.
+      - Shipped a [public MCP server](https://listenbox.app/agents/) with OAuth sign-in and an [open-source CLI](https://github.com/listenbox/client) on the same API, so AI assistants can manage shows and publish episodes.
       - Automated [podcast website publishing](https://listenbox.app/podcast-website/). Releasing an episode now updates the show’s website and RSS feed and creates a shareable episode page with browser playback.
-      - Built audio and video streaming on a Cloudflare R2-backed CDN so listeners could play and seek without downloading the whole file. Served about 1 TB of audio per day through Cloudflare’s edge.
       - Built a separate MCP server for the internal CRM to automate cold outreach, from contact research and personalized drafts to sending approved emails and tracking replies.
       - Wrote end-to-end tests across the CLI, web frontend, API, PostgreSQL and background jobs to reproduce interrupted uploads and external service delays before release.
       - Instrumented Listenbox end to end with OpenTelemetry. Used traces to pinpoint slow media processing and diagnose upload failures across the API and background jobs.
