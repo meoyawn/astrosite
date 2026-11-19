@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "vite-dev",
+      "runtimeExecutable": "aube",
+      "runtimeArgs": ["exec", "vite", "--config", "vite.config.ts"],
+      "port": 4321
+    }
+  ]
+}
