@@ -13,6 +13,16 @@ import {
 } from "../src/routes.ts"
 
 import {
+  cvPdfMaxBytes,
+  cvPrintFormats,
+  ligaturePattern,
+  pdfPageCount,
+  printCv,
+  readPdf,
+  type3FontCount,
+  unreadPhrases,
+} from "./cv-pdf.ts"
+import {
   builtOrigin,
   distDir,
   routeBuiltFiles,
@@ -23,9 +33,6 @@ import {
 
 const routeFileName = (route: string): string =>
   route === routes.home ? "index.html" : `${route.slice(1)}index.html`
-
-const pdfPageCount = (pdf: Buffer): number =>
-  pdf.toString("latin1").match(/\/Type\s*\/Page\b/g)?.length ?? 0
 
 function collectMarkdownNodes(node: Nodes): Nodes[] {
   return "children" in node
@@ -729,34 +736,32 @@ test.describe("e2e tests", () => {
     await expect(nav).toBeHidden()
   })
 
-  test("cv print PDF is exactly two pages in A4 and US Letter with standard margins", async ({
-    page,
-  }) => {
-    await routeBuiltFiles(page)
+  for (const format of cvPrintFormats) {
+    test(`cv prints as two ${format} pages that ATS extractors read back complete and in order`, async ({
+      page,
+    }) => {
+      const { pdf, phrases } = await printCv(page, format)
+      const reading = await readPdf(pdf)
 
-    const response = await page.goto(`${builtOrigin}${routes.cv}`)
-
-    expect(response?.ok() ?? false).toEqual(true)
-    await page.emulateMedia({ media: "print" })
-
-    for (const format of ["A4", "Letter"]) {
+      expect(phrases.length).toBeGreaterThan(0)
+      expect(pdfPageCount(pdf), "Expected exactly two pages.").toEqual(2)
+      expect(pdf.length, "Expected the CV PDF to fit job-board upload limits.")
+        .toBeLessThan(cvPdfMaxBytes)
       expect(
-        pdfPageCount(
-          await page.pdf({
-            format,
-            margin: {
-              bottom: "10mm",
-              left: "10mm",
-              right: "10mm",
-              top: "10mm",
-            },
-            printBackground: true,
-          }),
-        ),
-        `Expected /cv/ printed as ${format} to be exactly two pages.`,
-      ).toEqual(2)
-    }
-  })
+        type3FontCount(pdf),
+        "Expected print fonts that embed as TrueType, not Type 3.",
+      ).toEqual(0)
+      expect(reading.stream).not.toMatch(ligaturePattern)
+      expect(
+        unreadPhrases(reading.stream, phrases),
+        "Expected every printed block in content-stream order.",
+      ).toEqual([])
+      expect(
+        unreadPhrases(reading.positional, phrases),
+        "Expected every printed block in top-to-bottom, left-to-right order.",
+      ).toEqual([])
+    })
+  }
 
   test("cv exposes valid links", async ({ page }) => {
     function isInvalidHref(href: string): boolean {

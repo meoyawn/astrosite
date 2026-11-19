@@ -331,8 +331,8 @@ hierarchy; relaxed prose supports sustained reading across pages and the CV.
 ### Named Rules
 
 **The Reading Type Rule.** Use bold system sans for display and reading titles.
-The CV shares the same screen typography and reading measure; blue links are
-its accent. Compact print typography is a deliberate medium-specific exception.
+The CV shares the same screen typography with blue links as its accent, but uses
+a wide two-column layout instead of the reading measure. Compact print typography is a deliberate medium-specific exception.
 
 ## Layout
 
@@ -358,13 +358,31 @@ The main content is a grid item in a single-column wrapper. This contains
 WebKit's native selection painting to selected text lines instead of filling
 page margins and paragraph gaps. Print restores normal block flow for pagination.
 
-The CV uses the same centered reading measure and gutters as article pages.
-Contact links change from one column to two at `sm`; organization rows reserve
-a logo column and let text shrink and wrap. Print removes navigation, width
+The CV is a recruiter-facing résumé, not an article, so it does not keep the
+narrow reading measure. Below `lg` it uses the article measure and gutters. From
+`lg` (1024px) the navigation and content widen to 72rem with 40px gutters and a
+56px content top, and the page splits into a flexible work column and a 20rem
+reference column with an 80px gap. The header puts name, title, and location in
+the work column and stacks the contacts in the reference column, above a rule.
+Summary and experience fill the work column; skills, education, and awards fill
+the reference column. Skills render as a definition list of category labels and
+tools. Each role's date range and duration sit on the title line, aligned
+right, with company and location beneath. Source order stays summary,
+experience, skills, education, awards for screen readers, ATS, and print.
+Contact links change from one column to two at `sm` and stack again in the
+reference column at `lg`; organization rows reserve a logo column and let text
+shrink and wrap. Print removes navigation, width
 constraints, and outer spacing, reduces body text to
-12px/1.35, keeps organization rows together, and uses two columns for contacts
-and skills. Print names are 24px bold; section titles are 13.5px and role
-titles are 13px bold.
+12px/1.35, and keeps organization rows together. Print is a single column in
+source order so PDF text extractors used by ATS parsers read every block intact
+and in order: contacts share one wrapping row, role dates stack under the role
+title, and each skill prints as one `Category — tools` line with the dash as
+real text. Print uses the static `--font-print` stack (Helvetica Neue,
+Helvetica, Arial) with ligatures off, because Chromium embeds variable system
+fonts as Type 3, which loses word spaces and mis-maps glyphs. Print names are
+24px bold; section titles are 13.5px and role titles are 13px bold.
+`e2e/cv-pdf-extractors.playwright.ts` reads the printed PDF back with Poppler,
+MuPDF, Ghostscript, pdfminer.six, and PDFium from `mise.toml`.
 
 The travel island fills the viewport and suppresses page scrolling. On wide
 screens the timeline and place details overlay the upper left of the globe;

@@ -249,7 +249,7 @@ export default defineConfig({
     host: true,
     port: 4321,
     watch: {
-      ignored: [".idea/**", ".wrangler/**", ".agents/**"],
+      ignored: [".idea/**", ".wrangler/**", ".agents/**", ".claude/**"],
     },
   },
 })

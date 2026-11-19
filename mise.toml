@@ -1,0 +1,12 @@
+[tools]
+aube = "2.5.1"
+node = "26.13.1"
+task = "3.54.0"
+
+# PDF text extractors that ATS and résumé-parsing pipelines build on. The CV
+# print test reads the PDF back with each one (e2e/cv-pdf-extractors.playwright.ts).
+poppler = "26.11.0"
+"conda:mupdf" = "1.28.6"
+"conda:ghostscript" = "10.08.0"
+"conda:pdfminer.six" = "20260107"
+"conda:pypdfium2" = "5.13.0"

@@ -23,14 +23,10 @@ jobs:
         with:
           persist-credentials: false
 
-      - name: Set up Aube and Node.js
-        uses: jdx/aube-action@0fd8685e54606c8893cc05119759aa3bc925e30b # v1.1.0
-        with:
-          version: 2.5.1
-          node-version: auto
-
-      - name: Set up Task
-        uses: go-task/setup-task@70f2430ad412f838533de8c0515c749ffb2b8bd3 # v1
+      # Installs everything mise.toml pins: Aube, Node.js, Task, and the PDF
+      # text extractors the CV print tests run.
+      - name: Set up tools
+        uses: jdx/mise-action@f5be966e4a917d54244728e6a5fdcd1d93a35e6c # v5.2.6
 
       - name: Install dependencies
         run: aube install --frozen-lockfile

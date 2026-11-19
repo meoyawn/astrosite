@@ -5,6 +5,10 @@
   --font-sans:
     ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
     "Segoe UI Symbol", "Noto Color Emoji";
+  /* Static system faces for printed PDFs. Chromium embeds variable system
+     fonts (SF, Segoe UI Variable) as Type 3, which drops word spaces and
+     mis-maps glyphs for PDF text extractors used by ATS parsers. */
+  --font-print: "Helvetica Neue", Helvetica, Arial, sans-serif;
   --color-date: #6b7280;
   --color-link: oklch(22.64% 0 0);
   --color-link-underline: oklch(61.67% 0 0);
